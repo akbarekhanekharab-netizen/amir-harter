@@ -23,12 +23,31 @@
             border: 2px solid #f093fb; 
             border-radius: 10px; 
             background: rgba(255,255,255,0.05);
+            touch-action: none;
         }
         .score { margin: 15px 0; font-size: 1.3rem; }
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(3, 60px);
+            grid-template-rows: repeat(2, 60px);
+            gap: 5px;
+            margin-top: 20px;
+        }
+        .ctrl-btn {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid #f093fb;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .ctrl-btn:active { background: rgba(255,255,255,0.3); }
         .back-btn {
             margin-top: 20px;
-            padding: 12px 30px;
-            background: linear-gradient(45deg, #f093fb, #f5576c);
+            padding: 10px 25px;
+            background: rgba(255,255,255,0.1);
             color: #fff;
             text-decoration: none;
             border-radius: 25px;
@@ -40,6 +59,16 @@
     <p class="credit">ساخته شده توسط AmirHarter</p>
     <div class="score" id="score">امتیاز: 0</div>
     <canvas id="canvas" width="300" height="300"></canvas>
+    
+    <div class="controls">
+        <div></div>
+        <div class="ctrl-btn" onclick="changeDirection('up')">⬆️</div>
+        <div></div>
+        <div class="ctrl-btn" onclick="changeDirection('left')">⬅️</div>
+        <div class="ctrl-btn" onclick="changeDirection('down')">⬇️</div>
+        <div class="ctrl-btn" onclick="changeDirection('right')">➡️</div>
+    </div>
+    
     <a href="games.html" class="back-btn">بازگشت</a>
     
     <script>
@@ -51,6 +80,13 @@
         let food = {x: 10, y: 10};
         let direction = 'right';
         let score = 0;
+        
+        function changeDirection(dir) {
+            if (dir === 'up' && direction !== 'down') direction = 'up';
+            if (dir === 'down' && direction !== 'up') direction = 'down';
+            if (dir === 'left' && direction !== 'right') direction = 'left';
+            if (dir === 'right' && direction !== 'left') direction = 'right';
+        }
         
         function draw() {
             ctx.clearRect(0, 0, 300, 300);
@@ -90,13 +126,6 @@
                 direction = 'right';
             }
         }
-        
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowUp' && direction !== 'down') direction = 'up';
-            if (e.key === 'ArrowDown' && direction !== 'up') direction = 'down';
-            if (e.key === 'ArrowLeft' && direction !== 'right') direction = 'left';
-            if (e.key === 'ArrowRight' && direction !== 'left') direction = 'right';
-        });
         
         setInterval(() => {
             update();
