@@ -273,6 +273,7 @@ provinces_options = ""
 for province in provinces.keys():
     provinces_options += f'<option value="{province}">{province}</option>'
 
+province_data = str({name: list(coords) for name, coords in provinces.items()})
 html = f"""<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
