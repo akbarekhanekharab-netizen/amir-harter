@@ -383,6 +383,7 @@ html = f"""<!DOCTYPE html>
             -webkit-user-select: none;
             -webkit-touch-callout: none;
             -webkit-tap-highlight-color: transparent;
+            position: relative;
         }}
         .header {{
             display: flex;
@@ -495,7 +496,7 @@ html = f"""<!DOCTYPE html>
             padding: 15px;
         }}
         .theme-float {{
-            position: absoIute;
+            position: absolute;
             top: 80px;
             left: 15px;
             font-size: 2rem;
@@ -848,6 +849,8 @@ html = f"""<!DOCTYPE html>
         <button class="settings-btn" onclick="toggleSettings()">⚙️</button>
     </div>
 
+    <button class="theme-float" onclick="toggleTheme()" id="themeFloat">☀️</button>
+
     <div class="settings-overlay" id="settingsOverlay" onclick="toggleSettings()"></div>
     <div class="settings-panel" id="settingsPanel">
         <div class="settings-title">⚙️ تنظیمات</div>
@@ -906,8 +909,6 @@ html = f"""<!DOCTYPE html>
     </div>
 
     <div class="main">
-        <button class="theme-float" onclick="toggleTheme()" id="themeFloat">☀️</button>
-
         <div class="logo-animation">
             <div class="logo-text">AmirHarter</div>
         </div>
