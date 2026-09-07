@@ -41,6 +41,9 @@
             justify-content: center;
             font-size: 1.5rem;
             cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
         }
         .ctrl-btn:active { background: rgba(255,255,255,0.3); }
         .back-btn {
@@ -61,11 +64,11 @@
     
     <div class="controls">
         <div></div>
-        <div class="ctrl-btn" onclick="changeDirection('up')">⬆️</div>
+        <div class="ctrl-btn" ontouchstart="changeDirection('up'); return false;" onclick="changeDirection('up'); return false;">⬆️</div>
         <div></div>
-        <div class="ctrl-btn" onclick="changeDirection('left')">⬅️</div>
-        <div class="ctrl-btn" onclick="changeDirection('down')">⬇️</div>
-        <div class="ctrl-btn" onclick="changeDirection('right')">➡️</div>
+        <div class="ctrl-btn" ontouchstart="changeDirection('left'); return false;" onclick="changeDirection('left'); return false;">⬅️</div>
+        <div class="ctrl-btn" ontouchstart="changeDirection('down'); return false;" onclick="changeDirection('down'); return false;">⬇️</div>
+        <div class="ctrl-btn" ontouchstart="changeDirection('right'); return false;" onclick="changeDirection('right'); return false;">➡️</div>
     </div>
     
     <a href="games.html" class="back-btn">بازگشت</a>
