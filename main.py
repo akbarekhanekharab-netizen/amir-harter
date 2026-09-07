@@ -267,43 +267,43 @@ html = f"""<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AmirHarter</title>
     <style>
-        :root {{ 
-            --bg: #0f0c29; 
-            --card: rgba(255,255,255,0.1); 
-            --border: rgba(255,255,255,0.2); 
-            --text: #fff; 
-            --muted: #ccc; 
+        :root {{
+            --bg: #0f0c29;
+            --card: rgba(255,255,255,0.1);
+            --border: rgba(255,255,255,0.2);
+            --text: #fff;
+            --muted: #ccc;
             --accent: #f093fb;
         }}
-        .light-mode {{ 
-            --bg: linear-gradient(135deg, #e8f4fd, #d4e9ff, #c2dfff); 
-            --card: rgba(255,255,255,0.85); 
-            --border: #b8d4f0; 
-            --text: #1a2a4a; 
-            --muted: #5a6c8a; 
+        .light-mode {{
+            --bg: linear-gradient(135deg, #e8f4fd, #d4e9ff, #c2dfff);
+            --card: rgba(255,255,255,0.85);
+            --border: #b8d4f0;
+            --text: #1a2a4a;
+            --muted: #5a6c8a;
             --accent: #e85d75;
         }}
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{ background: var(--bg); color: var(--text); font-family: Tahoma; transition: 0.5s; min-height: 100vh; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }}
-        
-        .header {{ 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 15px 20px; 
-            background: linear-gradient(135deg, #f093fb, #4facfe); 
-            position: fixed; 
-            top: 0; 
+
+        .header {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #f093fb, #4facfe);
+            position: fixed;
+            top: 0;
             left: 0;
             right: 0;
-            z-index: 100; 
+            z-index: 100;
         }}
-        .light-mode .header {{ 
-            background: linear-gradient(135deg, #f5576c, #4facfe); 
+        .light-mode .header {{
+            background: linear-gradient(135deg, #f5576c, #4facfe);
         }}
         .logo {{ font-size: 1.5rem; font-weight: bold; color: #fff; }}
         .settings-btn {{ font-size: 1.5rem; background: none; border: none; cursor: pointer; color: #fff; }}
-        
+
         .settings-overlay {{
             display: none;
             position: fixed;
@@ -339,7 +339,7 @@ html = f"""<!DOCTYPE html>
             text-align: right;
         }}
         .settings-item:hover {{ background: rgba(255,255,255,0.15); }}
-        
+
         .modal-overlay {{
             display: none;
             position: fixed;
@@ -375,12 +375,12 @@ html = f"""<!DOCTYPE html>
             font-size: 1.5rem;
             cursor: pointer;
         }}
-        
+
         .main {{ max-width: 600px; margin: 70px auto 0; padding: 15px; }}
-        
+
         .theme-float {{
             position: fixed;
-            top: 15px;
+            top: 60px;
             left: 15px;
             font-size: 2rem;
             z-index: 50;
@@ -389,7 +389,7 @@ html = f"""<!DOCTYPE html>
             cursor: pointer;
             padding: 5px;
         }}
-        
+
         .logo-animation {{
             text-align: center;
             padding: 40px 20px;
@@ -412,34 +412,34 @@ html = f"""<!DOCTYPE html>
             0%, 100% {{ background-position: 0% 50%; }}
             50% {{ background-position: 100% 50%; }}
         }}
-        
+
         .search-container {{
             position: relative;
             margin: 15px 0;
         }}
-        .search-box {{ 
-            width: 100%; 
-            padding: 14px 120px 14px 50px; 
-            border-radius: 30px; 
-            border: 2px solid var(--border); 
-            background: var(--card); 
-            color: var(--text); 
-            font-size: 1.05rem; 
-            outline: none; 
+        .search-box {{
+            width: 100%;
+            padding: 14px 120px 14px 50px;
+            border-radius: 30px;
+            border: 2px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+            font-size: 1.05rem;
+            outline: none;
             text-align: center;
         }}
-        .search-btn {{ 
-            position: absolute; 
+        .search-btn {{
+            position: absolute;
             right: 8px;
             top: 50%;
             transform: translateY(-50%);
-            padding: 10px 20px; 
-            border: none; 
-            border-radius: 25px; 
-            background: linear-gradient(45deg, #f093fb, #f5576c); 
-            color: #fff; 
-            cursor: pointer; 
-            font-weight: bold; 
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
         }}
         .mic-btn {{
             position: absolute;
@@ -451,7 +451,7 @@ html = f"""<!DOCTYPE html>
             cursor: pointer;
             font-size: 1.3rem;
         }}
-        
+
         .search-options {{
             display: flex;
             gap: 10px;
@@ -470,58 +470,58 @@ html = f"""<!DOCTYPE html>
             text-align: center;
             text-decoration: none;
         }}
-        
-        .clock-section {{ 
-            text-align: center; 
-            padding: 30px 15px; 
-            margin: 15px 0; 
-            background: linear-gradient(135deg, rgba(240,147,251,0.3), rgba(79,172,254,0.3)); 
-            border: 1px solid var(--border); 
-            border-radius: 25px; 
+
+        .clock-section {{
+            text-align: center;
+            padding: 30px 15px;
+            margin: 15px 0;
+            background: linear-gradient(135deg, rgba(240,147,251,0.3), rgba(79,172,254,0.3));
+            border: 1px solid var(--border);
+            border-radius: 25px;
         }}
         .clock-icon {{ font-size: 3rem; }}
-        .clock {{ 
-            font-size: 2.5rem; 
-            font-weight: 900; 
-            background: linear-gradient(45deg, #ffd700, #ffaa00, #ffd700); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
+        .clock {{
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ffd700, #ffaa00, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }}
-        .light-mode .clock {{ 
-            background: linear-gradient(45deg, #1a2a4a, #4facfe); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
+        .light-mode .clock {{
+            background: linear-gradient(45deg, #1a2a4a, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }}
         .date {{ color: var(--muted); font-size: 0.9rem; }}
-        
-        .card {{ 
-            background: var(--card); 
-            border: 1px solid var(--border); 
-            border-radius: 15px; 
-            padding: 18px; 
-            margin: 15px 0; 
-            backdrop-filter: blur(10px); 
+
+        .card {{
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 18px;
+            margin: 15px 0;
+            backdrop-filter: blur(10px);
         }}
         .card-title {{ font-size: 1.15rem; margin-bottom: 10px; }}
         .news-scroll, .football-scroll, .currency-scroll {{ max-height: 180px; overflow-y: auto; }}
         .news-item {{ padding: 8px; border-bottom: 1px solid var(--border); cursor: pointer; font-size: 0.85rem; }}
         .news-item:hover {{ color: var(--accent); }}
-        
-        .currency-search {{ 
-            width: 100%; 
-            padding: 10px; 
-            border-radius: 8px; 
-            border: 1px solid var(--border); 
-            background: var(--card); 
-            color: var(--text); 
-            font-size: 0.85rem; 
-            margin-bottom: 10px; 
+
+        .currency-search {{
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+            font-size: 0.85rem;
+            margin-bottom: 10px;
         }}
         .currency-item {{ display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }}
-        .currency-value {{ 
-            font-weight: bold; 
-            padding: 4px 12px; 
-            border-radius: 15px; 
+        .currency-value {{
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 15px;
             font-size: 0.85rem;
         }}
         .currency-value.up {{ background: #28a745; color: #fff; }}
@@ -536,22 +536,22 @@ html = f"""<!DOCTYPE html>
             0%, 100% {{ transform: scale(1); }}
             50% {{ transform: scale(1.1); }}
         }}
-        
+
         .weather-card {{ text-align: center; }}
         .weather-icon {{ font-size: 3rem; }}
         .weather-temp {{ font-size: 2rem; font-weight: 900; color: var(--accent); }}
         .weather-desc {{ margin-top: 10px; color: var(--muted); }}
-        .province-select {{ 
-            width: 100%; 
-            padding: 8px; 
-            border-radius: 8px; 
-            border: 1px solid var(--border); 
-            background: var(--card); 
-            color: var(--text); 
-            font-size: 0.8rem; 
-            margin-top: 10px; 
+        .province-select {{
+            width: 100%;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+            font-size: 0.8rem;
+            margin-top: 10px;
         }}
-        
+
         .filter-btns {{ display: flex; gap: 8px; margin-bottom: 15px; }}
         .filter-btn {{ flex: 1; padding: 8px; border: none; border-radius: 20px; background: linear-gradient(45deg, #f093fb, #f5576c); color: #fff; cursor: pointer; font-size: 0.75rem; font-weight: bold; }}
         .filter-btn.active {{ background: linear-gradient(45deg, #4facfe, #00f2fe); }}
@@ -562,7 +562,7 @@ html = f"""<!DOCTYPE html>
         .team-name.left {{ text-align: left; }}
         .match-score {{ color: var(--accent); font-weight: bold; }}
         .match-status {{ text-align: center; font-size: 0.75rem; color: var(--muted); }}
-        
+
         .lang-row {{ display: flex; gap: 10px; margin-bottom: 15px; }}
         .lang-box {{ flex: 1; }}
         .lang-search {{ width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 0.75rem; }}
@@ -583,7 +583,7 @@ html = f"""<!DOCTYPE html>
         <div class="logo">AmirHarter</div>
         <button class="settings-btn" onclick="toggleSettings()">⚙️</button>
     </div>
-    
+
     <div class="settings-overlay" id="settingsOverlay" onclick="toggleSettings()"></div>
     <div class="settings-panel" id="settingsPanel">
         <div class="settings-title">⚙️ تنظیمات</div>
@@ -594,7 +594,7 @@ html = f"""<!DOCTYPE html>
         <div class="settings-item" onclick="showAboutModal()">📖 درباره ما</div>
         <div class="settings-item">📌 نسخه: v36</div>
     </div>
-    
+
     <div class="modal-overlay" id="aboutModal">
         <div class="modal">
             <div class="modal-header">
@@ -616,7 +616,7 @@ html = f"""<!DOCTYPE html>
             <p>نسخه ۴.۰</p>
         </div>
     </div>
-    
+
     <div class="modal-overlay" id="reportModal">
         <div class="modal">
             <div class="modal-header">
@@ -628,7 +628,7 @@ html = f"""<!DOCTYPE html>
             <p style="cursor:pointer; background: var(--card); padding: 10px; border-radius: 8px;" onclick="copyID()">@ID_HARTER</p>
         </div>
     </div>
-    
+
     <div class="modal-overlay" id="fontModal">
         <div class="modal">
             <div class="modal-header">
@@ -640,32 +640,32 @@ html = f"""<!DOCTYPE html>
             <div class="settings-item" onclick="setFontSize('1.2rem', 'بزرگ')">بزرگ</div>
         </div>
     </div>
-    
+
     <div class="main">
         <button class="theme-float" onclick="toggleTheme()" id="themeFloat">☀️</button>
-        
+
         <div class="logo-animation">
             <div class="logo-text">AmirHarter</div>
         </div>
-        
+
         <div class="search-container">
             <button class="search-btn" onclick="searchGoogle(document.getElementById('mainSearch').value)">جستجو</button>
             <button class="mic-btn" onclick="voiceSearch()">🎤</button>
             <input class="search-box" id="mainSearch" placeholder="در AMIR HARTER" onkeypress="if(event.key==='Enter') searchGoogle(this.value)">
         </div>
-        
+
         <div class="search-options">
             <a href="https://play.google.com/" target="_blank" class="search-option">📱 گوگل‌پلی</a>
             <a href="https://telewebion.com/" target="_blank" class="search-option">📺 تلوبیون</a>
             <a href="games.html" class="search-option">🎮 بازی‌ها</a>
         </div>
-        
+
         <div class="clock-section">
             <div class="clock-icon">🕐</div>
             <div class="clock" id="clock">--:--:--</div>
             <div class="date" id="date">---</div>
         </div>
-        
+
         <div class="card">
             <div class="card-title">🌤 آب و هوا</div>
             <div class="weather-card" id="weatherData">{weather_html}</div>
@@ -674,7 +674,7 @@ html = f"""<!DOCTYPE html>
                 {provinces_options}
             </select>
         </div>
-        
+
         <div class="card">
             <div class="card-title"><span class="currency-icon">💱</span> قیمت ارز</div>
             <input class="currency-search" placeholder="🔍 جستجوی ارز..." onkeyup="filterCurrency(this.value)">
@@ -682,7 +682,7 @@ html = f"""<!DOCTYPE html>
                 {currency_html}
             </div>
         </div>
-        
+
         <div class="card">
             <div class="card-title">⚽ بازی‌های داغ</div>
             <div class="filter-btns">
@@ -693,9 +693,9 @@ html = f"""<!DOCTYPE html>
             </div>
             <div class="football-scroll">{matches_html}</div>
         </div>
-        
+
         <div class="card"><div class="card-title">📰 آخرین اخبار</div><div class="news-scroll">{news_html}</div></div>
-        
+
         <div class="card">
             <div class="card-title">🌐 ترجمه</div>
             <div class="lang-row">
@@ -718,12 +718,12 @@ html = f"""<!DOCTYPE html>
                 <button class="copy-btn" onclick="copyResult()">کپی</button>
             </div>
         </div>
-        
+
         <div class="footer">© 2026 AmirHarter - تمامی حقوق محفوظ است</div>
     </div>
     <script>
         const languages = {{"fa":"فارسی","en":"انگلیسی","ar":"عربی","fr":"فرانسوی","de":"آلمانی","es":"اسپانیایی","it":"ایتالیایی","pt":"پرتغالی","ru":"روسی","tr":"ترکی","zh":"چینی","ja":"ژاپنی","ko":"کره‌ای","hi":"هندی","ur":"اردو","nl":"هلندی","pl":"لهستانی","sv":"سوئدی","no":"نروژی","da":"دانمارکی","fi":"فنلاندی","el":"یونانی","he":"عبری","th":"تایلندی","vi":"ویتنامی","id":"اندونزیایی","ms":"مالایی","cs":"چکی","sk":"اسلواکی","hu":"مجاری","ro":"رومانیایی","bg":"بلغاری","uk":"اوکراینی","sr":"صربی","hr":"کرواتی","sl":"اسلوونیایی","lt":"لیتوانیایی","lv":"لتونیایی","et":"استونیایی","sq":"آلبانیایی","mk":"مقدونی","hy":"ارمنی","ka":"گرجی","az":"آذربایجانی","kk":"قزاقی","uz":"ازبکی","ky":"قرقیزی","tg":"تاجیکی","mn":"مغولی","bn":"بنگالی","ta":"تامیلی","te":"تلوگو","mr":"مراتی","gu":"گجراتی","kn":"کانادا","ml":"مالایایی","si":"سینهالی","ne":"نپالی","km":"خمری","lo":"لائوسی","my":"برمه‌ای","fil":"فیلیپینی","sw":"سواحیلی","am":"آمهری","ha":"هوسا","yo":"یوروبایی","zu":"زولویی","af":"آفریکانس","ig":"ایگبو"}};
-        
+
         function populateLanguages() {{
             const from = document.getElementById('from');
             const to = document.getElementById('to');
@@ -734,34 +734,34 @@ html = f"""<!DOCTYPE html>
             from.value = 'fa'; to.value = 'en';
         }}
         populateLanguages();
-        
+
         const provinces = {province_data};
-        
+
         function toggleSettings() {{
             document.getElementById('settingsPanel').classList.toggle('open');
-            document.getElementById('settingsOverlay').style.display = 
+            document.getElementById('settingsOverlay').style.display =
                 document.getElementById('settingsPanel').classList.contains('open') ? 'block' : 'none';
         }}
-        
+
         function showAboutModal() {{
             toggleSettings();
             document.getElementById('aboutModal').style.display = 'flex';
         }}
-        
+
         function showReportModal() {{
             toggleSettings();
             document.getElementById('reportModal').style.display = 'flex';
         }}
-        
+
         function showFontModal() {{
             toggleSettings();
             document.getElementById('fontModal').style.display = 'flex';
         }}
-        
+
         function closeModal(id) {{
             document.getElementById(id).style.display = 'none';
         }}
-        
+
         function copyID() {{
             const textarea = document.createElement('textarea');
             textarea.value = '@ID_HARTER';
@@ -771,13 +771,13 @@ html = f"""<!DOCTYPE html>
             document.body.removeChild(textarea);
             alert('کپی شد!');
         }}
-        
+
         function setFontSize(size, label) {{
             document.body.style.fontSize = size;
             document.getElementById('fontLabel').textContent = label;
             closeModal('fontModal');
         }}
-        
+
         function shareSite() {{
             const url = window.location.href;
             if (navigator.share) {{
@@ -786,7 +786,7 @@ html = f"""<!DOCTYPE html>
                 prompt('لینک سایت:', url);
             }}
         }}
-        
+
         function changeProvince(name) {{
             if (!name || !provinces[name]) return;
             const [lat, lon] = provinces[name];
@@ -801,29 +801,29 @@ html = f"""<!DOCTYPE html>
                     document.getElementById('weatherData').innerHTML = `<div class="weather-icon">🌤</div><div class="weather-temp">${{temp}}°C</div><div class="weather-desc">${{name}}<br>${{desc}}<br>باد: ${{wind}} km/h</div>`;
                 }});
         }}
-        
+
         function filterCurrency(query) {{
             document.querySelectorAll('.currency-item').forEach(item => {{
                 const name = item.getAttribute('data-name') || '';
                 item.style.display = name.includes(query) || query === '' ? 'flex' : 'none';
             }});
         }}
-        
+
         function updateClock() {{
             const now = new Date();
             document.getElementById('clock').textContent = now.toLocaleTimeString('fa-IR');
             document.getElementById('date').textContent = now.toLocaleDateString('fa-IR', {{weekday:'long',year:'numeric',month:'long',day:'numeric'}});
         }}
         setInterval(updateClock, 1000); updateClock();
-        
+
         function toggleTheme() {{
             document.body.classList.toggle('light-mode');
             const isLight = document.body.classList.contains('light-mode');
             document.getElementById('themeFloat').textContent = isLight ? '🌙' : '☀️';
         }}
-        
+
         function searchGoogle(q) {{ if (q) window.open('https://www.google.com/search?q=' + encodeURIComponent(q), '_blank'); }}
-        
+
         function voiceSearch() {{
             if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {{
                 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -837,7 +837,7 @@ html = f"""<!DOCTYPE html>
                 alert('مرورگر شما از تایپ صوتی پشتیبانی نمی‌کند');
             }}
         }}
-        
+
         function filterMatches(type, btn) {{
             document.querySelectorAll('.match-item').forEach(item => {{
                 if (type === 'all') item.style.display = 'block';
@@ -846,13 +846,13 @@ html = f"""<!DOCTYPE html>
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
         }}
-        
+
         function swapLanguages() {{
             const from = document.getElementById('from');
             const to = document.getElementById('to');
             const temp = from.value; from.value = to.value; to.value = temp;
         }}
-        
+
         function searchFrom() {{
             const q = document.getElementById('fromSearch').value.trim().toLowerCase();
             const select = document.getElementById('from');
@@ -860,7 +860,7 @@ html = f"""<!DOCTYPE html>
                 if (languages[code].toLowerCase().includes(q)) {{ select.value = code; document.getElementById('fromSearch').value = ''; break; }}
             }}
         }}
-        
+
         function searchTo() {{
             const q = document.getElementById('toSearch').value.trim().toLowerCase();
             const select = document.getElementById('to');
@@ -868,7 +868,7 @@ html = f"""<!DOCTYPE html>
                 if (languages[code].toLowerCase().includes(q)) {{ select.value = code; document.getElementById('toSearch').value = ''; break; }}
             }}
         }}
-        
+
         function translateText() {{
             const text = document.getElementById('text').value;
             const from = document.getElementById('from').value;
@@ -884,7 +884,7 @@ html = f"""<!DOCTYPE html>
                 }})
                 .catch(() => document.getElementById('result').textContent = 'خطا در ترجمه');
         }}
-        
+
         function copyResult() {{
             const result = document.getElementById('result').textContent;
             const textarea = document.createElement('textarea');
