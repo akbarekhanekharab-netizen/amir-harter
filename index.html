@@ -13,7 +13,6 @@
             --muted: #ccc; 
             --accent: #f093fb;
         }
-        
         .light-mode { 
             --bg: linear-gradient(135deg, #e8f4fd, #d4e9ff, #c2dfff); 
             --card: rgba(255,255,255,0.85); 
@@ -22,7 +21,6 @@
             --muted: #5a6c8a; 
             --accent: #e85d75;
         }
-        
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: var(--bg); color: var(--text); font-family: Tahoma; transition: 0.5s; min-height: 100vh; }
         
@@ -37,26 +35,81 @@
             top: 0; 
             z-index: 100; 
         }
-        
         .light-mode .header { 
             background: linear-gradient(135deg, #f5576c, #4facfe); 
-            box-shadow: 0 4px 20px rgba(245, 87, 108, 0.4); 
         }
-        
         .logo { font-size: 1.5rem; font-weight: bold; color: #fff; }
         .theme-btn { font-size: 1.8rem; background: none; border: none; cursor: pointer; }
+        
         .main { max-width: 600px; margin: 0 auto; padding: 15px; }
+        
+        .logo-animation {
+            text-align: center;
+            padding: 40px 20px;
+            animation: floatLogo 3s ease-in-out infinite;
+        }
+        @keyframes floatLogo {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        .logo-text {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #f093fb, #ffd700, #4facfe, #f093fb);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease infinite;
+        }
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
         
         .search-box { 
             width: 100%; 
-            padding: 13px; 
-            border-radius: 25px; 
-            border: 1px solid var(--border); 
+            padding: 14px 50px; 
+            border-radius: 30px; 
+            border: 2px solid var(--border); 
             background: var(--card); 
             color: var(--text); 
             font-size: 1.05rem; 
             margin: 15px 0; 
             outline: none; 
+        }
+        .search-btn { 
+            position: absolute; 
+            padding: 12px 20px; 
+            border: none; 
+            border-radius: 25px; 
+            background: linear-gradient(45deg, #f093fb, #f5576c); 
+            color: #fff; 
+            cursor: pointer; 
+            font-weight: bold; 
+        }
+        .mic-btn {
+            position: absolute;
+            left: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.3rem;
+        }
+        
+        .search-options {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .search-option {
+            padding: 10px 20px;
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            background: var(--card);
+            color: var(--text);
+            cursor: pointer;
+            font-size: 0.85rem;
         }
         
         .clock-section { 
@@ -67,24 +120,19 @@
             border: 1px solid var(--border); 
             border-radius: 25px; 
         }
-        
-        .clock-icon { font-size: 3.5rem; margin-bottom: 10px; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-        
+        .clock-icon { font-size: 3rem; }
         .clock { 
-            font-size: 3rem; 
+            font-size: 2.5rem; 
             font-weight: 900; 
             background: linear-gradient(45deg, #ffd700, #ffaa00, #ffd700); 
             -webkit-background-clip: text; 
             -webkit-text-fill-color: transparent; 
         }
-        
         .light-mode .clock { 
             background: linear-gradient(45deg, #1a2a4a, #4facfe); 
             -webkit-background-clip: text; 
             -webkit-text-fill-color: transparent; 
         }
-        
         .date { color: var(--muted); font-size: 0.9rem; }
         
         .card { 
@@ -94,19 +142,29 @@
             padding: 18px; 
             margin: 15px 0; 
             backdrop-filter: blur(10px); 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
         }
-        
         .card-title { font-size: 1.15rem; margin-bottom: 10px; }
         .news-scroll, .football-scroll, .currency-scroll { max-height: 180px; overflow-y: auto; }
         .news-item { padding: 8px; border-bottom: 1px solid var(--border); cursor: pointer; font-size: 0.85rem; }
         .news-item:hover { color: var(--accent); }
         
+        .currency-search { 
+            width: 100%; 
+            padding: 10px; 
+            border-radius: 8px; 
+            border: 1px solid var(--border); 
+            background: var(--card); 
+            color: var(--text); 
+            font-size: 0.85rem; 
+            margin-bottom: 10px; 
+        }
+        .currency-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+        .currency-value { color: #4facfe; font-weight: bold; }
+        
         .weather-card { text-align: center; }
-        .weather-icon { font-size: 4rem; animation: bounce 2s infinite; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        .weather-temp { font-size: 2.5rem; font-weight: 900; color: var(--accent); }
-        .weather-desc { margin-top: 10px; color: var(--muted); font-size: 0.9rem; }
+        .weather-icon { font-size: 3rem; }
+        .weather-temp { font-size: 2rem; font-weight: 900; color: var(--accent); }
+        .weather-desc { margin-top: 10px; color: var(--muted); }
         .province-select { 
             width: 100%; 
             padding: 8px; 
@@ -118,18 +176,15 @@
             margin-top: 10px; 
         }
         
-        .currency-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
-        .currency-value { color: #4facfe; font-weight: bold; }
-        
         .filter-btns { display: flex; gap: 8px; margin-bottom: 15px; }
-        .filter-btn { flex: 1; padding: 10px; border: none; border-radius: 25px; background: linear-gradient(45deg, #f093fb, #f5576c); color: #fff; cursor: pointer; font-size: 0.85rem; font-weight: bold; }
+        .filter-btn { flex: 1; padding: 8px; border: none; border-radius: 20px; background: linear-gradient(45deg, #f093fb, #f5576c); color: #fff; cursor: pointer; font-size: 0.75rem; font-weight: bold; }
         .filter-btn.active { background: linear-gradient(45deg, #4facfe, #00f2fe); }
-        .match-item { padding: 12px 10px; border-bottom: 1px solid var(--border); }
+        .match-item { padding: 10px; border-bottom: 1px solid var(--border); }
         .match-row { display: flex; justify-content: space-between; align-items: center; gap: 5px; margin-bottom: 5px; }
         .team-name { flex: 1; font-size: 0.85rem; }
         .team-name.right { text-align: right; }
         .team-name.left { text-align: left; }
-        .match-score { flex: 0 0 auto; min-width: 70px; text-align: center; color: var(--accent); font-weight: bold; font-size: 0.9rem; }
+        .match-score { color: var(--accent); font-weight: bold; }
         .match-status { text-align: center; font-size: 0.75rem; color: var(--muted); }
         
         .lang-row { display: flex; gap: 10px; margin-bottom: 15px; }
@@ -138,20 +193,32 @@
         .search-btn { width: 100%; padding: 10px; border: none; border-radius: 25px; background: linear-gradient(45deg, #f093fb, #f5576c); color: #fff; cursor: pointer; font-size: 1.2rem; margin-top: 6px; }
         .lang-select { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 0.8rem; margin-top: 5px; }
         .swap-btn { width: 40px; height: 40px; border: none; border-radius: 50%; background: linear-gradient(45deg, #f093fb, #f5576c); color: #fff; cursor: pointer; font-size: 1.3rem; align-self: center; }
-        .swap-btn.rotated { transform: rotate(180deg); }
-        textarea { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); min-height: 100px; font-size: 1rem; margin: 10px 0; }
-        .btn-row { display: flex; gap: 10px; }
+        textarea { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); min-height: 100px; }
+        .btn-row { display: flex; gap: 10px; margin-top: 10px; }
         .btn-row button { flex: 1; padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
         .translate-btn { background: var(--accent); color: #fff; }
         .copy-btn { background: #4facfe; color: #fff; }
-        .result { background: var(--card); padding: 15px; border-radius: 10px; margin: 10px 0; min-height: 80px; }
+        .result { background: var(--card); padding: 15px; border-radius: 10px; margin: 10px 0; }
         .footer { text-align: center; padding: 20px; color: var(--muted); font-size: 0.8rem; }
     </style>
 </head>
 <body>
     <div class="header"><div class="logo">AmirHarter</div><button class="theme-btn" onclick="toggleTheme()" id="themeBtn">☀️</button></div>
     <div class="main">
-        <input class="search-box" placeholder="جستجو..." onkeypress="if(event.key==='Enter') searchGoogle(this.value)">
+        <div class="logo-animation">
+            <div class="logo-text">AmirHarter</div>
+        </div>
+        
+        <div style="position: relative;">
+            <button class="search-btn" onclick="searchGoogle(document.getElementById('mainSearch').value)">جستجو</button>
+            <button class="mic-btn" onclick="voiceSearch()">🎤</button>
+            <input class="search-box" id="mainSearch" placeholder="در AMIR HARTER جستجو کنید..." onkeypress="if(event.key==='Enter') searchGoogle(this.value)">
+        </div>
+        
+        <div class="search-options">
+            <div class="search-option" onclick="window.open('https://yandex.com/images/', '_blank')">🖼 جستجوی تصویر</div>
+            <div class="search-option" onclick="window.open('https://soundcloud.com/search', '_blank')">🎵 جستجوی موسیقی</div>
+        </div>
         
         <div class="clock-section">
             <div class="clock-icon">🕐</div>
@@ -161,19 +228,18 @@
         
         <div class="card">
             <div class="card-title">🌤 آب و هوا</div>
-            <div class="weather-card" id="weatherData">
-                <div class="weather-icon">🌤</div><div class="weather-temp">33.5°C</div><div class="weather-desc">آفتابی<br>باد: 10.9 km/h</div>
-            </div>
+            <div class="weather-card" id="weatherData"><div class="weather-icon">🌤</div><div class="weather-temp">33.7°C</div><div class="weather-desc">آفتابی<br>باد: 11.0 km/h</div></div>
             <select class="province-select" onchange="changeProvince(this.value)">
                 <option value="">انتخاب استان...</option>
-                <option value="تهران">تهران</option><option value="مشهد">مشهد</option><option value="اصفهان">اصفهان</option><option value="شیراز">شیراز</option><option value="تبریز">تبریز</option><option value="اهواز">اهواز</option><option value="قم">قم</option><option value="کرج">کرج</option><option value="کرمانشاه">کرمانشاه</option><option value="رشت">رشت</option><option value="زاهدان">زاهدان</option><option value="همدان">همدان</option><option value="ارومیه">ارومیه</option><option value="یزد">یزد</option><option value="اردبیل">اردبیل</option><option value="بندرعباس">بندرعباس</option><option value="اراک">اراک</option><option value="اسلام‌شهر">اسلام‌شهر</option><option value="زنجان">زنجان</option><option value="سنندج">سنندج</option><option value="قزوین">قزوین</option><option value="خرم‌آباد">خرم‌آباد</option><option value="گرگان">گرگان</option><option value="ساری">ساری</option><option value="بوشهر">بوشهر</option><option value="بیرجند">بیرجند</option><option value="ایلام">ایلام</option><option value="شهرکرد">شهرکرد</option><option value="یاسوج">یاسوج</option><option value="بجنورد">بجنورد</option><option value="سمنان">سمنان</option>
+                <option value="تهران">تهران</option><option value="مشهد">مشهد</option><option value="اصفهان">اصفهان</option><option value="شیراز">شیراز</option><option value="تبریز">تبریز</option><option value="اهواز">اهواز</option><option value="قم">قم</option><option value="کرج">کرج</option><option value="کرمانشاه">کرمانشاه</option><option value="رشت">رشت</option><option value="زاهدان">زاهدان</option><option value="همدان">همدان</option><option value="ارومیه">ارومیه</option><option value="یزد">یزد</option><option value="اردبیل">اردبیل</option><option value="بندرعباس">بندرعباس</option><option value="اراک">اراک</option><option value="زنجان">زنجان</option><option value="سنندج">سنندج</option><option value="قزوین">قزوین</option><option value="خرم‌آباد">خرم‌آباد</option><option value="گرگان">گرگان</option><option value="ساری">ساری</option><option value="بوشهر">بوشهر</option><option value="بیرجند">بیرجند</option><option value="ایلام">ایلام</option><option value="شهرکرد">شهرکرد</option><option value="یاسوج">یاسوج</option><option value="بجنورد">بجنورد</option><option value="سمنان">سمنان</option>
             </select>
         </div>
         
         <div class="card">
             <div class="card-title">💰 قیمت ارز</div>
-            <div class="currency-scroll">
-                <div class="currency-item"><span>دلار</span><span class="currency-value">2,287,050</span></div><div class="currency-item"><span>یورو</span><span class="currency-value">2,664,400</span></div><div class="currency-item"><span>درهم</span><span class="currency-value">624,680</span></div><div class="currency-item"><span>پوند</span><span class="currency-value">3,084,400</span></div><div class="currency-item"><span>لیر ترکیه</span><span class="currency-value">48,300</span></div><div class="currency-item"><span>یوان چین</span><span class="currency-value">341,800</span></div><div class="currency-item"><span>روبل روسیه</span><span class="currency-value">26,810</span></div><div class="currency-item"><span>دینار عراق</span><span class="currency-value">1,655</span></div><div class="currency-item"><span>افغانی</span><span class="currency-value">35,020</span></div>
+            <input class="currency-search" placeholder="🔍 جستجوی ارز..." onkeyup="filterCurrency(this.value)">
+            <div class="currency-scroll" id="currencyList">
+                <div class="currency-item" data-name="دلار"><span>دلار</span><span class="currency-value">2,287,050</span></div><div class="currency-item" data-name="یورو"><span>یورو</span><span class="currency-value">2,664,400</span></div><div class="currency-item" data-name="درهم"><span>درهم</span><span class="currency-value">624,680</span></div><div class="currency-item" data-name="پوند"><span>پوند</span><span class="currency-value">3,084,400</span></div><div class="currency-item" data-name="لیر ترکیه"><span>لیر ترکیه</span><span class="currency-value">48,300</span></div><div class="currency-item" data-name="یوان چین"><span>یوان چین</span><span class="currency-value">341,800</span></div><div class="currency-item" data-name="روبل روسیه"><span>روبل روسیه</span><span class="currency-value">26,810</span></div><div class="currency-item" data-name="دینار عراق"><span>دینار عراق</span><span class="currency-value">1,655</span></div><div class="currency-item" data-name="افغانی"><span>افغانی</span><span class="currency-value">35,020</span></div>
             </div>
         </div>
         
@@ -308,7 +374,7 @@
         <div class="match-status">برگزار نشده | هفته 3</div></div></div>
         </div>
         
-        <div class="card"><div class="card-title">📰 آخرین اخبار</div><div class="news-scroll"><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610814/%D8%A7%D8%B9%D9%84%D8%A7%D9%85-%D8%A2%D9%85%D8%A7%D8%AF%DA%AF%DB%8C-%D8%B3%D8%AA%D8%A7%D8%AF-%D8%A7%D8%AC%D8%B1%D8%A7%DB%8C%DB%8C-%D9%81%D8%B1%D9%85%D8%A7%D9%86-%D8%A7%D9%85%D8%A7%D9%85-%D8%AE%D9%85%DB%8C%D9%86%DB%8C-%D8%B1%D9%87-%D8%AC%D9%87%D8%AA-%D8%AD%D9%85%D8%A7%DB%8C%D8%AA-%D8%A7%D8%B2-%D8%B7%D8%B1%D8%AD', '_blank')"><span>📰</span>اعلام آمادگی ستاد اجرایی فرمان امام خمینی(ره) جهت حمایت از طرح های نوآورانه جهاددانشگاهی</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610813/%DA%A9%D8%A7%D8%B1%DA%AF%D8%B1-%D8%AA%D8%A7%D9%88%D8%A7%D9%86-%D9%82%D8%B7%D8%B9%DB%8C-%D8%A8%D8%B1%D9%82-%D8%B1%D8%A7-%D9%85%DB%8C-%D8%AF%D9%87%D8%AF-%DB%8C%DA%A9-%D9%81%D8%B9%D8%A7%D9%84-%DA%A9%D8%A7%D8%B1%DA%AF%D8%B1%DB%8C-%DA%A9%D8%A7%D8%B1%DA%AF%D8%B1-%D8%A8%DB%8C-%D8%AD%D9%82', '_blank')"><span>📰</span>کارگر تاوان قطعی برق را می‌دهد؟/ یک فعال کارگری: کارگر بی‌حق نیست، فقط می‌ترسد!</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610775/%D9%82%DB%8C%D9%85%D8%AA-%D9%85%D8%B3%DA%A9%D9%86-%D8%AF%D8%B1-%D8%A7%D9%86%DA%AF%D9%84%DB%8C%D8%B3-%DA%A9%D8%A7%D9%87%D8%B4-%DB%8C%D8%A7%D9%81%D8%AA', '_blank')"><span>📰</span>قیمت مسکن در انگلیس کاهش یافت</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610812/%D8%A7%D8%AA%DA%A9%D8%A7-%D8%A8%D9%87-%D8%AA%DA%A9-%D8%B4%D8%A7%D8%AE%D8%B5-%D9%86%D8%B1%D8%AE-%D8%A8%DB%8C%DA%A9%D8%A7%D8%B1%DB%8C-%D8%AA%D8%AD%D9%84%DB%8C%D9%84%DB%8C-%DA%AF%D9%85%D8%B1%D8%A7%D9%87-%DA%A9%D9%86%D9%86%D8%AF%D9%87-%D8%A7%D8%B3%D8%AA-%D8%B2%D9%86%DA%AF-%D8%AE%D8%B7%D8%B1', '_blank')"><span>📰</span>اتکا به تک‌شاخص «نرخ بیکاری» تحلیلی گمراه‌کننده است / زنگ خطر شاخص NEET برای جوانان یزدی</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610811/%D9%85%D9%88%D8%B2%D9%87-%D9%85%D9%81%D8%A7%D8%AE%D8%B1-%D8%A7%D8%B1%D8%AF%DA%A9%D8%A7%D9%86-%D8%AF%D8%B1-%D9%85%D8%B3%DB%8C%D8%B1-%D8%AA%D8%AD%D9%88%D9%84-%D8%A8%D8%A7%D8%B2%D9%86%DA%AF%D8%B1%DB%8C-%D8%B7%D8%B1%D8%AD-%D9%85%D8%AD%D8%AA%D9%88%D8%A7%DB%8C%DB%8C-%D8%A8%D8%A7-%D8%B1%D9%88%DB%8C%DA%A9%D8%B1%D8%AF', '_blank')"><span>📰</span>موزه مفاخر اردکان در مسیر تحول؛ بازنگری طرح محتوایی با رویکرد نوین موزه‌داری</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610810/%D8%B3%D8%AE%D9%86%DA%AF%D9%88%DB%8C-%DA%A9%D9%85%DB%8C%D8%B3%DB%8C%D9%88%D9%86-%D8%A7%D8%AC%D8%AA%D9%85%D8%A7%D8%B9%DB%8C-%D8%B2%D9%86%D8%A7%D9%86-%D8%B3%D8%B1%D9%BE%D8%B1%D8%B3%D8%AA-%D8%AE%D8%A7%D9%86%D9%88%D8%A7%D8%B1-%D8%AF%D8%B1-%D8%B1%D9%88%D8%B3%D8%AA%D8%A7%D9%87%D8%A7-%D8%AA%D8%AD%D8%AA-%D9%BE%D9%88%D8%B4%D8%B4', '_blank')"><span>📰</span>سخنگوی کمیسیون اجتماعی: زنان سرپرست خانوار در روستاها تحت پوشش بیمه رایگان قرار می‌گیرند</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610809/%D8%A7%D9%87%D8%AF%D8%A7%DB%8C-%D8%AC%D8%A7%DB%8C%D8%B2%D9%87-%D8%A7%D9%85%DB%8C-%D9%BE%D8%B3-%D8%A7%D8%B2-%D8%AF%D8%B1%DA%AF%D8%B0%D8%B4%D8%AA-%DB%8C%DA%A9-%D8%A8%D8%A7%D8%B2%DB%8C%DA%AF%D8%B1', '_blank')"><span>📰</span>اهدای جایزه «امی» پس از درگذشت یک بازیگر</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610808/%D8%AF%D8%A7%D9%88%D8%AF%D9%86%DA%98%D8%A7%D8%AF-%D9%88-%D8%B4%D9%85%D9%82%D8%AF%D8%B1%DB%8C-%D8%B2%D9%88%D8%AC%D9%87-%D8%AF%DB%8C%D8%AC%DB%8C%D8%AA%D8%A7%D9%84-%D9%88-%D8%B7%D8%A8%D8%B3-%D9%85%DB%8C-%D8%B3%D8%A7%D8%B2%D9%86%D8%AF', '_blank')"><span>📰</span>داودنژاد و شمقدری «زوجه دیجیتال» و «طبس» می‌سازند</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610804/%D9%85%D9%88%D8%B6%D8%B9-%D8%A8%D8%A7%D8%B4%DA%AF%D8%A7%D9%87-%D8%A7%D8%B3%D8%AA%D9%82%D9%84%D8%A7%D9%84-%D8%AF%D8%B1%D8%A8%D8%A7%D8%B1%D9%87-%D9%88%D8%B6%D8%B9%DB%8C%D8%AA-%D8%A7%D9%86%D8%AA%D9%82%D8%A7%D9%84-%D9%85%D8%AD%D9%85%D8%AF-%D8%AE%D9%84%DB%8C%D9%81%D9%87', '_blank')"><span>📰</span>موضع باشگاه استقلال درباره وضعیت انتقال محمد خلیفه</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610807/%D9%87%D8%B4%D8%AF%D8%A7%D8%B1-%D8%AF%D8%B1%D8%A8%D8%A7%D8%B1%D9%87-%D8%B1%D9%88%D9%86%D8%AF-%D8%A7%D9%81%D8%B2%D8%A7%DB%8C%D8%B4%DB%8C-%D8%B3%D8%B1%D8%B7%D8%A7%D9%86-%D9%87%D8%A7%DB%8C-%DA%AF%D9%88%D8%A7%D8%B1%D8%B4%DB%8C-%D8%BA%D8%B1%D8%A8%D8%A7%D9%84%DA%AF%D8%B1%DB%8C-%D8%A7%D8%B2-%DB%B4%DB%B5-%D8%B3%D8%A7%D9%84%DA%AF%DB%8C', '_blank')"><span>📰</span>هشدار درباره روند افزایشی سرطان‌های گوارشی / غربالگری از ۴۵ سالگی جدی گرفته شود</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610806/%D8%A8%D8%A7%D8%B1%D8%B4-%D8%A8%D8%A7%D8%B1%D8%A7%D9%86-%D8%AF%D8%B1-%D8%A8%D8%B1%D8%AE%DB%8C-%D9%86%D9%82%D8%A7%D8%B7-%D8%A7%D8%B3%D8%AA%D8%A7%D9%86-%D8%AA%D9%87%D8%B1%D8%A7%D9%86', '_blank')"><span>📰</span>بارش باران در برخی نقاط استان تهران</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610805/%DB%B2%DB%B5-%D8%AF%D8%B1%D8%B5%D8%AF-%D8%A7%D8%B2-%D8%AA%D8%A7%DA%A9%D8%B3%D8%AA%D8%A7%D9%86-%D9%87%D8%A7%DB%8C-%D8%AE%D8%B1%D8%A7%D8%B3%D8%A7%D9%86-%D8%B4%D9%85%D8%A7%D9%84%DB%8C-%D8%AA%D8%AC%D8%A7%D8%B1%DB%8C-%D8%B4%D8%AF%D9%87-%D8%A7%D9%86%D8%AF', '_blank')"><span>📰</span>۲۵ درصد از تاکستان‌های خراسان شمالی تجاری شده اند</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610803/%D8%B1%D8%A6%DB%8C%D8%B3-%D8%A7%D8%AA%D8%AD%D8%A7%D8%AF%DB%8C%D9%87-%D8%A8%D8%A7%D8%B1%D9%81%D8%B1%D9%88%D8%B4%D8%A7%D9%86-%D9%85%D8%B4%D9%87%D8%AF-%DA%AF%D8%B1%D8%A7%D9%86%DB%8C-%D9%87%D9%88%DB%8C%D8%AC-%D9%86%D8%A7%D8%B4%DB%8C-%D8%A7%D8%B2-%D9%87%D8%B2%DB%8C%D9%86%D9%87-%D9%87%D8%A7%DB%8C-%D8%AA%D9%88%D9%84%DB%8C%D8%AF', '_blank')"><span>📰</span>رئیس اتحادیه بارفروشان مشهد: گرانی هویج ناشی از هزینه‌های تولید و سموم است</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610802/%DA%AF%D9%84%D8%B3%D8%AA%D8%A7%D9%86-%D8%AF%D8%B1-%D9%85%D8%B3%DB%8C%D8%B1-%D8%AA%DA%A9%D9%85%DB%8C%D9%84-%D8%B2%D9%86%D8%AC%DB%8C%D8%B1%D9%87-%D8%A7%D8%B1%D8%B2%D8%B4-%D9%85%D8%AD%D8%B5%D9%88%D9%84%D8%A7%D8%AA-%DA%A9%D8%B4%D8%A7%D9%88%D8%B1%D8%B2%DB%8C', '_blank')"><span>📰</span>گلستان در مسیر تکمیل زنجیره ارزش محصولات کشاورزی</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610801/%D9%84%D8%BA%D9%88-%D9%85%D9%85%D9%86%D9%88%D8%B9%DB%8C%D8%AA-%D9%BE%DB%8C%D8%A7%D9%85-%D8%B1%D8%B3%D8%A7%D9%86-%D9%87%D8%A7-%DA%AF%D8%B4%D8%A7%DB%8C%D8%B4-%D8%AF%D8%B1%D9%88%D8%A7%D8%B2%D9%87-%D9%87%D8%A7%DB%8C-%D8%A7%D9%82%D8%AA%D8%B5%D8%A7%D8%AF-%D8%AF%DB%8C%D8%AC%DB%8C%D8%AA%D8%A7%D9%84-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86', '_blank')"><span>📰</span>لغو ممنوعیت پیام‌رسان‌ها؛ گشایش دروازه‌های اقتصاد دیجیتال ایران</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066715/%D9%85%D8%B0%D8%A7%DA%A9%D8%B1%D8%A7%D8%AA-%D8%AF%D8%B1-%D9%85%D8%B1%D8%AD%D9%84%D9%87-%D9%86%D9%87%D8%A7%DB%8C%DB%8C-%D9%85%D9%88%D8%AC-%D8%AC%D8%AF%DB%8C%D8%AF-%D8%A7%D9%82%D8%AF%D8%A7%D9%85%D8%A7%D8%AA-%D9%82%D9%87%D8%B1%D8%A2%D9%85%DB%8C%D8%B2-%D8%A2%D9%85%D8%B1%DB%8C%DA%A9%D8%A7-%D9%BE%D8%B2%D8%B4%DA%A9%DB%8C%D8%A7%D9%86', '_blank')"><span>📰</span>مذاکرات در مرحله نهایی | موج جدید اقدامات قهرآمیز آمریکا | پزشکیان به آمریکا می رود؟ | به همه کشورها هشدار می‌دهیم</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066629/%D8%A2%DB%8C%D8%A7-%D9%85%DB%8C-%D8%B4%D9%88%D8%AF-%D8%A8%D8%A7-%D8%AA%D8%B1%DB%8C%D8%AF-%D9%BE%D9%88%D9%84%D8%AF%D8%A7%D8%B1-%D8%B4%D8%AF', '_blank')"><span>📰</span>آیا می‌شود با ترید پولدار شد؟</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066633/%D8%AF%DB%8C%D9%BE%D9%84%D9%85%D8%A7%D8%B3%DB%8C-%D8%A8%D8%B9%D8%AF-%D8%A7%D8%B2-%D8%AC%D9%86%DA%AF-%D8%AF%D8%A7%D8%B1%D8%A7%DB%8C-%D8%A7%D9%87%D9%85%DB%8C%D8%AA-%D8%A8%D8%B3%DB%8C%D8%A7%D8%B1-%D8%B2%DB%8C%D8%A7%D8%AF%DB%8C-%D8%A7%D8%B3%D8%AA', '_blank')"><span>📰</span>دیپلماسی بعد از جنگ دارای اهمیت بسیار زیادی است</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066632/%D8%A7%DA%AF%D8%B1-%D8%A7%DB%8C%D9%85%D8%A7%D9%86-%D8%AA%D9%88%D8%AD%DB%8C%D8%AF%DB%8C-%D8%A2%D8%B3%DB%8C%D8%A8-%D8%A8%D8%A8%DB%8C%D9%86%D8%AF-%D8%AD%D8%A8-%D8%A7%D9%84%D9%88%D8%B7%D9%86-%D9%86%D8%A7%D9%82%D8%B5-%D8%A7%D8%B3%D8%AA', '_blank')"><span>📰</span>اگر ایمان توحیدی آسیب ببیند، حب‌الوطن ناقص است</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066708/%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D9%87-%D8%B2%D9%86%D8%AF%D9%87-%D8%B1%D8%A7%D8%AF%DB%8C%D9%88%DB%8C%DB%8C-%D8%A8%D8%A7%D8%BA-%D9%85%D8%AF%D8%B1%D8%B3%D9%87-%D8%B1%D8%A7-%D8%AF%D8%B1-%D8%A8%D8%A7%D8%BA-%DA%A9%D8%AA%D8%A7%D8%A8-%D8%A8%D8%B4%D9%86%D9%88%DB%8C%D8%AF', '_blank')"><span>📰</span>برنامه زنده رادیویی باغ مدرسه را در باغ کتاب بشنوید</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066626/%DB%B9%DB%B4-%D8%AF%D8%B1%D8%B5%D8%AF-%D8%AD%D8%AC%D9%85-%D8%AF%D8%A7%D8%B1%D8%A7%DB%8C%DB%8C-%D8%B7%D9%84%D8%A7%DB%8C-%D8%AF%D9%86%DB%8C%D8%A7-%D8%AF%D8%B1-%D8%A7%D8%AE%D8%AA%DB%8C%D8%A7%D8%B1-%DB%B4-%D8%AF%D8%B1%D8%B5%D8%AF-%D9%81%D8%B9%D8%A7%D9%84%D8%A7%D9%86-%D8%A8%D8%A7%D8%B2%D8%A7%D8%B1-%D8%A7%D8%B3%D8%AA', '_blank')"><span>📰</span>۹۴ درصد حجم دارایی طلای دنیا در اختیار ۴ درصد فعالان بازار است</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066686/%D8%B4%D9%87%D8%A7%D8%A8-%D8%AD%D8%B3%DB%8C%D9%86%DB%8C-%D8%AF%D8%B1-%D9%86%D9%82%D8%B4-%D9%86%D8%A7%D8%B5%D8%B1-%D9%85%D8%AD%D9%85%D8%AF%D8%AE%D8%A7%D9%86%DB%8C-%D8%B4%D9%87%D9%84%D8%A7-%D8%AC%D8%A7%D9%87%D8%AF-%D8%A8%D9%87-%DA%A9%D8%AF%D8%A7%D9%85-%D8%A8%D8%A7%D8%B2%DB%8C%DA%AF%D8%B1-%D8%B1%D8%B3%DB%8C%D8%AF', '_blank')"><span>📰</span>شهاب حسینی در نقش ناصر محمدخانی | شهلا جاهد به کدام بازیگر رسید؟</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066684/%D8%B1%D8%A7%DB%8C%DA%AF%D8%A7%D9%86-%D8%B4%D8%AF%D9%86-%D9%85%D8%AA%D8%B1%D9%88-%D9%88-%D8%A7%D8%AA%D9%88%D8%A8%D9%88%D8%B3-%D8%A8%DB%8C-%D8%AA%D8%A7%D8%AB%DB%8C%D8%B1-%D8%A8%D9%88%D8%AF-%D9%88%DB%8C%D8%AF%D8%A6%D9%88', '_blank')"><span>📰</span>رایگان شدن مترو و اتوبوس بی تاثیر بود | ویدئو</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066691/%D9%86%D9%81%D8%AA%DA%A9%D8%B4-%D8%AA%D8%AD%D8%AA-%D8%AD%D9%85%D8%A7%DB%8C%D8%AA-%D8%A2%D9%85%D8%B1%DB%8C%DA%A9%D8%A7-%D8%AF%D8%B1-%D8%AA%D9%86%DA%AF%D9%87-%D9%87%D8%B1%D9%85%D8%B2-%D8%AA%D8%BA%DB%8C%DB%8C%D8%B1-%D9%85%D8%B3%DB%8C%D8%B1-%D8%AF%D8%A7%D8%AF-%D8%B9%DA%A9%D8%B3', '_blank')"><span>📰</span>نفتکش تحت حمایت آمریکا در تنگه هرمز تغییر مسیر داد + عکس</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066676/%D9%87%D8%B4%D8%AF%D8%A7%D8%B1-%D9%85%D9%87%D9%85-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86-%D8%A8%D9%87-%DA%A9%D8%B1%D9%87-%D8%AC%D9%86%D9%88%D8%A8%DB%8C-%D9%88%DB%8C%D8%AF%D8%A6%D9%88', '_blank')"><span>📰</span>هشدار مهم ایران به کره جنوبی | ویدئو</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066692/%D9%88%D8%A7%DA%A9%D9%86%D8%B4-%D8%B9%D8%A7%D8%B1%D9%81-%D8%A8%D9%87-%D8%A7%D8%B1%D8%A7%D8%AC%DB%8C%D9%81-%D8%AF%D8%B4%D9%85%D9%86-%D8%AF%D8%B1%D8%A8%D8%A7%D8%B1%D9%87-%D8%AA%D8%AC%D9%87%DB%8C%D8%B2%D8%A7%D8%AA-%D9%86%D8%B8%D8%A7%D9%85%DB%8C-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86-%D9%88%DB%8C%D8%AF%D8%A6%D9%88', '_blank')"><span>📰</span>واکنش عارف به اراجیف دشمن درباره تجهیزات نظامی ایران | ویدئو</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066696/%D8%AC%D8%AF%DB%8C%D8%AF%D8%AA%D8%B1%DB%8C%D9%86-%D8%AE%D8%A8%D8%B1-%D8%AF%D8%B1%D8%A8%D8%A7%D8%B1%D9%87-%D9%88%D8%B6%D8%B9%DB%8C%D8%AA-%DB%B3-%D8%AE%D9%84%D8%A8%D8%A7%D9%86-%D9%85%D9%81%D9%82%D9%88%D8%AF-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86%DB%8C-%D9%88%DB%8C%D8%AF%D8%A6%D9%88', '_blank')"><span>📰</span>جدیدترین خبر درباره وضعیت ۳ خلبان مفقود ایرانی | ویدئو</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/photo/1066701/%D8%AA%D8%B5%D9%88%DB%8C%D8%B1%DB%8C-%D8%AC%D8%A7%D9%84%D8%A8-%D8%A7%D8%B2-%D8%A7%D8%AD%D9%85%D8%AF%D8%B1%D8%B6%D8%A7-%D8%B9%D8%A7%D8%A8%D8%AF%D8%B2%D8%A7%D8%AF%D9%87-%D9%88-%D8%A8%D9%84%DB%8C%D8%B2%D8%B1-%D9%85%D8%B9%D8%B1%D9%88%D9%81%D8%B4-%D8%A8%D8%A8%DB%8C%D9%86%DB%8C%D8%AF', '_blank')"><span>📰</span>تصویری جالب از احمدرضا عابدزاده و بلیزر معروفش؛ ببینید</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/photo/1066693/%D8%B4%D8%A7%D9%87%DA%A9%D8%A7%D8%B1-%D8%B9%DA%A9%D8%A7%D8%B3-%DB%B1%DB%B7-%D8%B3%D8%A7%D9%84%D9%87-%D8%B3%D9%87-%D8%B3%D8%A7%D9%84-%D8%A7%D9%86%D8%AA%D8%B8%D8%A7%D8%B1-%D8%A8%D8%B1%D8%A7%DB%8C-%DB%8C%DA%A9-%D8%AB%D8%A7%D9%86%DB%8C%D9%87-%D8%AA%D8%B5%D8%A7%D9%88%DB%8C%D8%B1', '_blank')"><span>📰</span>شاهکار عکاس ۱۷ ساله؛‌ سه سال انتظار برای یک ثانیه! | تصاویر</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066702/%D9%BE%D8%B2%D8%B4%DA%A9%DB%8C%D8%A7%D9%86-%D8%A7%DA%AF%D8%B1-%D8%A8%DA%AF%D9%88%DB%8C%D9%86%D8%AF-%DA%86%D8%B4%D9%85-%D9%88-%D9%85%D8%BA%D8%B2-%D8%B1%D8%A7-%D8%B9%D9%85%D9%84-%DA%A9%D9%86-%D9%85%DB%8C-%DA%AF%D9%88%DB%8C%D9%85-%D9%86%D9%85%DB%8C-%D8%AA%D9%88%D8%A7%D9%86%D9%85-%D9%88%DB%8C%D8%AF%D8%A6%D9%88', '_blank')"><span>📰</span>پزشکیان: اگر بگویند چشم و مغز را عمل کن می‌گویم نمی توانم + ویدئو | نباید بگوییم الا و بالله هرچه گفتم باید اطاعت کنید</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271173/%D8%B1%DB%8C%D8%B2%D8%B4-%D9%85%D8%B9%D8%AF%D9%86-%D8%AF%D8%B1-%D8%AE%D8%B1%D8%A7%D8%B3%D8%A7%D9%86-%D9%82%D8%B1%D8%A8%D8%A7%D9%86%DB%8C-%DA%AF%D8%B1%D9%81%D8%AA-%D8%A2%D9%85%D8%A7%D8%B1-%D8%AC%D8%A7%D9%86-%D8%A8%D8%A7%D8%AE%D8%AA%DA%AF%D8%A7%D9%86-%D9%88-%D9%85%D8%B5%D8%AF%D9%88%D9%85%D8%A7%D9%86', '_blank')"><span>📰</span>ریزش معدن در خراسان قربانی گرفت/ آمار جان باختگان و مصدومان</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271178/%D9%82%D8%B1%D9%82%D8%A7%D8%B4-%D9%85%D9%85%DA%A9%D9%86-%D8%A7%D8%B3%D8%AA-%D8%AF%D9%87%D9%87-%D9%87%D8%A7-%D8%B7%D9%88%D9%84-%D8%A8%DA%A9%D8%B4%D8%AF-%D8%AA%D8%A7-%D8%A7%D8%B9%D8%AA%D9%85%D8%A7%D8%AF-%D9%85%DB%8C%D8%A7%D9%86-%D8%A7%D9%85%D8%A7%D8%B1%D8%A7%D8%AA-%D9%88-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86', '_blank')"><span>📰</span>قرقاش: ممکن است دهه‌ها طول بکشد تا اعتماد میان امارات و ایران دوباره شکل بگیرد</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271170/%D8%B4%D8%A7%DB%8C%D8%B9%D9%87-%D8%B9%D8%AC%DB%8C%D8%A8-%D8%AF%D8%B1-%D9%85%D9%88%D8%B1%D8%AF-%D8%AC%D8%A7%D9%85-%D8%AD%D8%B0%D9%81%DB%8C', '_blank')"><span>📰</span>شایعه عجیب در مورد جام حذفی</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271176/%D8%A2%D8%BA%D8%A7%D8%B2-%D9%85%D8%B1%D8%AD%D9%84%D9%87-%D8%AF%D9%88%D9%85-%D8%B3%D8%A7%D9%85%D8%A7%D9%86%D8%AF%D9%87%DB%8C-%D8%B4%D9%86%D8%A7%D9%88%D8%B1%D9%87%D8%A7%DB%8C-%D8%B5%DB%8C%D8%A7%D8%AF%DB%8C-%D9%81%D8%A7%D9%82%D8%AF-%D9%85%D8%AC%D9%88%D8%B2-%D8%AF%D8%B1-%D9%85%DB%8C%D9%86%D8%A7%D8%A8', '_blank')"><span>📰</span>آغاز مرحله دوم ساماندهی شناورهای صیادی فاقد مجوز در میناب</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271050/%D9%85%D9%86%D9%81%DB%8C-%D8%AF%D9%88%DB%8C%D8%B3%D8%AA-%D9%88-%D9%87%D9%81%D8%AA%D8%A7%D8%AF-%D9%88-%D8%B3%D9%87-%D8%B1%D8%A7%D9%87%DB%8C-%D8%AC%D8%B4%D9%86%D9%88%D8%A7%D8%B1%D9%87-%D8%A8%DB%8C%D9%86-%D8%A7%D9%84%D9%85%D9%84%D9%84%DB%8C-%D9%81%DB%8C%D9%84%D9%85-%D8%A7%D8%AD%D9%85%D8%AF%D8%A2%D8%A8%D8%A7%D8%AF', '_blank')"><span>📰</span>«منفی دویست و هفتاد و سه» راهی جشنواره بین‌المللی فیلم احمدآباد هند شد</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271153/%D8%AC%D8%B2%D8%A6%DB%8C%D8%A7%D8%AA-%D8%A8%D8%B1%DA%AF%D8%B2%D8%A7%D8%B1%DB%8C-%D8%AF%D9%88%D9%85%DB%8C%D9%86-%DA%A9%D9%86%DA%AF%D8%B1%D9%87-%D9%85%D9%84%DB%8C-%DB%B2%DB%B7%DB%B5%DB%B0-%D8%B4%D9%87%DB%8C%D8%AF-%DA%86%D9%87%D8%A7%D8%B1%D9%85%D8%AD%D8%A7%D9%84-%D9%88-%D8%A8%D8%AE%D8%AA%DB%8C%D8%A7%D8%B1%DB%8C-%D8%A7%D8%B9%D9%84%D8%A7%D9%85', '_blank')"><span>📰</span>جزئیات برگزاری دومین کنگره ملی ۲۷۵۰ شهید چهارمحال و بختیاری اعلام شد</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271122/%D9%82%DB%8C%D9%85%D8%AA-%D8%B3%DA%A9%D9%87-%D8%AF%D8%B1-%DB%B1%DB%B6-%D8%B4%D9%87%D8%B1%DB%8C%D9%88%D8%B1-%DB%B1%DB%B4%DB%B0%DB%B5-%D8%B3%DA%A9%D9%87-%DB%8C%DA%A9-%D9%85%DB%8C%D9%84%DB%8C%D9%88%D9%86-%D8%AA%D9%88%D9%85%D8%A7%D9%86-%D8%A7%D8%B1%D8%B2%D8%A7%D9%86-%D8%B4%D8%AF-%D8%AC%D8%AF%D9%88%D9%84', '_blank')"><span>📰</span>قیمت سکه در ۱۶ شهریور ۱۴۰۵/ سکه یک میلیون تومان ارزان شد + جدول</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271100/%D8%B9%DA%A9%D8%B3-%D8%A7%DB%8C%D9%86-%DA%A9%D9%88%DA%86%D9%87-%D9%BE%D8%A7%D8%AA%D9%88%D9%82-%D8%AA%D9%87%D8%B1%D8%A7%D9%86%DB%8C-%D9%87%D8%A7-%D8%AF%D8%B1-%D8%AF%D9%88%D8%B1%D8%A7%D9%86-%D9%82%D8%A7%D8%AC%D8%A7%D8%B1-%D8%A8%D9%88%D8%AF', '_blank')"><span>📰</span>عکس/ این کوچه پاتوق تهرانی ها در دوران قاجار بود</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271084/%D8%A8%D8%A8%DB%8C%D9%86%DB%8C%D8%AF-%D8%AF%D8%B3%D8%AA%DA%AF%DB%8C%D8%B1%DB%8C-%D8%B2%D9%86-%DB%B3%DB%B7-%D8%B3%D8%A7%D9%84%D9%87-%D9%85%D8%AA%D9%87%D9%85-%D8%A8%D9%87-%D8%B3%D8%B1%D9%82%D8%AA-%DA%AF%D9%88%D8%B4%D9%88%D8%A7%D8%B1%D9%87-%D8%AF%D8%AE%D8%AA%D8%B1%D8%A8%DA%86%D9%87-%D9%87%D8%A7-%D8%AF%D8%B1', '_blank')"><span>📰</span>ببینید | دستگیری زن ۳۷ ساله متهم به سرقت گوشواره دختربچه‌ها در قم</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271160/%D8%AF%D8%A7%D9%86%D8%B4%DA%AF%D8%A7%D9%87-%D8%AA%D9%87%D8%B1%D8%A7%D9%86-%D8%AF%D8%B1%D8%A8%D8%A7%D8%B1%D9%87-%D8%AE%D9%88%D8%A7%D8%A8%DA%AF%D8%A7%D9%87-%D9%87%D8%A7-%D8%A7%D8%B7%D9%84%D8%A7%D8%B9%DB%8C%D9%87-%D8%AF%D8%A7%D8%AF', '_blank')"><span>📰</span>دانشگاه تهران درباره خوابگاه‌ها اطلاعیه داد</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271164/%D8%AA%D8%A7%DA%A9%DB%8C%D8%AF-%D8%B4%D9%87%D8%B1%D8%AF%D8%A7%D8%B1-%DA%A9%D8%B1%D9%85%D8%A7%D9%86-%D8%A8%D8%B1-%D9%85%D8%AF%DB%8C%D8%B1%DB%8C%D8%AA-%D8%B9%D9%85%D9%84%DB%8C%D8%A7%D8%AA%DB%8C-%D9%88-%D8%AC%D9%87%D8%A7%D8%AF-%D8%AE%D8%AF%D9%85%D8%AA-%D8%A8%D8%B1%D8%A7%DB%8C-%D8%A7%D9%85%DB%8C%D8%AF%D8%A2%D9%81%D8%B1%DB%8C%D9%86%DB%8C', '_blank')"><span>📰</span>تاکید شهردار کرمان بر مدیریت عملیاتی و جهاد خدمت برای امیدآفرینی در جامعه</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271150/%D9%87%D8%B4%D8%AF%D8%A7%D8%B1-%D8%AA%D9%88%D8%A6%DB%8C%D8%AA%D8%B1%DB%8C-%D9%82%D8%A7%D9%84%DB%8C%D8%A8%D8%A7%D9%81-%D8%A8%D9%87-%D9%88%D8%B2%DB%8C%D8%B1-%D8%AC%D9%86%DA%AF-%D8%A2%D9%85%D8%B1%DB%8C%DA%A9%D8%A7-%D8%A8%D9%87-%D8%B2%D8%A8%D8%A7%D9%86-%D8%A7%D9%86%DA%AF%D9%84%DB%8C%D8%B3%DB%8C-%D8%A7%DA%AF%D8%B1', '_blank')"><span>📰</span>هشدار توئیتری قالیباف به وزیر جنگ آمریکا به زبان انگلیسی/ اگر به دارایی‌های ما حمله کنید، مورد حمله قرار خواهید گرفت</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2269041/%D9%87%DB%8C%DA%86-%DA%A9%D9%85%D8%A8%D9%88%D8%AF-%DA%A9%D9%88%D8%AF-%D8%B4%DB%8C%D9%85%DB%8C%D8%A7%DB%8C%DB%8C-%D8%A8%D8%B1%D8%A7%DB%8C-%DA%A9%D8%B4%D8%AA-%D9%BE%D8%A7%DB%8C%DB%8C%D8%B2%D9%87-%D8%AF%D8%B1-%DA%A9%D8%B1%D9%85%D8%A7%D9%86-%D9%88%D8%AC%D9%88%D8%AF-%D9%86%D8%AF%D8%A7%D8%B1%D8%AF-%D8%B3%D8%A7%D9%84%D8%A7%D9%86%D9%87', '_blank')"><span>📰</span>هیچ کمبود کود شیمیایی برای کشت پاییزه در کرمان وجود ندارد/ سالانه ۴۰۰ میلیارد تومان کود یارانه‌ای در کرمان توزیع می‌شود</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271116/%DA%A9%D8%B4%D9%81-%DB%B4%DB%B3-%D8%AF%D8%B3%D8%AA%DA%AF%D8%A7%D9%87-%D9%85%D8%A7%DB%8C%D9%86%D8%B1-%D9%82%D8%A7%DA%86%D8%A7%D9%82-%D8%AF%D8%B1-%D8%A8%D9%86%D8%AF%D8%B1%D8%B9%D8%A8%D8%A7%D8%B3', '_blank')"><span>📰</span>کشف ۴۳ دستگاه ماینر قاچاق در بندرعباس</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271168/%D8%A2%D8%BA%D8%A7%D8%B2-%D9%86%D8%B4%D8%B3%D8%AA-%D9%81%D8%B5%D9%84%DB%8C-%D8%B4%D9%88%D8%B1%D8%A7%DB%8C-%D8%AD%DA%A9%D8%A7%D9%85', '_blank')"><span>📰</span>آغاز نشست فصلی شورای حکام</div></div></div>
+        <div class="card"><div class="card-title">📰 آخرین اخبار</div><div class="news-scroll"><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610828/%D8%B1%D8%B4%D8%AF-%DB%B1%DB%B4-%D8%AF%D8%B1%D8%B5%D8%AF%DB%8C-%D8%B4%D8%A7%D8%AE%D8%B5-%DA%A9%DB%8C%D9%81%DB%8C%D8%AA-%D8%A2%D8%A8-%D8%B4%D8%B1%D8%A8-%D8%AF%D8%B1-%D8%B1%D9%88%D8%B3%D8%AA%D8%A7%D9%87%D8%A7%DB%8C-%DA%A9%D9%87%DA%AF%DB%8C%D9%84%D9%88%DB%8C%D9%87-%D9%88-%D8%A8%D9%88%DB%8C%D8%B1%D8%A7%D8%AD%D9%85%D8%AF', '_blank')"><span>📰</span>رشد ۱۴ درصدی شاخص کیفیت آب شرب در روستاهای کهگیلویه و بویراحمد</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610827/%D8%AF%D8%A7%D9%86%D8%B4%DA%AF%D8%A7%D9%87-%D8%B4%DB%8C%D8%B1%D8%A7%D8%B2-%D9%85%DB%8C%D8%B2%D8%A8%D8%A7%D9%86-%D8%A8%DB%8C%D8%B3%D8%AA-%D9%88%D9%86%D9%87%D9%85%DB%8C%D9%86-%DA%A9%D9%86%DA%AF%D8%B1%D9%87-%D8%B3%D8%B1%D8%A7%D8%B3%D8%B1%DB%8C-%D8%AC%D8%A7%D9%85%D8%B9%D9%87-%D8%A7%D8%B3%D9%84%D8%A7%D9%85%DB%8C', '_blank')"><span>📰</span>دانشگاه شیراز؛ میزبان بیست‌ ونهمین کنگره سراسری جامعه اسلامی دانشجویان کشور</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610826/%D9%81%D8%B1%D9%85%D8%A7%D9%86%D8%AF%D9%87-%D8%A7%D9%86%D8%AA%D8%B8%D8%A7%D9%85%DB%8C-%D8%A7%D8%B3%D8%AA%D8%A7%D9%86-%D9%BE%D9%84%DB%8C%D8%B3-%DA%A9%D8%B1%D9%85%D8%A7%D9%86%D8%B4%D8%A7%D9%87-%D8%AF%D8%B1-%D8%A8%D8%A7%D9%84%D8%A7%D8%AA%D8%B1%DB%8C%D9%86-%D8%B3%D8%B7%D8%AD-%D8%A2%D9%85%D8%A7%D8%AF%DA%AF%DB%8C-%D9%82%D8%B1%D8%A7%D8%B1', '_blank')"><span>📰</span>فرمانده انتظامی استان: پلیس کرمانشاه در بالاترین سطح آمادگی قرار دارد</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610825/%D8%AF%D8%B3%D8%AA%DA%AF%DB%8C%D8%B1%DB%8C-%DB%B4-%D8%B4%DA%A9%D8%A7%D8%B1%DA%86%DB%8C-%D9%85%D8%AA%D8%AE%D9%84%D9%81-%D8%B7%DB%8C-%DB%B4%DB%B8-%D8%B3%D8%A7%D8%B9%D8%AA-%D8%B9%D9%85%D9%84%DB%8C%D8%A7%D8%AA-%D8%B4%D8%A8%D8%A7%D9%86%D9%87-%D9%85%D8%AD%DB%8C%D8%B7-%D8%A8%D8%A7%D9%86%D8%A7%D9%86-%D8%AF%D8%B1', '_blank')"><span>📰</span>دستگیری ۴ شکارچی متخلف طی ۴۸ ساعت عملیات شبانه محیط‌بانان در چرام</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610824/%D8%AF%DB%8C%D8%AF%D8%A7%D8%B1-%D9%85%D8%AD%D8%B1%D9%85%D8%A7%D9%86%D9%87-%D8%B1%D9%88%D8%B3%D8%A7%DB%8C-%D8%A7%D8%B7%D9%84%D8%A7%D8%B9%D8%A7%D8%AA%DB%8C-%D8%AA%D8%B1%DA%A9%DB%8C%D9%87-%D9%88-%DB%8C%D9%88%D9%86%D8%A7%D9%86-%D8%AF%D8%B1-%D9%BE%D8%B4%D8%AA-%D9%BE%D8%B1%D8%AF%D9%87-%D8%AA%D9%86%D8%B4-%D9%87%D8%A7', '_blank')"><span>📰</span>دیدار محرمانه روسای اطلاعاتی ترکیه و یونان در پشت پرده تنش‌ها</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610823/%D8%AA%D8%B1%D8%AC%D9%85%D9%87-%D8%B1%D9%85%D8%A7%D9%86-%D8%AC%D8%AF%DB%8C%D8%AF-%D9%85%D9%88%D8%B1%D8%A7%DA%A9%D8%A7%D9%85%DB%8C-%D8%AF%D8%B1-%DB%B4-%D8%B3%D8%A7%D8%B9%D8%AA', '_blank')"><span>📰</span>ترجمه رمان جدید موراکامی در ۴ ساعت!</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610822/%D8%B6%D8%B1%D9%88%D8%B1%D8%AA-%D8%AA%D9%82%D9%88%DB%8C%D8%AA-%D8%B1%D9%88%DB%8C%DA%A9%D8%B1%D8%AF-%D9%BE%DA%98%D9%88%D9%87%D8%B4-%D9%85%D8%AD%D9%88%D8%B1-%D8%AF%D8%B1-%D8%A2%D9%85%D9%88%D8%B2%D8%B4-%D9%88-%D9%BE%D8%B1%D9%88%D8%B1%D8%B4', '_blank')"><span>📰</span>ضرورت تقویت رویکرد پژوهش‌محور در آموزش و پرورش</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610821/%D8%B1%DA%A9%D9%88%D8%B1%D8%AF-%D8%B1%D9%88%D8%B2%D8%A7%D9%86%D9%87-%D8%B4%D8%A7%D8%AE%D8%B5-%D8%A8%D9%88%D8%B1%D8%B3-%D8%B4%DA%A9%D8%B3%D8%AA', '_blank')"><span>📰</span>رکورد روزانه شاخص بورس شکست</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610820/%D8%B6%D8%B1%D9%88%D8%B1%D8%AA-%D8%A7%D9%84%D8%B2%D8%A7%D9%85-%D9%88%D8%A7%D8%AD%D8%AF%D9%87%D8%A7%DB%8C-%D8%B3%D9%86%DA%AF-%D8%A8%D8%B1%DB%8C-%D8%A8%D8%B1%D9%88%D8%AC%D8%B1%D8%AF-%D8%A8%D9%87-%D8%A7%D8%B3%D8%AA%D9%81%D8%A7%D8%AF%D9%87-%D8%A7%D8%B2-%D9%81%DB%8C%D9%84%D8%AA%D8%B1%D9%BE%D8%B1%D8%B3-%D9%BE%D8%B3%D9%85%D8%A7%D9%86%D8%AF', '_blank')"><span>📰</span>ضرورت الزام واحدهای سنگ‌بری بروجرد به استفاده از فیلترپرس/پسماند سنگ‌ها به محصول تبدیل شود</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610819/%D8%AD%D9%88%D8%B2%D9%87-%D8%B9%D9%81%D8%A7%D9%81-%D9%88-%D8%AD%D8%AC%D8%A7%D8%A8-%D8%AF%D8%B1-%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D9%87-%D8%B4%D9%87%D8%B1%DB%8C-%D8%A7%D9%87%D9%88%D8%A7%D8%B2-%D9%85%D8%AF%DB%8C%D8%B1%DB%8C%D8%AA-%D8%A8%D8%A7%D8%B1%D9%86%D8%AF%DA%AF%DB%8C-%D9%87%D8%A7-%D8%B3%D8%AE%D8%AA', '_blank')"><span>📰</span>حوزه عفاف و حجاب در برنامه شهری اهواز/ مدیریت بارندگی‌ها سخت است </div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610818/%D8%A7%D9%81%D8%B4%DB%8C%D9%86-%D8%B8%D8%B1%D9%81%DB%8C%D8%AA-%D8%AC%D8%B0%D8%A8-%D9%BE%DA%98%D9%88%D9%87%D8%B4%DA%AF%D8%B1%D8%A7%D9%86-%D9%BE%D8%B3%D8%A7%D8%AF%DA%A9%D8%AA%D8%B1%DB%8C-%D8%AF%D8%B1-%DA%86%D9%87%D8%A7%D8%B1-%D9%85%D8%B3%DB%8C%D8%B1-%D9%81%D8%B1%D8%A7%D9%87%D9%85-%D8%A7%D8%B3%D8%AA', '_blank')"><span>📰</span>افشین: ظرفیت جذب پژوهشگران پسادکتری در چهار مسیر فراهم است</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610817/%D8%AA%DA%A9%D9%85%DB%8C%D9%84-%D8%B2%D9%86%D8%AC%DB%8C%D8%B1%D9%87-%D8%A7%D8%B1%D8%B2%D8%B4-%D9%85%D8%AD%D8%B5%D9%88%D9%84%D8%A7%D8%AA-%D8%B1%D9%88%D8%B3%D8%AA%D8%A7%DB%8C%DB%8C-%D8%B1%D8%A7%D9%87%DA%A9%D8%A7%D8%B1-%D8%AA%D9%88%D8%B3%D8%B9%D9%87-%D8%A7%D9%82%D8%AA%D8%B5%D8%A7%D8%AF%DB%8C-%D9%85%D9%86%D8%A7%D8%B7%D9%82', '_blank')"><span>📰</span>تکمیل زنجیره ارزش محصولات روستایی، راهکار توسعه اقتصادی مناطق محروم است</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610816/%D8%AD%D9%81%D8%A7%D8%B8%D8%AA-%D8%A7%D8%B2-%D8%AE%D8%A7%DA%A9-%D8%AD%D8%A7%D8%B5%D9%84%D8%AE%DB%8C%D8%B2-%D8%B6%D8%B1%D9%88%D8%B1%D8%AA%DB%8C-%D8%B1%D8%A7%D9%87%D8%A8%D8%B1%D8%AF%DB%8C-%D8%A8%D8%B1%D8%A7%DB%8C-%D8%A7%D9%85%D9%86%DB%8C%D8%AA-%D8%BA%D8%B0%D8%A7%DB%8C%DB%8C-%DA%A9%D8%B4%D9%88%D8%B1-%D8%A7%D8%B3%D8%AA', '_blank')"><span>📰</span>حفاظت از خاک حاصلخیز، ضرورتی راهبردی برای امنیت غذایی کشور است</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610815/%DA%86%DB%8C%D9%86-%D8%AF%D8%B1-%D8%AD%D8%A7%D9%84-%DA%AF%D8%B3%D8%AA%D8%B1%D8%B4-%D8%AC%D9%86%DA%AF%D9%86%D8%AF%D9%87-%D9%87%D8%A7%DB%8C-%D8%B1%D8%A7%D8%AF%D8%A7%D8%B1%DA%AF%D8%B1%DB%8C%D8%B2-%D8%A7%D8%B3%D8%AA', '_blank')"><span>📰</span>چین در حال گسترش جنگنده‌های رادارگریز است</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061610814/%D8%A7%D8%B9%D9%84%D8%A7%D9%85-%D8%A2%D9%85%D8%A7%D8%AF%DA%AF%DB%8C-%D8%B3%D8%AA%D8%A7%D8%AF-%D8%A7%D8%AC%D8%B1%D8%A7%DB%8C%DB%8C-%D9%81%D8%B1%D9%85%D8%A7%D9%86-%D8%A7%D9%85%D8%A7%D9%85-%D8%AE%D9%85%DB%8C%D9%86%DB%8C-%D8%B1%D9%87-%D8%AC%D9%87%D8%AA-%D8%AD%D9%85%D8%A7%DB%8C%D8%AA-%D8%A7%D8%B2-%D8%B7%D8%B1%D8%AD', '_blank')"><span>📰</span>اعلام آمادگی ستاد اجرایی فرمان امام خمینی(ره) جهت حمایت از طرح‌ های نوآورانه جهاددانشگاهی</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066731/%D9%86%D8%A7%DA%A9%D8%A7%D9%85%DB%8C-%D8%AA%D8%B1%D8%A7%DA%A9%D8%AA%D9%88%D8%B1-%D8%A8%DB%8C%D8%B1%D8%A7%D9%86%D9%88%D9%86%D8%AF-%D8%AF%D8%B1-%D8%A2%D8%B3%D8%AA%D8%A7%D9%86%D9%87-%D8%A7%D8%B9%D8%B2%D8%A7%D9%85-%D8%A8%D9%87-%D8%B3%D8%B1%D8%A8%D8%A7%D8%B2%DB%8C-%D8%AC%D9%84%D8%B3%D9%87-%D9%85%D9%87%D9%85', '_blank')"><span>📰</span>ناکامی تراکتور؛ بیرانوند در آستانه اعزام به سربازی | جلسه مهم با فراجا</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066712/%D8%A2%D9%88%D8%A7%D8%B2-%D8%AC%D8%AF%DB%8C%D8%AF-%D8%B4%D9%87%D8%B1%D8%A7%D9%85-%D9%86%D8%A7%D8%B8%D8%B1%DB%8C-%D8%B1%D8%A7-%D8%A8%D8%B4%D9%86%D9%88%DB%8C%D8%AF', '_blank')"><span>📰</span>آواز جدید شهرام ناظری را بشنوید</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066730/%D9%87%D8%B4%D8%AF%D8%A7%D8%B1-%D9%85%D8%AA%D9%81%D8%A7%D9%88%D8%AA-%D8%A8%D9%87-%D8%A2%D9%85%D8%B1%DB%8C%DA%A9%D8%A7-%D9%82%D8%A7%D9%84%DB%8C%D8%A8%D8%A7%D9%81-%D9%87%D8%AF%D9%81-%D8%A8%D8%B9%D8%AF%DB%8C-%D8%AD%D9%85%D9%84%D8%A7%D8%AA-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86-%D8%B1%D8%A7-%D8%A7%D8%B9%D9%84%D8%A7%D9%85', '_blank')"><span>📰</span>هشدار متفاوت به آمریکا؛ قالیباف هدف بعدی حملات ایران را اعلام کرد+ عکس</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066716/%D8%A7%DB%8C%D9%86-%DA%A9%D8%A7%D8%B1%DA%AF%D8%B1%D8%AF%D8%A7%D9%86-%D9%85%D8%A7%D8%AC%D8%B1%D8%A7%DB%8C-%D8%B4%DA%A9%D8%B3%D8%AA-%D8%A2%D9%85%D8%B1%DB%8C%DA%A9%D8%A7%DB%8C%DB%8C-%D9%87%D8%A7-%D8%AF%D8%B1-%D8%AC%D9%86%D9%88%D8%A8-%D8%A7%D8%B5%D9%81%D9%87%D8%A7%D9%86-%D8%B1%D8%A7-%D9%85%DB%8C-%D8%B3%D8%A7%D8%B2%D8%AF', '_blank')"><span>📰</span>این کارگردان ماجرای شکست آمریکایی‌ها در جنوب اصفهان را می‌سازد</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066718/%D8%B1%D8%B4%D8%AF-%DB%B4%DB%B0%DB%B0-%D8%AF%D8%B1%D8%B5%D8%AF%DB%8C-%D8%AF%D8%B1-%DA%AF%D9%84%D8%B2%D9%86%DB%8C-%D8%A8%D8%B9%D8%AF-%D8%A7%D8%B2-%D9%BE%D9%88%D8%B4%DB%8C%D8%AF%D9%86-%D9%BE%DB%8C%D8%B1%D8%A7%D9%87%D9%86-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86', '_blank')"><span>📰</span>رشد ۴۰۰ درصدی در گلزنی بعد از پوشیدن پیراهن ایران</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066721/%D8%B9%D9%84%DB%8C%D8%B1%D8%B6%D8%A7-%D9%82%D8%B1%D8%A8%D8%A7%D9%86%DB%8C-%DA%A9%D8%A7%D8%B4-%D9%85%DB%8C-%D8%AA%D9%88%D8%A7%D9%86%D8%B3%D8%AA%D9%85-%D9%88%D8%B3%D8%B7-%D8%A7%DB%8C%D9%86-%D8%B4%D9%87%D8%B1-%D8%A8%D8%A7%DB%8C%D8%B3%D8%AA%D9%85-%D9%88', '_blank')"><span>📰</span>علیرضا قربانی: کاش می توانستم وسط این شهر بایستم و...</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066720/%D8%A7%D9%88%D9%84%DB%8C%D9%86-%D9%85%D9%88%D8%B6%D8%B9-%D8%B1%D8%B3%D9%85%DB%8C-%D8%A7%D8%B3%D8%AA%D9%82%D9%84%D8%A7%D9%84-%D8%AF%D8%B1%D8%A8%D8%A7%D8%B1%D9%87-%D8%A7%D9%86%D8%AA%D9%82%D8%A7%D9%84-%D8%AE%D9%84%DB%8C%D9%81%D9%87-%D8%B9%DA%A9%D8%B3', '_blank')"><span>📰</span>اولین موضع رسمی استقلال درباره انتقال خلیفه + عکس</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066474/%D9%81%D8%A7%D8%B2-%D8%AF%D9%88%D9%85-%D8%B1%D9%88%D8%AF%D8%AF%D8%B1%D9%87-%D9%81%D8%B1%D8%AD%D8%B2%D8%A7%D8%AF-%D8%A7%D9%88%D8%A7%DB%8C%D9%84-%D9%BE%D8%A7%DB%8C%DB%8C%D8%B2-%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD-%D9%85%DB%8C-%D8%B4%D9%88%D8%AF', '_blank')"><span>📰</span>فاز دوم روددره فرحزاد اوایل پاییز افتتاح می‌شود</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066726/%D8%AA%D8%B5%D8%A7%D9%88%DB%8C%D8%B1-%D9%88-%D8%AC%D8%B2%D8%A6%DB%8C%D8%A7%D8%AA-%D8%B9%D9%85%D9%84%DB%8C%D8%A7%D8%AA-%D8%B9%D9%84%DB%8C%D9%87-%D8%AA%D8%B1%D9%88%D8%B1%DB%8C%D8%B3%D8%AA-%D9%87%D8%A7-%D8%A7%D9%86%D9%87%D8%AF%D8%A7%D9%85-%DB%B3%D9%87%D8%B3%D8%AA%D9%87-%D8%B9%D9%85%D9%84%DB%8C%D8%A7%D8%AA%DB%8C', '_blank')"><span>📰</span>تصاویر و جزئیات عملیات علیه تروریست‌ها؛ انهدام ۳هسته‌ عملیاتی،  دستگیری ۹ تروریست و هلاکت ۳ تن</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066715/%D9%85%D8%B0%D8%A7%DA%A9%D8%B1%D8%A7%D8%AA-%D8%AF%D8%B1-%D9%85%D8%B1%D8%AD%D9%84%D9%87-%D9%86%D9%87%D8%A7%DB%8C%DB%8C-%D9%85%D9%88%D8%AC-%D8%AC%D8%AF%DB%8C%D8%AF-%D8%A7%D9%82%D8%AF%D8%A7%D9%85%D8%A7%D8%AA-%D9%82%D9%87%D8%B1%D8%A2%D9%85%DB%8C%D8%B2-%D8%A2%D9%85%D8%B1%DB%8C%DA%A9%D8%A7-%D9%BE%D8%B2%D8%B4%DA%A9%DB%8C%D8%A7%D9%86', '_blank')"><span>📰</span>مذاکرات در مرحله نهایی | موج جدید اقدامات قهرآمیز آمریکا | پزشکیان به آمریکا می رود؟ | به همه کشورها هشدار می‌دهیم</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066629/%D8%A2%DB%8C%D8%A7-%D9%85%DB%8C-%D8%B4%D9%88%D8%AF-%D8%A8%D8%A7-%D8%AA%D8%B1%DB%8C%D8%AF-%D9%BE%D9%88%D9%84%D8%AF%D8%A7%D8%B1-%D8%B4%D8%AF', '_blank')"><span>📰</span>آیا می‌شود با ترید پولدار شد؟</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066633/%D8%AF%DB%8C%D9%BE%D9%84%D9%85%D8%A7%D8%B3%DB%8C-%D8%A8%D8%B9%D8%AF-%D8%A7%D8%B2-%D8%AC%D9%86%DA%AF-%D8%AF%D8%A7%D8%B1%D8%A7%DB%8C-%D8%A7%D9%87%D9%85%DB%8C%D8%AA-%D8%A8%D8%B3%DB%8C%D8%A7%D8%B1-%D8%B2%DB%8C%D8%A7%D8%AF%DB%8C-%D8%A7%D8%B3%D8%AA', '_blank')"><span>📰</span>دیپلماسی بعد از جنگ دارای اهمیت بسیار زیادی است</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066632/%D8%A7%DA%AF%D8%B1-%D8%A7%DB%8C%D9%85%D8%A7%D9%86-%D8%AA%D9%88%D8%AD%DB%8C%D8%AF%DB%8C-%D8%A2%D8%B3%DB%8C%D8%A8-%D8%A8%D8%A8%DB%8C%D9%86%D8%AF-%D8%AD%D8%A8-%D8%A7%D9%84%D9%88%D8%B7%D9%86-%D9%86%D8%A7%D9%82%D8%B5-%D8%A7%D8%B3%D8%AA', '_blank')"><span>📰</span>اگر ایمان توحیدی آسیب ببیند، حب‌الوطن ناقص است</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066708/%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D9%87-%D8%B2%D9%86%D8%AF%D9%87-%D8%B1%D8%A7%D8%AF%DB%8C%D9%88%DB%8C%DB%8C-%D8%A8%D8%A7%D8%BA-%D9%85%D8%AF%D8%B1%D8%B3%D9%87-%D8%B1%D8%A7-%D8%AF%D8%B1-%D8%A8%D8%A7%D8%BA-%DA%A9%D8%AA%D8%A7%D8%A8-%D8%A8%D8%B4%D9%86%D9%88%DB%8C%D8%AF', '_blank')"><span>📰</span>برنامه زنده رادیویی باغ مدرسه را در باغ کتاب بشنوید</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1066626/%DB%B9%DB%B4-%D8%AF%D8%B1%D8%B5%D8%AF-%D8%AD%D8%AC%D9%85-%D8%AF%D8%A7%D8%B1%D8%A7%DB%8C%DB%8C-%D8%B7%D9%84%D8%A7%DB%8C-%D8%AF%D9%86%DB%8C%D8%A7-%D8%AF%D8%B1-%D8%A7%D8%AE%D8%AA%DB%8C%D8%A7%D8%B1-%DB%B4-%D8%AF%D8%B1%D8%B5%D8%AF-%D9%81%D8%B9%D8%A7%D9%84%D8%A7%D9%86-%D8%A8%D8%A7%D8%B2%D8%A7%D8%B1-%D8%A7%D8%B3%D8%AA', '_blank')"><span>📰</span>۹۴ درصد حجم دارایی طلای دنیا در اختیار ۴ درصد فعالان بازار است</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271184/%D9%87%D9%88%D8%B4-%D9%85%D8%B5%D9%86%D9%88%D8%B9%DB%8C-%D8%B9%D9%84%DB%8C%D9%87-%D9%87%D9%88%D8%B4-%D9%85%D8%B5%D9%86%D9%88%D8%B9%DB%8C-%D8%AC%D9%88%DB%8C%D9%86%D8%AF%DA%AF%D8%A7%D9%86-%DA%A9%D8%A7%D8%B1-%DA%86%D8%B7%D9%88%D8%B1-%D8%A8%D8%A7-%D9%BE%D8%B1%D8%A7%D9%85%D9%BE%D8%AA-%D9%85%D8%AE%D9%81%DB%8C', '_blank')"><span>📰</span>هوش مصنوعی علیه هوش مصنوعی / جویندگان کار چطور با پرامپت مخفی استخدام می‌شوند؟</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271140/%D8%AE%D8%A8%D8%B1-%D8%AE%D9%88%D8%B4-%D8%AF%D9%88%D9%84%D8%AA-%D8%A8%D8%B1%D8%A7%DB%8C-%D9%85%D8%B3%D8%AA%D8%A7%D8%AC%D8%B1%D8%A7%D9%86-%D8%A7%DB%8C%D9%86-%D8%A7%D9%81%D8%B1%D8%A7%D8%AF-%D8%AA%D8%A7-%D9%85%D9%87%D8%B1%D9%85%D8%A7%D9%87-%D8%B5%D8%A7%D8%AD%D8%A8%D8%AE%D8%A7%D9%86%D9%87-%D9%85%DB%8C-%D8%B4%D9%88%D9%86%D8%AF', '_blank')"><span>📰</span>خبر خوش دولت برای مستاجران / این افراد تا مهرماه صاحبخانه می‌شوند</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271009/%D8%A8%D9%87%D8%AA%D8%B1%DB%8C%D9%86-%D8%AF%D8%AE%D8%AA%D8%B1-%D8%AF%D9%86%DB%8C%D8%A7-%DA%86%DA%AF%D9%88%D9%86%D9%87-%D8%A8%D8%A7%D8%B4%DB%8C%D9%85-%D8%B1%D9%88%D8%A7%DB%8C%D8%AA%DB%8C-%D8%B4%DB%8C%D8%B1%DB%8C%D9%86-%D8%A7%D8%B2-%DA%A9%D9%88%D8%AF%DA%A9%DB%8C-%D8%AD%D8%B6%D8%B1%D8%AA-%D9%85%D8%B9%D8%B5%D9%88%D9%85%D9%87-%D8%B3', '_blank')"><span>📰</span>«بهترین دختر دنیا» چگونه باشیم؟ روایتی شیرین از کودکی حضرت معصومه(س)</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271129/%D8%A8%D8%A8%DB%8C%D9%86%DB%8C%D8%AF-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86-%D8%A8%D8%B1%D8%A7%DB%8C-%D8%B4%DA%A9%D8%B3%D8%AA%D9%86-%D9%85%D8%AD%D8%A7%D8%B5%D8%B1%D9%87-%D8%AF%D8%B1%DB%8C%D8%A7%DB%8C%DB%8C-%D8%A2%D9%85%D8%B1%DB%8C%DA%A9%D8%A7-%D8%A7%D9%82%D8%AF%D8%A7%D9%85-%D9%86%D8%B8%D8%A7%D9%85%DB%8C-%D8%AE%D9%88%D8%A7%D9%87%D8%AF', '_blank')"><span>📰</span>ببینید | ایران برای شکستن محاصره دریایی آمریکا، اقدام نظامی خواهد کرد؟</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271173/%D8%B1%DB%8C%D8%B2%D8%B4-%D9%85%D8%B9%D8%AF%D9%86-%D8%AF%D8%B1-%D8%AE%D8%B1%D8%A7%D8%B3%D8%A7%D9%86-%D9%82%D8%B1%D8%A8%D8%A7%D9%86%DB%8C-%DA%AF%D8%B1%D9%81%D8%AA-%D8%A2%D9%85%D8%A7%D8%B1-%D8%AC%D8%A7%D9%86-%D8%A8%D8%A7%D8%AE%D8%AA%DA%AF%D8%A7%D9%86-%D9%88-%D9%85%D8%B5%D8%AF%D9%88%D9%85%D8%A7%D9%86', '_blank')"><span>📰</span>ریزش معدن در خراسان قربانی گرفت/ آمار جان باختگان و مصدومان</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271178/%D9%82%D8%B1%D9%82%D8%A7%D8%B4-%D9%85%D9%85%DA%A9%D9%86-%D8%A7%D8%B3%D8%AA-%D8%AF%D9%87%D9%87-%D9%87%D8%A7-%D8%B7%D9%88%D9%84-%D8%A8%DA%A9%D8%B4%D8%AF-%D8%AA%D8%A7-%D8%A7%D8%B9%D8%AA%D9%85%D8%A7%D8%AF-%D9%85%DB%8C%D8%A7%D9%86-%D8%A7%D9%85%D8%A7%D8%B1%D8%A7%D8%AA-%D9%88-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86', '_blank')"><span>📰</span>قرقاش: ممکن است دهه‌ها طول بکشد تا اعتماد میان امارات و ایران دوباره شکل بگیرد</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271170/%D8%B4%D8%A7%DB%8C%D8%B9%D9%87-%D8%B9%D8%AC%DB%8C%D8%A8-%D8%AF%D8%B1-%D9%85%D9%88%D8%B1%D8%AF-%D8%AC%D8%A7%D9%85-%D8%AD%D8%B0%D9%81%DB%8C', '_blank')"><span>📰</span>شایعه عجیب در مورد جام حذفی</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271176/%D8%A2%D8%BA%D8%A7%D8%B2-%D9%85%D8%B1%D8%AD%D9%84%D9%87-%D8%AF%D9%88%D9%85-%D8%B3%D8%A7%D9%85%D8%A7%D9%86%D8%AF%D9%87%DB%8C-%D8%B4%D9%86%D8%A7%D9%88%D8%B1%D9%87%D8%A7%DB%8C-%D8%B5%DB%8C%D8%A7%D8%AF%DB%8C-%D9%81%D8%A7%D9%82%D8%AF-%D9%85%D8%AC%D9%88%D8%B2-%D8%AF%D8%B1-%D9%85%DB%8C%D9%86%D8%A7%D8%A8', '_blank')"><span>📰</span>آغاز مرحله دوم ساماندهی شناورهای صیادی فاقد مجوز در میناب</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271050/%D9%85%D9%86%D9%81%DB%8C-%D8%AF%D9%88%DB%8C%D8%B3%D8%AA-%D9%88-%D9%87%D9%81%D8%AA%D8%A7%D8%AF-%D9%88-%D8%B3%D9%87-%D8%B1%D8%A7%D9%87%DB%8C-%D8%AC%D8%B4%D9%86%D9%88%D8%A7%D8%B1%D9%87-%D8%A8%DB%8C%D9%86-%D8%A7%D9%84%D9%85%D9%84%D9%84%DB%8C-%D9%81%DB%8C%D9%84%D9%85-%D8%A7%D8%AD%D9%85%D8%AF%D8%A2%D8%A8%D8%A7%D8%AF', '_blank')"><span>📰</span>«منفی دویست و هفتاد و سه» راهی جشنواره بین‌المللی فیلم احمدآباد هند شد</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271153/%D8%AC%D8%B2%D8%A6%DB%8C%D8%A7%D8%AA-%D8%A8%D8%B1%DA%AF%D8%B2%D8%A7%D8%B1%DB%8C-%D8%AF%D9%88%D9%85%DB%8C%D9%86-%DA%A9%D9%86%DA%AF%D8%B1%D9%87-%D9%85%D9%84%DB%8C-%DB%B2%DB%B7%DB%B5%DB%B0-%D8%B4%D9%87%DB%8C%D8%AF-%DA%86%D9%87%D8%A7%D8%B1%D9%85%D8%AD%D8%A7%D9%84-%D9%88-%D8%A8%D8%AE%D8%AA%DB%8C%D8%A7%D8%B1%DB%8C-%D8%A7%D8%B9%D9%84%D8%A7%D9%85', '_blank')"><span>📰</span>جزئیات برگزاری دومین کنگره ملی ۲۷۵۰ شهید چهارمحال و بختیاری اعلام شد</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271122/%D9%82%DB%8C%D9%85%D8%AA-%D8%B3%DA%A9%D9%87-%D8%AF%D8%B1-%DB%B1%DB%B6-%D8%B4%D9%87%D8%B1%DB%8C%D9%88%D8%B1-%DB%B1%DB%B4%DB%B0%DB%B5-%D8%B3%DA%A9%D9%87-%DB%8C%DA%A9-%D9%85%DB%8C%D9%84%DB%8C%D9%88%D9%86-%D8%AA%D9%88%D9%85%D8%A7%D9%86-%D8%A7%D8%B1%D8%B2%D8%A7%D9%86-%D8%B4%D8%AF-%D8%AC%D8%AF%D9%88%D9%84', '_blank')"><span>📰</span>قیمت سکه در ۱۶ شهریور ۱۴۰۵/ سکه یک میلیون تومان ارزان شد + جدول</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271100/%D8%B9%DA%A9%D8%B3-%D8%A7%DB%8C%D9%86-%DA%A9%D9%88%DA%86%D9%87-%D9%BE%D8%A7%D8%AA%D9%88%D9%82-%D8%AA%D9%87%D8%B1%D8%A7%D9%86%DB%8C-%D9%87%D8%A7-%D8%AF%D8%B1-%D8%AF%D9%88%D8%B1%D8%A7%D9%86-%D9%82%D8%A7%D8%AC%D8%A7%D8%B1-%D8%A8%D9%88%D8%AF', '_blank')"><span>📰</span>عکس/ این کوچه پاتوق تهرانی ها در دوران قاجار بود</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271084/%D8%A8%D8%A8%DB%8C%D9%86%DB%8C%D8%AF-%D8%AF%D8%B3%D8%AA%DA%AF%DB%8C%D8%B1%DB%8C-%D8%B2%D9%86-%DB%B3%DB%B7-%D8%B3%D8%A7%D9%84%D9%87-%D9%85%D8%AA%D9%87%D9%85-%D8%A8%D9%87-%D8%B3%D8%B1%D9%82%D8%AA-%DA%AF%D9%88%D8%B4%D9%88%D8%A7%D8%B1%D9%87-%D8%AF%D8%AE%D8%AA%D8%B1%D8%A8%DA%86%D9%87-%D9%87%D8%A7-%D8%AF%D8%B1', '_blank')"><span>📰</span>ببینید | دستگیری زن ۳۷ ساله متهم به سرقت گوشواره دختربچه‌ها در قم</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271160/%D8%AF%D8%A7%D9%86%D8%B4%DA%AF%D8%A7%D9%87-%D8%AA%D9%87%D8%B1%D8%A7%D9%86-%D8%AF%D8%B1%D8%A8%D8%A7%D8%B1%D9%87-%D8%AE%D9%88%D8%A7%D8%A8%DA%AF%D8%A7%D9%87-%D9%87%D8%A7-%D8%A7%D8%B7%D9%84%D8%A7%D8%B9%DB%8C%D9%87-%D8%AF%D8%A7%D8%AF', '_blank')"><span>📰</span>دانشگاه تهران درباره خوابگاه‌ها اطلاعیه داد</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271164/%D8%AA%D8%A7%DA%A9%DB%8C%D8%AF-%D8%B4%D9%87%D8%B1%D8%AF%D8%A7%D8%B1-%DA%A9%D8%B1%D9%85%D8%A7%D9%86-%D8%A8%D8%B1-%D9%85%D8%AF%DB%8C%D8%B1%DB%8C%D8%AA-%D8%B9%D9%85%D9%84%DB%8C%D8%A7%D8%AA%DB%8C-%D9%88-%D8%AC%D9%87%D8%A7%D8%AF-%D8%AE%D8%AF%D9%85%D8%AA-%D8%A8%D8%B1%D8%A7%DB%8C-%D8%A7%D9%85%DB%8C%D8%AF%D8%A2%D9%81%D8%B1%DB%8C%D9%86%DB%8C', '_blank')"><span>📰</span>تاکید شهردار کرمان بر مدیریت عملیاتی و جهاد خدمت برای امیدآفرینی در جامعه</div></div></div>
         
         <div class="card">
             <div class="card-title">🌐 ترجمه</div>
@@ -325,7 +391,7 @@
         <div class="footer">© 2026 AmirHarter - تمامی حقوق محفوظ است</div>
     </div>
     <script>
-        const provinces = {'تهران': [35.6892, 51.389], 'مشهد': [36.2605, 59.6168], 'اصفهان': [32.6546, 51.668], 'شیراز': [29.5918, 52.5837], 'تبریز': [38.0962, 46.2738], 'اهواز': [31.3183, 48.6706], 'قم': [34.6416, 50.8746], 'کرج': [35.84, 50.9391], 'کرمانشاه': [34.3142, 47.065], 'رشت': [37.2808, 49.5832], 'زاهدان': [29.4963, 60.8629], 'همدان': [34.7983, 48.5148], 'ارومیه': [37.5527, 45.076], 'یزد': [31.8974, 54.3569], 'اردبیل': [38.2498, 48.2933], 'بندرعباس': [27.1832, 56.2666], 'اراک': [34.0949, 49.7016], 'اسلام\u200cشهر': [35.544, 51.235], 'زنجان': [36.683, 48.5087], 'سنندج': [35.3219, 46.9862], 'قزوین': [36.286, 50.004], 'خرم\u200cآباد': [33.4871, 48.3558], 'گرگان': [36.8386, 54.4346], 'ساری': [36.5633, 53.0601], 'بوشهر': [28.9234, 50.8203], 'بیرجند': [32.8649, 59.2212], 'ایلام': [33.6375, 46.4227], 'شهرکرد': [32.3256, 50.8644], 'یاسوج': [30.6684, 51.5875], 'بجنورد': [37.4749, 57.329], 'سمنان': [35.5729, 53.3971]};
+        const provinces = {'تهران': [35.6892, 51.389], 'مشهد': [36.2605, 59.6168], 'اصفهان': [32.6546, 51.668], 'شیراز': [29.5918, 52.5837], 'تبریز': [38.0962, 46.2738], 'اهواز': [31.3183, 48.6706], 'قم': [34.6416, 50.8746], 'کرج': [35.84, 50.9391], 'کرمانشاه': [34.3142, 47.065], 'رشت': [37.2808, 49.5832], 'زاهدان': [29.4963, 60.8629], 'همدان': [34.7983, 48.5148], 'ارومیه': [37.5527, 45.076], 'یزد': [31.8974, 54.3569], 'اردبیل': [38.2498, 48.2933], 'بندرعباس': [27.1832, 56.2666], 'اراک': [34.0949, 49.7016], 'زنجان': [36.683, 48.5087], 'سنندج': [35.3219, 46.9862], 'قزوین': [36.286, 50.004], 'خرم\u200cآباد': [33.4871, 48.3558], 'گرگان': [36.8386, 54.4346], 'ساری': [36.5633, 53.0601], 'بوشهر': [28.9234, 50.8203], 'بیرجند': [32.8649, 59.2212], 'ایلام': [33.6375, 46.4227], 'شهرکرد': [32.3256, 50.8644], 'یاسوج': [30.6684, 51.5875], 'بجنورد': [37.4749, 57.329], 'سمنان': [35.5729, 53.3971]};
         
         function changeProvince(name) {
             if (!name || !provinces[name]) return;
@@ -342,6 +408,13 @@
                 });
         }
         
+        function filterCurrency(query) {
+            document.querySelectorAll('.currency-item').forEach(item => {
+                const name = item.getAttribute('data-name') || '';
+                item.style.display = name.includes(query) || query === '' ? 'flex' : 'none';
+            });
+        }
+        
         function updateClock() {
             const now = new Date();
             document.getElementById('clock').textContent = now.toLocaleTimeString('fa-IR');
@@ -355,6 +428,19 @@
         }
         
         function searchGoogle(q) { if (q) window.open('https://www.google.com/search?q=' + encodeURIComponent(q), '_blank'); }
+        
+        function voiceSearch() {
+            if ('webkitSpeechRecognition' in window) {
+                const recognition = new webkitSpeechRecognition();
+                recognition.lang = 'fa-IR';
+                recognition.onresult = function(e) {
+                    document.getElementById('mainSearch').value = e.results[0][0].transcript;
+                };
+                recognition.start();
+            } else {
+                alert('مرورگر شما از تایپ صوتی پشتیبانی نمی‌کند');
+            }
+        }
         
         function filterMatches(type, btn) {
             document.querySelectorAll('.match-item').forEach(item => {
