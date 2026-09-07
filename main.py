@@ -61,14 +61,13 @@ provinces = {
     "زاهدان": (29.4963, 60.8629), "همدان": (34.7983, 48.5148),
     "ارومیه": (37.5527, 45.0760), "یزد": (31.8974, 54.3569),
     "اردبیل": (38.2498, 48.2933), "بندرعباس": (27.1832, 56.2666),
-    "اراک": (34.0949, 49.7016), "اسلام‌شهر": (35.5440, 51.2350),
-    "زنجان": (36.6830, 48.5087), "سنندج": (35.3219, 46.9862),
-    "قزوین": (36.2860, 50.0040), "خرم‌آباد": (33.4871, 48.3558),
-    "گرگان": (36.8386, 54.4346), "ساری": (36.5633, 53.0601),
-    "بوشهر": (28.9234, 50.8203), "بیرجند": (32.8649, 59.2212),
-    "ایلام": (33.6375, 46.4227), "شهرکرد": (32.3256, 50.8644),
-    "یاسوج": (30.6684, 51.5875), "بجنورد": (37.4749, 57.3290),
-    "سمنان": (35.5729, 53.3971)
+    "اراک": (34.0949, 49.7016), "زنجان": (36.6830, 48.5087),
+    "سنندج": (35.3219, 46.9862), "قزوین": (36.2860, 50.0040),
+    "خرم‌آباد": (33.4871, 48.3558), "گرگان": (36.8386, 54.4346),
+    "ساری": (36.5633, 53.0601), "بوشهر": (28.9234, 50.8203),
+    "بیرجند": (32.8649, 59.2212), "ایلام": (33.6375, 46.4227),
+    "شهرکرد": (32.3256, 50.8644), "یاسوج": (30.6684, 51.5875),
+    "بجنورد": (37.4749, 57.3290), "سمنان": (35.5729, 53.3971)
 }
 
 valid_leagues = ["PL", "PD", "SA", "BL1", "FL1"]
@@ -106,30 +105,20 @@ def get_weather(lat=35.6892, lon=51.3890):
         temp = data["current_weather"]["temperature"]
         wind = data["current_weather"]["windspeed"]
         code = data["current_weather"]["weathercode"]
-        
-        weather_desc = {
-            0: "آفتابی", 1: "نیمه آفتابی", 2: "نیمه ابری", 3: "ابری",
-            45: "مه", 51: "نم نم باران", 61: "باران", 71: "برف"
-        }
+        weather_desc = {0: "آفتابی", 1: "نیمه آفتابی", 2: "نیمه ابری", 3: "ابری", 45: "مه", 61: "باران", 71: "برف"}
         desc = weather_desc.get(code, "نامشخص")
-        
         return f'<div class="weather-icon">🌤</div><div class="weather-temp">{temp}°C</div><div class="weather-desc">{desc}<br>باد: {wind} km/h</div>'
     except:
         return '<div class="weather-icon">🌤</div><div class="weather-temp">--°C</div><div class="weather-desc">در دسترس نیست</div>'
 
 def get_currency():
     currencies = [
-        ("دلار", "price_dollar_rl"),
-        ("یورو", "price_eur"),
-        ("درهم", "price_aed"),
-        ("پوند", "price_gbp"),
-        ("لیر ترکیه", "price_try"),
-        ("یوان چین", "price_cny"),
-        ("روبل روسیه", "price_rub"),
-        ("دینار عراق", "price_iqd"),
+        ("دلار", "price_dollar_rl"), ("یورو", "price_eur"),
+        ("درهم", "price_aed"), ("پوند", "price_gbp"),
+        ("لیر ترکیه", "price_try"), ("یوان چین", "price_cny"),
+        ("روبل روسیه", "price_rub"), ("دینار عراق", "price_iqd"),
         ("افغانی", "price_afn"),
     ]
-    
     items = ""
     for name, indicator in currencies:
         try:
@@ -139,10 +128,9 @@ def get_currency():
             records = data.get("data", [])
             if records:
                 price = records[0][0]
-                items += f'<div class="currency-item"><span>{name}</span><span class="currency-value">{price}</span></div>'
+                items += f'<div class="currency-item" data-name="{name}"><span>{name}</span><span class="currency-value">{price}</span></div>'
         except:
             pass
-    
     return items if items else '<div class="currency-item">در دسترس نیست</div>'
 
 def get_football_foreign():
@@ -152,25 +140,21 @@ def get_football_foreign():
         headers = {"X-Auth-Token": "efd72515902e44019da93c99e04f7dbb"}
         response = requests.get(url, headers=headers, timeout=15)
         data = response.json()
-        
         for match in data.get("matches", []):
             league_code = match.get("competition", {}).get("code", "")
             if league_code not in valid_leagues:
                 continue
-            
             home = translate_team(match["homeTeam"]["name"])
             away = translate_team(match["awayTeam"]["name"])
             status = match["status"]
             matchday = match.get("matchday", "")
             utc_date = match.get("utcDate", "")
-            
             match_time = datetime.now()
             if utc_date:
                 try:
                     match_time = datetime.strptime(utc_date[:19], "%Y-%m-%dT%H:%M:%S")
                 except:
                     pass
-            
             if status == "FINISHED":
                 score = f"{match['score']['fullTime']['home']} - {match['score']['fullTime']['away']}"
                 status_text = "پایان یافته"
@@ -183,7 +167,6 @@ def get_football_foreign():
                 score = "-"
                 status_text = "برگزار نشده"
                 status_class = "upcoming"
-            
             matches.append({
                 "home": home, "away": away, "score": score,
                 "status_text": status_text, "status_class": status_class,
@@ -197,7 +180,6 @@ def get_football_foreign():
 def get_football_iran():
     matches = []
     seen = set()
-    
     for id_team, name in team_ids.items():
         try:
             url = f"https://www.thesportsdb.com/api/v1/json/3/eventslast.php?id={id_team}"
@@ -205,13 +187,11 @@ def get_football_iran():
             if response.status_code == 200:
                 data = response.json()
                 events = data.get("results", [])
-                
                 for event in events:
                     home = event.get("strHomeTeam", "")
                     away = event.get("strAwayTeam", "")
                     home_score = event.get("intHomeScore", "0")
                     away_score = event.get("intAwayScore", "0")
-                    
                     home_fa = translate_team(home)
                     away_fa = translate_team(away)
                     for eng, fa in iran_teams.items():
@@ -219,12 +199,10 @@ def get_football_iran():
                             home_fa = fa
                         if eng.lower() in away.lower():
                             away_fa = fa
-                    
                     match_key = f"{home_fa}-{away_fa}-{home_score}-{away_score}"
                     if match_key in seen:
                         continue
                     seen.add(match_key)
-                    
                     matches.append({
                         "home": home_fa, "away": away_fa,
                         "score": f"{home_score} - {away_score}",
@@ -235,7 +213,6 @@ def get_football_iran():
                     })
         except:
             pass
-    
     return matches
 
 news_html = get_news()
@@ -248,9 +225,7 @@ all_matches = iran_matches + foreign_matches
 finished = [m for m in all_matches if m["status_class"] == "finished"]
 live = [m for m in all_matches if m["status_class"] == "live"]
 upcoming = [m for m in all_matches if m["status_class"] == "upcoming"]
-
 finished.sort(key=lambda x: x["time"], reverse=True)
-
 all_matches = finished + live + upcoming
 
 matches_html = ""
@@ -268,12 +243,12 @@ for m in all_matches[:20]:
 if not matches_html:
     matches_html = '<div class="match-item">خطا در بارگذاری فوتبال</div>'
 
-# ساخت HTML استان‌ها برای آب و هوا
 provinces_options = ""
 for province in provinces.keys():
     provinces_options += f'<option value="{province}">{province}</option>'
 
 province_data = str({name: list(coords) for name, coords in provinces.items()})
+
 html = f"""<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -289,7 +264,6 @@ html = f"""<!DOCTYPE html>
             --muted: #ccc; 
             --accent: #f093fb;
         }}
-        
         .light-mode {{ 
             --bg: linear-gradient(135deg, #e8f4fd, #d4e9ff, #c2dfff); 
             --card: rgba(255,255,255,0.85); 
@@ -298,7 +272,6 @@ html = f"""<!DOCTYPE html>
             --muted: #5a6c8a; 
             --accent: #e85d75;
         }}
-        
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{ background: var(--bg); color: var(--text); font-family: Tahoma; transition: 0.5s; min-height: 100vh; }}
         
@@ -313,26 +286,81 @@ html = f"""<!DOCTYPE html>
             top: 0; 
             z-index: 100; 
         }}
-        
         .light-mode .header {{ 
             background: linear-gradient(135deg, #f5576c, #4facfe); 
-            box-shadow: 0 4px 20px rgba(245, 87, 108, 0.4); 
         }}
-        
         .logo {{ font-size: 1.5rem; font-weight: bold; color: #fff; }}
         .theme-btn {{ font-size: 1.8rem; background: none; border: none; cursor: pointer; }}
+        
         .main {{ max-width: 600px; margin: 0 auto; padding: 15px; }}
+        
+        .logo-animation {{
+            text-align: center;
+            padding: 40px 20px;
+            animation: floatLogo 3s ease-in-out infinite;
+        }}
+        @keyframes floatLogo {{
+            0%, 100% {{ transform: translateY(0); }}
+            50% {{ transform: translateY(-15px); }}
+        }}
+        .logo-text {{
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #f093fb, #ffd700, #4facfe, #f093fb);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease infinite;
+        }}
+        @keyframes gradientShift {{
+            0%, 100% {{ background-position: 0% 50%; }}
+            50% {{ background-position: 100% 50%; }}
+        }}
         
         .search-box {{ 
             width: 100%; 
-            padding: 13px; 
-            border-radius: 25px; 
-            border: 1px solid var(--border); 
+            padding: 14px 50px; 
+            border-radius: 30px; 
+            border: 2px solid var(--border); 
             background: var(--card); 
             color: var(--text); 
             font-size: 1.05rem; 
             margin: 15px 0; 
             outline: none; 
+        }}
+        .search-btn {{ 
+            position: absolute; 
+            padding: 12px 20px; 
+            border: none; 
+            border-radius: 25px; 
+            background: linear-gradient(45deg, #f093fb, #f5576c); 
+            color: #fff; 
+            cursor: pointer; 
+            font-weight: bold; 
+        }}
+        .mic-btn {{
+            position: absolute;
+            left: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.3rem;
+        }}
+        
+        .search-options {{
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }}
+        .search-option {{
+            padding: 10px 20px;
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            background: var(--card);
+            color: var(--text);
+            cursor: pointer;
+            font-size: 0.85rem;
         }}
         
         .clock-section {{ 
@@ -343,24 +371,19 @@ html = f"""<!DOCTYPE html>
             border: 1px solid var(--border); 
             border-radius: 25px; 
         }}
-        
-        .clock-icon {{ font-size: 3.5rem; margin-bottom: 10px; animation: pulse 2s infinite; }}
-        @keyframes pulse {{ 0%, 100% {{ transform: scale(1); }} 50% {{ transform: scale(1.1); }} }}
-        
+        .clock-icon {{ font-size: 3rem; }}
         .clock {{ 
-            font-size: 3rem; 
+            font-size: 2.5rem; 
             font-weight: 900; 
             background: linear-gradient(45deg, #ffd700, #ffaa00, #ffd700); 
             -webkit-background-clip: text; 
             -webkit-text-fill-color: transparent; 
         }}
-        
         .light-mode .clock {{ 
             background: linear-gradient(45deg, #1a2a4a, #4facfe); 
             -webkit-background-clip: text; 
             -webkit-text-fill-color: transparent; 
         }}
-        
         .date {{ color: var(--muted); font-size: 0.9rem; }}
         
         .card {{ 
@@ -370,19 +393,29 @@ html = f"""<!DOCTYPE html>
             padding: 18px; 
             margin: 15px 0; 
             backdrop-filter: blur(10px); 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
         }}
-        
         .card-title {{ font-size: 1.15rem; margin-bottom: 10px; }}
         .news-scroll, .football-scroll, .currency-scroll {{ max-height: 180px; overflow-y: auto; }}
         .news-item {{ padding: 8px; border-bottom: 1px solid var(--border); cursor: pointer; font-size: 0.85rem; }}
         .news-item:hover {{ color: var(--accent); }}
         
+        .currency-search {{ 
+            width: 100%; 
+            padding: 10px; 
+            border-radius: 8px; 
+            border: 1px solid var(--border); 
+            background: var(--card); 
+            color: var(--text); 
+            font-size: 0.85rem; 
+            margin-bottom: 10px; 
+        }}
+        .currency-item {{ display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }}
+        .currency-value {{ color: #4facfe; font-weight: bold; }}
+        
         .weather-card {{ text-align: center; }}
-        .weather-icon {{ font-size: 4rem; animation: bounce 2s infinite; }}
-        @keyframes bounce {{ 0%, 100% {{ transform: translateY(0); }} 50% {{ transform: translateY(-10px); }} }}
-        .weather-temp {{ font-size: 2.5rem; font-weight: 900; color: var(--accent); }}
-        .weather-desc {{ margin-top: 10px; color: var(--muted); font-size: 0.9rem; }}
+        .weather-icon {{ font-size: 3rem; }}
+        .weather-temp {{ font-size: 2rem; font-weight: 900; color: var(--accent); }}
+        .weather-desc {{ margin-top: 10px; color: var(--muted); }}
         .province-select {{ 
             width: 100%; 
             padding: 8px; 
@@ -394,18 +427,15 @@ html = f"""<!DOCTYPE html>
             margin-top: 10px; 
         }}
         
-        .currency-item {{ display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }}
-        .currency-value {{ color: #4facfe; font-weight: bold; }}
-        
         .filter-btns {{ display: flex; gap: 8px; margin-bottom: 15px; }}
-        .filter-btn {{ flex: 1; padding: 10px; border: none; border-radius: 25px; background: linear-gradient(45deg, #f093fb, #f5576c); color: #fff; cursor: pointer; font-size: 0.85rem; font-weight: bold; }}
+        .filter-btn {{ flex: 1; padding: 8px; border: none; border-radius: 20px; background: linear-gradient(45deg, #f093fb, #f5576c); color: #fff; cursor: pointer; font-size: 0.75rem; font-weight: bold; }}
         .filter-btn.active {{ background: linear-gradient(45deg, #4facfe, #00f2fe); }}
-        .match-item {{ padding: 12px 10px; border-bottom: 1px solid var(--border); }}
+        .match-item {{ padding: 10px; border-bottom: 1px solid var(--border); }}
         .match-row {{ display: flex; justify-content: space-between; align-items: center; gap: 5px; margin-bottom: 5px; }}
         .team-name {{ flex: 1; font-size: 0.85rem; }}
         .team-name.right {{ text-align: right; }}
         .team-name.left {{ text-align: left; }}
-        .match-score {{ flex: 0 0 auto; min-width: 70px; text-align: center; color: var(--accent); font-weight: bold; font-size: 0.9rem; }}
+        .match-score {{ color: var(--accent); font-weight: bold; }}
         .match-status {{ text-align: center; font-size: 0.75rem; color: var(--muted); }}
         
         .lang-row {{ display: flex; gap: 10px; margin-bottom: 15px; }}
@@ -414,20 +444,32 @@ html = f"""<!DOCTYPE html>
         .search-btn {{ width: 100%; padding: 10px; border: none; border-radius: 25px; background: linear-gradient(45deg, #f093fb, #f5576c); color: #fff; cursor: pointer; font-size: 1.2rem; margin-top: 6px; }}
         .lang-select {{ width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 0.8rem; margin-top: 5px; }}
         .swap-btn {{ width: 40px; height: 40px; border: none; border-radius: 50%; background: linear-gradient(45deg, #f093fb, #f5576c); color: #fff; cursor: pointer; font-size: 1.3rem; align-self: center; }}
-        .swap-btn.rotated {{ transform: rotate(180deg); }}
-        textarea {{ width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); min-height: 100px; font-size: 1rem; margin: 10px 0; }}
-        .btn-row {{ display: flex; gap: 10px; }}
+        textarea {{ width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); min-height: 100px; }}
+        .btn-row {{ display: flex; gap: 10px; margin-top: 10px; }}
         .btn-row button {{ flex: 1; padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }}
         .translate-btn {{ background: var(--accent); color: #fff; }}
         .copy-btn {{ background: #4facfe; color: #fff; }}
-        .result {{ background: var(--card); padding: 15px; border-radius: 10px; margin: 10px 0; min-height: 80px; }}
+        .result {{ background: var(--card); padding: 15px; border-radius: 10px; margin: 10px 0; }}
         .footer {{ text-align: center; padding: 20px; color: var(--muted); font-size: 0.8rem; }}
     </style>
 </head>
 <body>
     <div class="header"><div class="logo">AmirHarter</div><button class="theme-btn" onclick="toggleTheme()" id="themeBtn">☀️</button></div>
     <div class="main">
-        <input class="search-box" placeholder="جستجو..." onkeypress="if(event.key==='Enter') searchGoogle(this.value)">
+        <div class="logo-animation">
+            <div class="logo-text">AmirHarter</div>
+        </div>
+        
+        <div style="position: relative;">
+            <button class="search-btn" onclick="searchGoogle(document.getElementById('mainSearch').value)">جستجو</button>
+            <button class="mic-btn" onclick="voiceSearch()">🎤</button>
+            <input class="search-box" id="mainSearch" placeholder="در AMIR HARTER جستجو کنید..." onkeypress="if(event.key==='Enter') searchGoogle(this.value)">
+        </div>
+        
+        <div class="search-options">
+            <div class="search-option" onclick="window.open('https://yandex.com/images/', '_blank')">🖼 جستجوی تصویر</div>
+            <div class="search-option" onclick="window.open('https://soundcloud.com/search', '_blank')">🎵 جستجوی موسیقی</div>
+        </div>
         
         <div class="clock-section">
             <div class="clock-icon">🕐</div>
@@ -437,9 +479,7 @@ html = f"""<!DOCTYPE html>
         
         <div class="card">
             <div class="card-title">🌤 آب و هوا</div>
-            <div class="weather-card" id="weatherData">
-                {weather_html}
-            </div>
+            <div class="weather-card" id="weatherData">{weather_html}</div>
             <select class="province-select" onchange="changeProvince(this.value)">
                 <option value="">انتخاب استان...</option>
                 {provinces_options}
@@ -448,7 +488,8 @@ html = f"""<!DOCTYPE html>
         
         <div class="card">
             <div class="card-title">💰 قیمت ارز</div>
-            <div class="currency-scroll">
+            <input class="currency-search" placeholder="🔍 جستجوی ارز..." onkeyup="filterCurrency(this.value)">
+            <div class="currency-scroll" id="currencyList">
                 {currency_html}
             </div>
         </div>
@@ -498,6 +539,13 @@ html = f"""<!DOCTYPE html>
                 }});
         }}
         
+        function filterCurrency(query) {{
+            document.querySelectorAll('.currency-item').forEach(item => {{
+                const name = item.getAttribute('data-name') || '';
+                item.style.display = name.includes(query) || query === '' ? 'flex' : 'none';
+            }});
+        }}
+        
         function updateClock() {{
             const now = new Date();
             document.getElementById('clock').textContent = now.toLocaleTimeString('fa-IR');
@@ -512,6 +560,19 @@ html = f"""<!DOCTYPE html>
         
         function searchGoogle(q) {{ if (q) window.open('https://www.google.com/search?q=' + encodeURIComponent(q), '_blank'); }}
         
+        function voiceSearch() {{
+            if ('webkitSpeechRecognition' in window) {{
+                const recognition = new webkitSpeechRecognition();
+                recognition.lang = 'fa-IR';
+                recognition.onresult = function(e) {{
+                    document.getElementById('mainSearch').value = e.results[0][0].transcript;
+                }};
+                recognition.start();
+            }} else {{
+                alert('مرورگر شما از تایپ صوتی پشتیبانی نمی‌کند');
+            }}
+        }}
+        
         function filterMatches(type, btn) {{
             document.querySelectorAll('.match-item').forEach(item => {{
                 if (type === 'all') item.style.display = 'block';
@@ -525,7 +586,6 @@ html = f"""<!DOCTYPE html>
 </html>
 """
 
-province_data = str({name: list(coords) for name, coords in provinces.items()})
 html = html.replace("{province_data}", province_data)
 
 with open(OUTPUT_DIR / 'index.html', 'w', encoding='utf-8') as f:
