@@ -497,7 +497,7 @@ html = f"""<!DOCTYPE html>
         }}
         .theme-float {{
             position: absolute;
-            top: 10px;
+            top: 5px;
             right: 10px;
             font-size: 1.3rem;
             z-index: 50;
