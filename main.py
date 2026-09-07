@@ -495,7 +495,7 @@ html = f"""<!DOCTYPE html>
             padding: 15px;
         }}
         .theme-float {{
-            position: fixed;
+            position: absoIute;
             top: 80px;
             left: 15px;
             font-size: 2rem;
