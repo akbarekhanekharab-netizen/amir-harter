@@ -98,7 +98,7 @@ def get_news():
             pass
     return news_items
 
-def get_weather(lat=35.6892, lon=51.3890):
+def get_weather(lat=35.6892, lon=51.3890, city="تهران"):
     try:
         url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true&timezone=Asia%2FTehran"
         response = requests.get(url, timeout=10)
@@ -108,7 +108,7 @@ def get_weather(lat=35.6892, lon=51.3890):
         code = data["current_weather"]["weathercode"]
         weather_desc = {0: "آفتابی", 1: "نیمه آفتابی", 2: "نیمه ابری", 3: "ابری", 45: "مه", 61: "باران", 71: "برف"}
         desc = weather_desc.get(code, "نامشخص")
-        return f'<div class="weather-icon">🌤</div><div class="weather-temp">{temp}°C</div><div class="weather-desc">{desc}<br>باد: {wind} km/h</div>'
+        return f'<div class="weather-icon">🌤</div><div class="weather-temp">{temp}°C</div><div class="weather-desc">{city}<br>{desc}<br>باد: {wind} km/h</div>'
     except:
         return '<div class="weather-icon">🌤</div><div class="weather-temp">--°C</div><div class="weather-desc">در دسترس نیست</div>'
 
@@ -129,7 +129,17 @@ def get_currency():
             records = data.get("data", [])
             if records:
                 price = records[0][0]
-                items += f'<div class="currency-item" data-name="{name}"><span>{name}</span><span class="currency-value">{price}</span></div>'
+                # تشخیص افزایش یا کاهش
+                change_class = "up"
+                if len(records) > 1:
+                    try:
+                        prev = float(records[1][0].replace(",", ""))
+                        curr = float(price.replace(",", ""))
+                        if curr < prev:
+                            change_class = "down"
+                    except:
+                        pass
+                items += f'<div class="currency-item" data-name="{name}"><span>{name}</span><span class="currency-value {change_class}">{price}</span></div>'
         except:
             pass
     return items if items else '<div class="currency-item">در دسترس نیست</div>'
@@ -282,7 +292,6 @@ html = f"""<!DOCTYPE html>
             align-items: center; 
             padding: 15px 20px; 
             background: linear-gradient(135deg, #f093fb, #4facfe); 
-            box-shadow: 0 4px 20px rgba(240, 147, 251, 0.5); 
             position: sticky; 
             top: 0; 
             z-index: 100; 
@@ -291,32 +300,21 @@ html = f"""<!DOCTYPE html>
             background: linear-gradient(135deg, #f5576c, #4facfe); 
         }}
         .logo {{ font-size: 1.5rem; font-weight: bold; color: #fff; }}
-        .theme-btn {{ font-size: 1.8rem; background: none; border: none; cursor: pointer; }}
+        .settings-btn {{ font-size: 1.5rem; background: none; border: none; cursor: pointer; color: #fff; }}
         
         .main {{ max-width: 600px; margin: 0 auto; padding: 15px; }}
         
-        .logo-animation {{
+        .theme-float {{
             text-align: center;
-            padding: 40px 20px;
-            animation: floatLogo 3s ease-in-out infinite;
-        }}
-        @keyframes floatLogo {{
-            0%, 100% {{ transform: translateY(0); }}
-            50% {{ transform: translateY(-15px); }}
-        }}
-        .logo-text {{
             font-size: 3rem;
-            font-weight: 900;
-            background: linear-gradient(45deg, #f093fb, #ffd700, #4facfe, #f093fb);
-            background-size: 300% 300%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradientShift 3s ease infinite;
+            padding: 30px;
+            animation: floatTheme 3s ease-in-out infinite;
         }}
-        @keyframes gradientShift {{
-            0%, 100% {{ background-position: 0% 50%; }}
-            50% {{ background-position: 100% 50%; }}
+        @keyframes floatTheme {{
+            0%, 100% {{ transform: translateY(0); }}
+            50% {{ transform: translateY(-10px); }}
         }}
+        .theme-btn {{ font-size: 3rem; background: none; border: none; cursor: pointer; }}
         
         .search-container {{
             position: relative;
@@ -331,6 +329,7 @@ html = f"""<!DOCTYPE html>
             color: var(--text); 
             font-size: 1.05rem; 
             outline: none; 
+            text-align: center;
         }}
         .search-btn {{ 
             position: absolute; 
@@ -358,18 +357,21 @@ html = f"""<!DOCTYPE html>
         
         .search-options {{
             display: flex;
-            gap: 15px;
+            gap: 10px;
             justify-content: center;
             margin: 20px 0;
         }}
         .search-option {{
-            padding: 10px 20px;
+            flex: 1;
+            padding: 12px;
             border: 1px solid var(--border);
             border-radius: 25px;
             background: var(--card);
             color: var(--text);
             cursor: pointer;
             font-size: 0.85rem;
+            text-align: center;
+            text-decoration: none;
         }}
         
         .clock-section {{ 
@@ -419,7 +421,18 @@ html = f"""<!DOCTYPE html>
             margin-bottom: 10px; 
         }}
         .currency-item {{ display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }}
-        .currency-value {{ color: #4facfe; font-weight: bold; }}
+        .currency-value {{ 
+            font-weight: bold; 
+            padding: 4px 12px; 
+            border-radius: 15px; 
+            animation: pulseCurrency 2s infinite;
+        }}
+        .currency-value.up {{ background: #28a745; color: #fff; }}
+        .currency-value.down {{ background: #dc3545; color: #fff; }}
+        @keyframes pulseCurrency {{
+            0%, 100% {{ transform: scale(1); }}
+            50% {{ transform: scale(1.05); }}
+        }}
         
         .weather-card {{ text-align: center; }}
         .weather-icon {{ font-size: 3rem; }}
@@ -459,36 +472,29 @@ html = f"""<!DOCTYPE html>
         .translate-btn {{ background: var(--accent); color: #fff; }}
         .copy-btn {{ background: #4facfe; color: #fff; }}
         .result {{ background: var(--card); padding: 15px; border-radius: 10px; margin: 10px 0; }}
-        .games-btn {{
-            display: inline-block;
-            padding: 12px 30px;
-            background: linear-gradient(45deg, #f093fb, #ffd700);
-            color: #fff;
-            text-decoration: none;
-            border-radius: 25px;
-            font-weight: bold;
-            margin: 10px 0;
-        }}
         .footer {{ text-align: center; padding: 20px; color: var(--muted); font-size: 0.8rem; }}
     </style>
 </head>
 <body>
-    <div class="header"><div class="logo">AmirHarter</div><button class="theme-btn" onclick="toggleTheme()" id="themeBtn">☀️</button></div>
+    <div class="header">
+        <div class="logo">AmirHarter</div>
+        <button class="settings-btn" onclick="openSettings()">⚙️</button>
+    </div>
     <div class="main">
-        <div class="logo-animation">
-            <div class="logo-text">AmirHarter</div>
+        <div class="theme-float">
+            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">☀️</button>
         </div>
         
         <div class="search-container">
             <button class="search-btn" onclick="searchGoogle(document.getElementById('mainSearch').value)">جستجو</button>
             <button class="mic-btn" onclick="voiceSearch()">🎤</button>
-            <input class="search-box" id="mainSearch" placeholder="در AMIR HARTER جستجو کنید..." onkeypress="if(event.key==='Enter') searchGoogle(this.value)">
+            <input class="search-box" id="mainSearch" placeholder="در AMIR HARTER" onkeypress="if(event.key==='Enter') searchGoogle(this.value)">
         </div>
         
         <div class="search-options">
-            <div class="search-option" onclick="window.open('https://images.google.com/', '_blank')">🖼 جستجوی تصویر</div>
-            <div class="search-option" onclick="window.open('https://www.google.com/search?q=music', '_blank')">🎵 جستجوی موسیقی</div>
-            <a href="games.html" class="games-btn">🎮 بازی‌ها</a>
+            <a href="https://play.google.com/" target="_blank" class="search-option">📱 گوگل‌پلی</a>
+            <a href="https://telewebion.com/" target="_blank" class="search-option">📺 تلوبیون</a>
+            <a href="games.html" class="search-option">🎮 بازی‌ها</a>
         </div>
         
         <div class="clock-section">
@@ -507,7 +513,7 @@ html = f"""<!DOCTYPE html>
         </div>
         
         <div class="card">
-            <div class="card-title">💰 قیمت ارز</div>
+            <div class="card-title">💱 قیمت ارز</div>
             <input class="currency-search" placeholder="🔍 جستجوی ارز..." onkeyup="filterCurrency(this.value)">
             <div class="currency-scroll" id="currencyList">
                 {currency_html}
@@ -543,11 +549,11 @@ html = f"""<!DOCTYPE html>
                 </div>
             </div>
             <textarea id="text" placeholder="متن خود را وارد کنید..."></textarea>
+            <div class="result" id="result">نتیجه ترجمه...</div>
             <div class="btn-row">
                 <button class="translate-btn" onclick="translateText()">ترجمه</button>
                 <button class="copy-btn" onclick="copyResult()">کپی</button>
             </div>
-            <div class="result" id="result">نتیجه ترجمه...</div>
         </div>
         
         <div class="footer">© 2026 AmirHarter - تمامی حقوق محفوظ است</div>
@@ -602,11 +608,16 @@ html = f"""<!DOCTYPE html>
             document.getElementById('themeBtn').textContent = document.body.classList.contains('light-mode') ? '🌙' : '☀️';
         }}
         
+        function openSettings() {{
+            alert('تنظیمات به زودی!');
+        }}
+        
         function searchGoogle(q) {{ if (q) window.open('https://www.google.com/search?q=' + encodeURIComponent(q), '_blank'); }}
         
         function voiceSearch() {{
-            if ('webkitSpeechRecognition' in window) {{
-                const recognition = new webkitSpeechRecognition();
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {{
+                const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+                const recognition = new SR();
                 recognition.lang = 'fa-IR';
                 recognition.onresult = function(e) {{
                     document.getElementById('mainSearch').value = e.results[0][0].transcript;
@@ -653,8 +664,15 @@ html = f"""<!DOCTYPE html>
             const from = document.getElementById('from').value;
             const to = document.getElementById('to').value;
             if (!text) return;
-            fetch(`https://api.mymemory.translated.net/get?q=${{encodeURIComponent(text)}}&langpair=${{from}}|${{to}}`)
-                .then(r => r.json()).then(d => document.getElementById('result').textContent = d.responseData.translatedText);
+            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${{from}}&tl=${{to}}&dt=t&q=${{encodeURIComponent(text)}}`;
+            fetch(url)
+                .then(r => r.json())
+                .then(d => {{
+                    let translated = '';
+                    d[0].forEach(part => translated += part[0]);
+                    document.getElementById('result').textContent = translated;
+                }})
+                .catch(() => document.getElementById('result').textContent = 'خطا در ترجمه');
         }}
         
         function copyResult() {{
