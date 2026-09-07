@@ -129,7 +129,6 @@ def get_currency():
             records = data.get("data", [])
             if records:
                 price = records[0][0]
-                # تشخیص افزایش یا کاهش
                 change_class = "up"
                 if len(records) > 1:
                     try:
@@ -274,6 +273,7 @@ html = f"""<!DOCTYPE html>
             --text: #fff; 
             --muted: #ccc; 
             --accent: #f093fb;
+            --font-size: 1rem;
         }}
         .light-mode {{ 
             --bg: linear-gradient(135deg, #e8f4fd, #d4e9ff, #c2dfff); 
@@ -284,7 +284,7 @@ html = f"""<!DOCTYPE html>
             --accent: #e85d75;
         }}
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-        body {{ background: var(--bg); color: var(--text); font-family: Tahoma; transition: 0.5s; min-height: 100vh; }}
+        body {{ background: var(--bg); color: var(--text); font-family: Tahoma; transition: 0.5s; min-height: 100vh; font-size: var(--font-size); }}
         
         .header {{ 
             display: flex; 
@@ -302,19 +302,82 @@ html = f"""<!DOCTYPE html>
         .logo {{ font-size: 1.5rem; font-weight: bold; color: #fff; }}
         .settings-btn {{ font-size: 1.5rem; background: none; border: none; cursor: pointer; color: #fff; }}
         
+        .settings-overlay {{
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+        }}
+        .settings-panel {{
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 280px;
+            height: 100%;
+            background: var(--bg);
+            border-left: 1px solid var(--border);
+            transition: right 0.3s;
+            z-index: 201;
+            padding: 20px;
+            overflow-y: auto;
+        }}
+        .settings-panel.open {{ right: 0; }}
+        .settings-title {{ font-size: 1.3rem; font-weight: bold; margin-bottom: 20px; }}
+        .settings-item {{
+            padding: 12px;
+            margin: 8px 0;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: right;
+        }}
+        .settings-item:hover {{ background: rgba(255,255,255,0.15); }}
+        
         .main {{ max-width: 600px; margin: 0 auto; padding: 15px; }}
         
         .theme-float {{
-            text-align: center;
-            font-size: 3rem;
-            padding: 30px;
+            position: fixed;
+            top: 70px;
+            left: 15px;
+            font-size: 2.5rem;
+            z-index: 50;
             animation: floatTheme 3s ease-in-out infinite;
+            cursor: pointer;
+            background: none;
+            border: none;
         }}
         @keyframes floatTheme {{
             0%, 100% {{ transform: translateY(0); }}
             50% {{ transform: translateY(-10px); }}
         }}
-        .theme-btn {{ font-size: 3rem; background: none; border: none; cursor: pointer; }}
+        
+        .logo-animation {{
+            text-align: center;
+            padding: 40px 20px;
+            animation: floatLogo 3s ease-in-out infinite;
+        }}
+        @keyframes floatLogo {{
+            0%, 100% {{ transform: translateY(0); }}
+            50% {{ transform: translateY(-15px); }}
+        }}
+        .logo-text {{
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #f093fb, #ffd700, #4facfe, #f093fb);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease infinite;
+        }}
+        @keyframes gradientShift {{
+            0%, 100% {{ background-position: 0% 50%; }}
+            50% {{ background-position: 100% 50%; }}
+        }}
         
         .search-container {{
             position: relative;
@@ -425,13 +488,16 @@ html = f"""<!DOCTYPE html>
             font-weight: bold; 
             padding: 4px 12px; 
             border-radius: 15px; 
-            animation: pulseCurrency 2s infinite;
         }}
         .currency-value.up {{ background: #28a745; color: #fff; }}
         .currency-value.down {{ background: #dc3545; color: #fff; }}
+        .currency-icon {{
+            display: inline-block;
+            animation: pulseCurrency 2s infinite;
+        }}
         @keyframes pulseCurrency {{
             0%, 100% {{ transform: scale(1); }}
-            50% {{ transform: scale(1.05); }}
+            50% {{ transform: scale(1.1); }}
         }}
         
         .weather-card {{ text-align: center; }}
@@ -478,11 +544,28 @@ html = f"""<!DOCTYPE html>
 <body>
     <div class="header">
         <div class="logo">AmirHarter</div>
-        <button class="settings-btn" onclick="openSettings()">⚙️</button>
+        <button class="settings-btn" onclick="toggleSettings()">⚙️</button>
     </div>
+    
+    <div class="settings-overlay" id="settingsOverlay" onclick="toggleSettings()"></div>
+    <div class="settings-panel" id="settingsPanel">
+        <div class="settings-title">⚙️ تنظیمات</div>
+        
+        <div class="settings-item" onclick="showLogin()">👤 ثبت‌نام / ورود</div>
+        <div class="settings-item" onclick="toggleTheme()">🌙 تغییر تم</div>
+        <div class="settings-item" onclick="cycleLanguage()">🌐 زبان: <span id="langLabel">فارسی</span></div>
+        <div class="settings-item" onclick="cycleFontSize()">🔤 فونت: <span id="fontLabel">متوسط</span></div>
+        <div class="settings-item" onclick="shareSite()">📤 اشتراک‌گذاری سایت</div>
+        <div class="settings-item" onclick="reportIssue()">⚠️ گزارش مشکل</div>
+        <div class="settings-item" onclick="showAbout()">📖 درباره ما</div>
+        <div class="settings-item">📌 نسخه: v36</div>
+    </div>
+    
     <div class="main">
-        <div class="theme-float">
-            <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">☀️</button>
+        <button class="theme-float" onclick="toggleTheme()" id="themeFloat">☀️</button>
+        
+        <div class="logo-animation">
+            <div class="logo-text">AmirHarter</div>
         </div>
         
         <div class="search-container">
@@ -513,7 +596,7 @@ html = f"""<!DOCTYPE html>
         </div>
         
         <div class="card">
-            <div class="card-title">💱 قیمت ارز</div>
+            <div class="card-title"><span class="currency-icon">💱</span> قیمت ارز</div>
             <input class="currency-search" placeholder="🔍 جستجوی ارز..." onkeyup="filterCurrency(this.value)">
             <div class="currency-scroll" id="currencyList">
                 {currency_html}
@@ -574,6 +657,57 @@ html = f"""<!DOCTYPE html>
         
         const provinces = {province_data};
         
+        function toggleSettings() {{
+            document.getElementById('settingsPanel').classList.toggle('open');
+            document.getElementById('settingsOverlay').style.display = 
+                document.getElementById('settingsPanel').classList.contains('open') ? 'block' : 'none';
+        }}
+        
+        function showLogin() {{
+            const name = prompt('نام شما:');
+            if (name) {{
+                localStorage.setItem('userName', name);
+                alert('خوش اومدی ' + name + '! 👋');
+            }}
+        }}
+        
+        function cycleFontSize() {{
+            const sizes = ['0.9rem', '1rem', '1.2rem'];
+            const labels = ['کوچیک', 'متوسط', 'بزرگ'];
+            let current = getComputedStyle(document.body).fontSize;
+            let idx = sizes.indexOf(current);
+            if (idx === -1) idx = 1;
+            idx = (idx + 1) % 3;
+            document.body.style.fontSize = sizes[idx];
+            document.getElementById('fontLabel').textContent = labels[idx];
+        }}
+        
+        function cycleLanguage() {{
+            const labels = ['فارسی', 'English', 'العربية'];
+            let current = document.getElementById('langLabel').textContent;
+            let idx = labels.indexOf(current);
+            if (idx === -1) idx = 0;
+            idx = (idx + 1) % 3;
+            document.getElementById('langLabel').textContent = labels[idx];
+        }}
+        
+        function shareSite() {{
+            const url = window.location.href;
+            if (navigator.share) {{
+                navigator.share({{title: 'AmirHarter', url: url}});
+            }} else {{
+                prompt('لینک سایت:', url);
+            }}
+        }}
+        
+        function reportIssue() {{
+            alert('برای گزارش مشکل به تلگرام ما پیام بدید!');
+        }}
+        
+        function showAbout() {{
+            alert('AmirHarter | پورتال هوشمند\\n\\nAMIRHARTER ... فقط یک سایت نیست\\nیه دنیای کامله!\\n\\nجایی که همه‌چیز یکجا جمع شده\\nاز آخرین اخبار و قیمت ارز\\nتا آب و هوا، فوتبال و ترجمه!\\n\\nساخته شده برای اینکه دنیایی از اطلاعات دم دستت باشه\\n\\n✨ قدرت در عین سادگی ✨\\nنسخه ۴.۰');
+        }}
+        
         function changeProvince(name) {{
             if (!name || !provinces[name]) return;
             const [lat, lon] = provinces[name];
@@ -605,11 +739,8 @@ html = f"""<!DOCTYPE html>
         
         function toggleTheme() {{
             document.body.classList.toggle('light-mode');
-            document.getElementById('themeBtn').textContent = document.body.classList.contains('light-mode') ? '🌙' : '☀️';
-        }}
-        
-        function openSettings() {{
-            alert('تنظیمات به زودی!');
+            const isLight = document.body.classList.contains('light-mode');
+            document.getElementById('themeFloat').textContent = isLight ? '🌙' : '☀️';
         }}
         
         function searchGoogle(q) {{ if (q) window.open('https://www.google.com/search?q=' + encodeURIComponent(q), '_blank'); }}
