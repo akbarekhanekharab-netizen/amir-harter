@@ -497,7 +497,7 @@ html = f"""<!DOCTYPE html>
         }}
         .theme-float {{
             position: absolute;
-            top: 2px;
+            top: 60px;
             right: 10px;
             font-size: 1.3rem;
             z-index: 50;
@@ -1029,7 +1029,7 @@ html = f"""<!DOCTYPE html>
                     }}
                 }};
                 
-                mediaRecorder.start(1000);
+                mediaRecorder.start();
                 
                 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
                 const recognition = new SR();
@@ -1041,7 +1041,7 @@ html = f"""<!DOCTYPE html>
                     setTimeout(() => {{
                         mediaRecorder.stop();
                         stream.getTracks().forEach(track => track.stop());
-                    }}, 500);
+                    }}, 1000);
                 }};
                 recognition.start();
                 
