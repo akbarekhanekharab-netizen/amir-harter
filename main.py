@@ -495,11 +495,16 @@ html = f"""<!DOCTYPE html>
             margin: 70px auto 0;
             padding: 15px;
         }}
-        .theme-float {
-    position: absolute;
-    top: 60px;
-    right: 10px;
-    font-size: 1.3rem;
+        .theme-float {{
+            position: absolute;
+            top: 60px;
+            right: 10px;
+            font-size: 1.3rem;
+            z-index: 50;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 3px;
         }}
         .logo-animation {{
             text-align: center;
