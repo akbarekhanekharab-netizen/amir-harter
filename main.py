@@ -324,7 +324,7 @@ all_matches = finished + live + upcoming
 matches_html = ""
 for m in all_matches[:20]:
     matchday_text = f" | {m['matchday']}" if m['matchday'] else ""
-    tv_icon = ' <span onclick="window.open(\'https://www.telewebion.com/\', \'_blank\')" style="cursor:pointer;">📺</span>' if m['status_class'] == 'live' else ''
+    tv_icon = ' <span onclick="window.open(\'https://telewebion.net/\', \'_blank\')" style="cursor:pointer;">📺</span>' if m['status_class'] == 'live' else ''
     matches_html += f'''<div class="match-item" data-status="{m['status_class']}">
         <div class="match-row">
             <span class="team-name right">{m['home']}</span>
@@ -447,7 +447,7 @@ html = f"""<!DOCTYPE html>
     <div class="main">
         <div class="logo-animation"><div class="logo-text">AmirHarter</div></div>
         <div class="search-container"><button class="search-btn" onclick="searchGoogle(document.getElementById('mainSearch').value)" data-fa="جستجو" data-en="Search">جستجو</button><button class="mic-btn" onclick="voiceSearch()">🎤</button><input class="search-box" id="mainSearch" placeholder="در AMIR HARTER" data-placeholder-fa="در AMIR HARTER" data-placeholder-en="Search in AMIR HARTER"></div>
-        <div class="search-options"><a href="https://play.google.com/" target="_blank" class="search-option" data-fa="📱 گوگل‌پلی" data-en="📱 Google Play">📱 گوگل‌پلی</a><a href="https://www.telewebion.com/" target="_blank" class="search-option" data-fa="📺 تلوبیون" data-en="📺 Telewebion">📺 تلوبیون</a><a href="games.html" class="search-option" data-fa="🎮 بازی‌ها" data-en="🎮 Games">🎮 بازی‌ها</a></div>
+        <div class="search-options"><a href="https://play.google.com/" target="_blank" class="search-option" data-fa="📱 گوگل‌پلی" data-en="📱 Google Play">📱 گوگل‌پلی</a><a href="https://telewebion.net/" target="_blank" class="search-option" data-fa="📺 تلوبیون" data-en="📺 Telewebion">📺 تلوبیون</a><a href="games.html" class="search-option" data-fa="🎮 بازی‌ها" data-en="🎮 Games">🎮 بازی‌ها</a></div>
         <div class="clock-section"><div class="clock-icon">🕐</div><div class="clock" id="clock">--:--:--</div><div class="date" id="date">---</div></div>
         <div class="card"><div class="card-title" data-fa="🌤 آب و هوا" data-en="🌤 Weather">🌤 آب و هوا</div><div class="weather-card" id="weatherData">{weather_html}</div><select class="province-select" onchange="changeProvince(this.value)"><option value="" data-fa="انتخاب استان..." data-en="Select province...">انتخاب استان...</option>{provinces_options}</select></div>
         <div class="card"><div class="card-title"><span class="currency-icon">💱</span> <span data-fa="قیمت ارز" data-en="Currency Rates">قیمت ارز</span></div><input class="currency-search" placeholder="🔍 جستجوی ارز..." onkeyup="filterCurrency(this.value)"><div class="currency-scroll" id="currencyList">{currency_html}</div></div>
