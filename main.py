@@ -273,7 +273,6 @@ html = f"""<!DOCTYPE html>
             --text: #fff; 
             --muted: #ccc; 
             --accent: #f093fb;
-            --font-size: 1rem;
         }}
         .light-mode {{ 
             --bg: linear-gradient(135deg, #e8f4fd, #d4e9ff, #c2dfff); 
@@ -284,7 +283,7 @@ html = f"""<!DOCTYPE html>
             --accent: #e85d75;
         }}
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-        body {{ background: var(--bg); color: var(--text); font-family: Tahoma; transition: 0.5s; min-height: 100vh; font-size: var(--font-size); }}
+        body {{ background: var(--bg); color: var(--text); font-family: Tahoma; transition: 0.5s; min-height: 100vh; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }}
         
         .header {{ 
             display: flex; 
@@ -338,22 +337,54 @@ html = f"""<!DOCTYPE html>
         }}
         .settings-item:hover {{ background: rgba(255,255,255,0.15); }}
         
+        .modal-overlay {{
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 300;
+            justify-content: center;
+            align-items: center;
+        }}
+        .modal {{
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }}
+        .modal-header {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }}
+        .modal-close {{
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }}
+        
         .main {{ max-width: 600px; margin: 0 auto; padding: 15px; }}
         
         .theme-float {{
             position: fixed;
             top: 70px;
             left: 15px;
-            font-size: 2.5rem;
+            font-size: 1.5rem;
             z-index: 50;
-            animation: floatTheme 3s ease-in-out infinite;
-            cursor: pointer;
             background: none;
             border: none;
-        }}
-        @keyframes floatTheme {{
-            0%, 100% {{ transform: translateY(0); }}
-            50% {{ transform: translateY(-10px); }}
+            cursor: pointer;
+            padding: 5px;
         }}
         
         .logo-animation {{
@@ -488,12 +519,17 @@ html = f"""<!DOCTYPE html>
             font-weight: bold; 
             padding: 4px 12px; 
             border-radius: 15px; 
+            font-size: 0.85rem;
         }}
         .currency-value.up {{ background: #28a745; color: #fff; }}
         .currency-value.down {{ background: #dc3545; color: #fff; }}
         .currency-icon {{
             display: inline-block;
+            font-size: 2rem;
             animation: pulseCurrency 2s infinite;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            padding: 8px;
         }}
         @keyframes pulseCurrency {{
             0%, 100% {{ transform: scale(1); }}
@@ -550,15 +586,58 @@ html = f"""<!DOCTYPE html>
     <div class="settings-overlay" id="settingsOverlay" onclick="toggleSettings()"></div>
     <div class="settings-panel" id="settingsPanel">
         <div class="settings-title">⚙️ تنظیمات</div>
-        
-        <div class="settings-item" onclick="showLogin()">👤 ثبت‌نام / ورود</div>
         <div class="settings-item" onclick="toggleTheme()">🌙 تغییر تم</div>
-        <div class="settings-item" onclick="cycleLanguage()">🌐 زبان: <span id="langLabel">فارسی</span></div>
-        <div class="settings-item" onclick="cycleFontSize()">🔤 فونت: <span id="fontLabel">متوسط</span></div>
+        <div class="settings-item" onclick="showFontModal()">🔤 فونت: <span id="fontLabel">متوسط</span></div>
         <div class="settings-item" onclick="shareSite()">📤 اشتراک‌گذاری سایت</div>
-        <div class="settings-item" onclick="reportIssue()">⚠️ گزارش مشکل</div>
-        <div class="settings-item" onclick="showAbout()">📖 درباره ما</div>
+        <div class="settings-item" onclick="showReportModal()">⚠️ گزارش مشکل</div>
+        <div class="settings-item" onclick="showAboutModal()">📖 درباره ما</div>
         <div class="settings-item">📌 نسخه: v36</div>
+    </div>
+    
+    <div class="modal-overlay" id="aboutModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span>📖 درباره ما</span>
+                <button class="modal-close" onclick="closeModal('aboutModal')">›</button>
+            </div>
+            <p>AmirHarter | پورتال هوشمند</p>
+            <br>
+            <p>AMIRHARTER ... فقط یک سایت نیست</p>
+            <p>یه دنیای کامله!</p>
+            <br>
+            <p>جایی که همه‌چیز یکجا جمع شده</p>
+            <p>از آخرین اخبار و قیمت ارز</p>
+            <p>تا آب و هوا، فوتبال و ترجمه!</p>
+            <br>
+            <p>ساخته شده برای اینکه دنیایی از اطلاعات دم دستت باشه</p>
+            <br>
+            <p>✨ قدرت در عین سادگی ✨</p>
+            <p>نسخه ۴.۰</p>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="reportModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span>⚠️ گزارش مشکل</span>
+                <button class="modal-close" onclick="closeModal('reportModal')">›</button>
+            </div>
+            <p>در روبیکا پیام دهید:</p>
+            <br>
+            <p style="cursor:pointer; background: var(--card); padding: 10px; border-radius: 8px;" onclick="copyID()">@ID_HARTER</p>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="fontModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span>🔤 انتخاب فونت</span>
+                <button class="modal-close" onclick="closeModal('fontModal')">›</button>
+            </div>
+            <div class="settings-item" onclick="setFontSize('0.9rem', 'کوچیک')">کوچیک</div>
+            <div class="settings-item" onclick="setFontSize('1rem', 'متوسط')">متوسط</div>
+            <div class="settings-item" onclick="setFontSize('1.2rem', 'بزرگ')">بزرگ</div>
+        </div>
     </div>
     
     <div class="main">
@@ -663,32 +742,39 @@ html = f"""<!DOCTYPE html>
                 document.getElementById('settingsPanel').classList.contains('open') ? 'block' : 'none';
         }}
         
-        function showLogin() {{
-            const name = prompt('نام شما:');
-            if (name) {{
-                localStorage.setItem('userName', name);
-                alert('خوش اومدی ' + name + '! 👋');
-            }}
+        function showAboutModal() {{
+            toggleSettings();
+            document.getElementById('aboutModal').style.display = 'flex';
         }}
         
-        function cycleFontSize() {{
-            const sizes = ['0.9rem', '1rem', '1.2rem'];
-            const labels = ['کوچیک', 'متوسط', 'بزرگ'];
-            let current = getComputedStyle(document.body).fontSize;
-            let idx = sizes.indexOf(current);
-            if (idx === -1) idx = 1;
-            idx = (idx + 1) % 3;
-            document.body.style.fontSize = sizes[idx];
-            document.getElementById('fontLabel').textContent = labels[idx];
+        function showReportModal() {{
+            toggleSettings();
+            document.getElementById('reportModal').style.display = 'flex';
         }}
         
-        function cycleLanguage() {{
-            const labels = ['فارسی', 'English', 'العربية'];
-            let current = document.getElementById('langLabel').textContent;
-            let idx = labels.indexOf(current);
-            if (idx === -1) idx = 0;
-            idx = (idx + 1) % 3;
-            document.getElementById('langLabel').textContent = labels[idx];
+        function showFontModal() {{
+            toggleSettings();
+            document.getElementById('fontModal').style.display = 'flex';
+        }}
+        
+        function closeModal(id) {{
+            document.getElementById(id).style.display = 'none';
+        }}
+        
+        function copyID() {{
+            const textarea = document.createElement('textarea');
+            textarea.value = '@ID_HARTER';
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            alert('کپی شد!');
+        }}
+        
+        function setFontSize(size, label) {{
+            document.body.style.fontSize = size;
+            document.getElementById('fontLabel').textContent = label;
+            closeModal('fontModal');
         }}
         
         function shareSite() {{
@@ -698,14 +784,6 @@ html = f"""<!DOCTYPE html>
             }} else {{
                 prompt('لینک سایت:', url);
             }}
-        }}
-        
-        function reportIssue() {{
-            alert('برای گزارش مشکل به تلگرام ما پیام بدید!');
-        }}
-        
-        function showAbout() {{
-            alert('AmirHarter | پورتال هوشمند\\n\\nAMIRHARTER ... فقط یک سایت نیست\\nیه دنیای کامله!\\n\\nجایی که همه‌چیز یکجا جمع شده\\nاز آخرین اخبار و قیمت ارز\\nتا آب و هوا، فوتبال و ترجمه!\\n\\nساخته شده برای اینکه دنیایی از اطلاعات دم دستت باشه\\n\\n✨ قدرت در عین سادگی ✨\\nنسخه ۴.۰');
         }}
         
         function changeProvince(name) {{
