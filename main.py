@@ -382,12 +382,12 @@ html = f"""<!DOCTYPE html>
             position: fixed;
             top: 15px;
             left: 15px;
-            font-size: 1.2rem;
+            font-size: 2rem;
             z-index: 50;
             background: none;
             border: none;
             cursor: pointer;
-            padding: 3px;
+            padding: 5px;
         }}
         
         .logo-animation {{
@@ -530,12 +530,7 @@ html = f"""<!DOCTYPE html>
             display: inline-block;
             font-size: 1.8rem;
             animation: pulseCurrency 2s infinite;
-            background: rgba(255,255,255,0.08);
-            padding: 8px;
-            border-radius: 50%;
-            box-shadow: 
-                0 0 10px rgba(255,255,255,0.3),
-                0 0 20px rgba(255,255,255,0.1);
+            text-shadow: 0 2px 4px rgba(255,255,255,0.7);
         }}
         @keyframes pulseCurrency {{
             0%, 100% {{ transform: scale(1); }}
