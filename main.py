@@ -2,6 +2,7 @@ import requests
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from pathlib import Path
+import shutil
 
 OUTPUT_DIR = Path('site')
 OUTPUT_DIR.mkdir(exist_ok=True)
@@ -317,20 +318,26 @@ html = f"""<!DOCTYPE html>
             50% {{ background-position: 100% 50%; }}
         }}
         
+        .search-container {{
+            position: relative;
+            margin: 15px 0;
+        }}
         .search-box {{ 
             width: 100%; 
-            padding: 14px 50px; 
+            padding: 14px 120px 14px 50px; 
             border-radius: 30px; 
             border: 2px solid var(--border); 
             background: var(--card); 
             color: var(--text); 
             font-size: 1.05rem; 
-            margin: 15px 0; 
             outline: none; 
         }}
         .search-btn {{ 
             position: absolute; 
-            padding: 12px 20px; 
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 10px 20px; 
             border: none; 
             border-radius: 25px; 
             background: linear-gradient(45deg, #f093fb, #f5576c); 
@@ -340,7 +347,9 @@ html = f"""<!DOCTYPE html>
         }}
         .mic-btn {{
             position: absolute;
-            left: 20px;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
             background: none;
             border: none;
             cursor: pointer;
@@ -441,7 +450,7 @@ html = f"""<!DOCTYPE html>
         .lang-row {{ display: flex; gap: 10px; margin-bottom: 15px; }}
         .lang-box {{ flex: 1; }}
         .lang-search {{ width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 0.75rem; }}
-        .search-btn {{ width: 100%; padding: 10px; border: none; border-radius: 25px; background: linear-gradient(45deg, #f093fb, #f5576c); color: #fff; cursor: pointer; font-size: 1.2rem; margin-top: 6px; }}
+        .lang-search-btn {{ width: 100%; padding: 10px; border: none; border-radius: 25px; background: linear-gradient(45deg, #f093fb, #f5576c); color: #fff; cursor: pointer; font-size: 1.2rem; margin-top: 6px; }}
         .lang-select {{ width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 0.8rem; margin-top: 5px; }}
         .swap-btn {{ width: 40px; height: 40px; border: none; border-radius: 50%; background: linear-gradient(45deg, #f093fb, #f5576c); color: #fff; cursor: pointer; font-size: 1.3rem; align-self: center; }}
         textarea {{ width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); min-height: 100px; }}
@@ -450,6 +459,16 @@ html = f"""<!DOCTYPE html>
         .translate-btn {{ background: var(--accent); color: #fff; }}
         .copy-btn {{ background: #4facfe; color: #fff; }}
         .result {{ background: var(--card); padding: 15px; border-radius: 10px; margin: 10px 0; }}
+        .games-btn {{
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #f093fb, #ffd700);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            margin: 10px 0;
+        }}
         .footer {{ text-align: center; padding: 20px; color: var(--muted); font-size: 0.8rem; }}
     </style>
 </head>
@@ -460,15 +479,16 @@ html = f"""<!DOCTYPE html>
             <div class="logo-text">AmirHarter</div>
         </div>
         
-        <div style="position: relative;">
+        <div class="search-container">
             <button class="search-btn" onclick="searchGoogle(document.getElementById('mainSearch').value)">جستجو</button>
             <button class="mic-btn" onclick="voiceSearch()">🎤</button>
             <input class="search-box" id="mainSearch" placeholder="در AMIR HARTER جستجو کنید..." onkeypress="if(event.key==='Enter') searchGoogle(this.value)">
         </div>
         
         <div class="search-options">
-            <div class="search-option" onclick="window.open('https://yandex.com/images/', '_blank')">🖼 جستجوی تصویر</div>
-            <div class="search-option" onclick="window.open('https://soundcloud.com/search', '_blank')">🎵 جستجوی موسیقی</div>
+            <div class="search-option" onclick="window.open('https://images.google.com/', '_blank')">🖼 جستجوی تصویر</div>
+            <div class="search-option" onclick="window.open('https://www.google.com/search?q=music', '_blank')">🎵 جستجوی موسیقی</div>
+            <a href="games.html" class="games-btn">🎮 بازی‌ها</a>
         </div>
         
         <div class="clock-section">
@@ -510,18 +530,42 @@ html = f"""<!DOCTYPE html>
         <div class="card">
             <div class="card-title">🌐 ترجمه</div>
             <div class="lang-row">
-                <div class="lang-box"><input class="lang-search" placeholder="تغییر زبان مبدا"><button class="search-btn">🔍</button><select class="lang-select"><option>فارسی</option></select></div>
-                <button class="swap-btn">⇄</button>
-                <div class="lang-box"><input class="lang-search" placeholder="تغییر زبان مقصد"><button class="search-btn">🔍</button><select class="lang-select"><option>انگلیسی</option></select></div>
+                <div class="lang-box">
+                    <input class="lang-search" id="fromSearch" placeholder="🔍 تغییر زبان مبدا...">
+                    <button class="lang-search-btn" onclick="searchFrom()">🔍</button>
+                    <select class="lang-select" id="from"></select>
+                </div>
+                <button class="swap-btn" onclick="swapLanguages()">⇄</button>
+                <div class="lang-box">
+                    <input class="lang-search" id="toSearch" placeholder="🔍 تغییر زبان مقصد...">
+                    <button class="lang-search-btn" onclick="searchTo()">🔍</button>
+                    <select class="lang-select" id="to"></select>
+                </div>
             </div>
-            <textarea placeholder="متن..."></textarea>
-            <div class="btn-row"><button class="translate-btn">ترجمه</button><button class="copy-btn">کپی</button></div>
-            <div class="result">نتیجه...</div>
+            <textarea id="text" placeholder="متن خود را وارد کنید..."></textarea>
+            <div class="btn-row">
+                <button class="translate-btn" onclick="translateText()">ترجمه</button>
+                <button class="copy-btn" onclick="copyResult()">کپی</button>
+            </div>
+            <div class="result" id="result">نتیجه ترجمه...</div>
         </div>
         
         <div class="footer">© 2026 AmirHarter - تمامی حقوق محفوظ است</div>
     </div>
     <script>
+        const languages = {{"fa":"فارسی","en":"انگلیسی","ar":"عربی","fr":"فرانسوی","de":"آلمانی","es":"اسپانیایی","it":"ایتالیایی","pt":"پرتغالی","ru":"روسی","tr":"ترکی","zh":"چینی","ja":"ژاپنی","ko":"کره‌ای","hi":"هندی","ur":"اردو","nl":"هلندی","pl":"لهستانی","sv":"سوئدی","no":"نروژی","da":"دانمارکی","fi":"فنلاندی","el":"یونانی","he":"عبری","th":"تایلندی","vi":"ویتنامی","id":"اندونزیایی","ms":"مالایی","cs":"چکی","sk":"اسلواکی","hu":"مجاری","ro":"رومانیایی","bg":"بلغاری","uk":"اوکراینی","sr":"صربی","hr":"کرواتی","sl":"اسلوونیایی","lt":"لیتوانیایی","lv":"لتونیایی","et":"استونیایی","sq":"آلبانیایی","mk":"مقدونی","hy":"ارمنی","ka":"گرجی","az":"آذربایجانی","kk":"قزاقی","uz":"ازبکی","ky":"قرقیزی","tg":"تاجیکی","mn":"مغولی","bn":"بنگالی","ta":"تامیلی","te":"تلوگو","mr":"مراتی","gu":"گجراتی","kn":"کانادا","ml":"مالایایی","si":"سینهالی","ne":"نپالی","km":"خمری","lo":"لائوسی","my":"برمه‌ای","fil":"فیلیپینی","sw":"سواحیلی","am":"آمهری","ha":"هوسا","yo":"یوروبایی","zu":"زولویی","af":"آفریکانس","ig":"ایگبو"}};
+        
+        function populateLanguages() {{
+            const from = document.getElementById('from');
+            const to = document.getElementById('to');
+            for (const code in languages) {{
+                from.innerHTML += `<option value="${{code}}">${{languages[code]}}</option>`;
+                to.innerHTML += `<option value="${{code}}">${{languages[code]}}</option>`;
+            }}
+            from.value = 'fa'; to.value = 'en';
+        }}
+        populateLanguages();
+        
         const provinces = {province_data};
         
         function changeProvince(name) {{
@@ -581,6 +625,45 @@ html = f"""<!DOCTYPE html>
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
         }}
+        
+        function swapLanguages() {{
+            const from = document.getElementById('from');
+            const to = document.getElementById('to');
+            const temp = from.value; from.value = to.value; to.value = temp;
+        }}
+        
+        function searchFrom() {{
+            const q = document.getElementById('fromSearch').value.trim().toLowerCase();
+            const select = document.getElementById('from');
+            for (const code in languages) {{
+                if (languages[code].toLowerCase().includes(q)) {{ select.value = code; document.getElementById('fromSearch').value = ''; break; }}
+            }}
+        }}
+        
+        function searchTo() {{
+            const q = document.getElementById('toSearch').value.trim().toLowerCase();
+            const select = document.getElementById('to');
+            for (const code in languages) {{
+                if (languages[code].toLowerCase().includes(q)) {{ select.value = code; document.getElementById('toSearch').value = ''; break; }}
+            }}
+        }}
+        
+        function translateText() {{
+            const text = document.getElementById('text').value;
+            const from = document.getElementById('from').value;
+            const to = document.getElementById('to').value;
+            if (!text) return;
+            fetch(`https://api.mymemory.translated.net/get?q=${{encodeURIComponent(text)}}&langpair=${{from}}|${{to}}`)
+                .then(r => r.json()).then(d => document.getElementById('result').textContent = d.responseData.translatedText);
+        }}
+        
+        function copyResult() {{
+            const result = document.getElementById('result').textContent;
+            const textarea = document.createElement('textarea');
+            textarea.value = result; document.body.appendChild(textarea);
+            textarea.select(); document.execCommand('copy');
+            document.body.removeChild(textarea); alert('کپی شد!');
+        }}
     </script>
 </body>
 </html>
@@ -591,8 +674,6 @@ html = html.replace("{province_data}", province_data)
 with open(OUTPUT_DIR / 'index.html', 'w', encoding='utf-8') as f:
     f.write(html)
 
-# کپی فایل‌های بازی
-import shutil
 game_files = ['games.html', 'tictactoe.html', 'snake.html', 'guess.html', 'rps.html']
 for game_file in game_files:
     if Path(game_file).exists():
