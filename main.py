@@ -498,13 +498,13 @@ html = f"""<!DOCTYPE html>
         .theme-float {{
             position: absolute;
             top: 80px;
-            left: 15px;
-            font-size: 2rem;
+            right: 15px;
+            font-size: 1.5rem;
             z-index: 50;
             background: none;
             border: none;
             cursor: pointer;
-            padding: 5px;
+            padding: 3px;
         }}
         .logo-animation {{
             text-align: center;
