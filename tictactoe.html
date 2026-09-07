@@ -19,6 +19,17 @@
         }
         h1 { margin-bottom: 10px; font-size: 2rem; }
         .credit { margin-bottom: 20px; color: #ccc; font-size: 0.9rem; }
+        .mode-select { margin-bottom: 20px; display: flex; gap: 15px; }
+        .mode-btn { 
+            padding: 10px 25px; 
+            background: rgba(255,255,255,0.1); 
+            border: 2px solid #f093fb; 
+            border-radius: 25px; 
+            color: #fff; 
+            cursor: pointer; 
+            font-weight: bold;
+        }
+        .mode-btn.active { background: linear-gradient(45deg, #f093fb, #f5576c); }
         .board {
             display: grid;
             grid-template-columns: repeat(3, 100px);
@@ -40,8 +51,8 @@
         .status { margin: 20px 0; font-size: 1.2rem; }
         .back-btn {
             margin-top: 20px;
-            padding: 12px 30px;
-            background: linear-gradient(45deg, #f093fb, #f5576c);
+            padding: 10px 25px;
+            background: rgba(255,255,255,0.1);
             color: #fff;
             text-decoration: none;
             border-radius: 25px;
@@ -51,6 +62,12 @@
 <body>
     <h1>⭕ بازی دوز ❌</h1>
     <p class="credit">ساخته شده توسط AmirHarter</p>
+    
+    <div class="mode-select">
+        <button class="mode-btn active" onclick="setMode('bot', this)">🤖 با ربات</button>
+        <button class="mode-btn" onclick="setMode('2p', this)">👥 دو نفره</button>
+    </div>
+    
     <div class="status" id="status">نوبت X</div>
     <div class="board" id="board"></div>
     <a href="games.html" class="back-btn">بازگشت</a>
@@ -58,6 +75,21 @@
     <script>
         let board = ['', '', '', '', '', '', '', '', ''];
         let current = 'X';
+        let mode = 'bot';
+        
+        function setMode(m, btn) {
+            mode = m;
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            resetGame();
+        }
+        
+        function resetGame() {
+            board = ['', '', '', '', '', '', '', '', ''];
+            current = 'X';
+            document.getElementById('status').textContent = 'نوبت X';
+            render();
+        }
         
         function render() {
             const boardEl = document.getElementById('board');
@@ -81,6 +113,26 @@
             return null;
         }
         
+        function botPlay() {
+            const empty = board.map((c, i) => c === '' ? i : null).filter(c => c !== null);
+            if (empty.length === 0) return;
+            const randomIndex = empty[Math.floor(Math.random() * empty.length)];
+            board[randomIndex] = 'O';
+            render();
+            
+            const winner = checkWin();
+            if (winner) {
+                document.getElementById('status').textContent = `برنده: ${winner}! 🎉`;
+                return;
+            }
+            if (!board.includes('')) {
+                document.getElementById('status').textContent = 'مساوی! 🤝';
+                return;
+            }
+            current = 'X';
+            document.getElementById('status').textContent = 'نوبت X';
+        }
+        
         function play(i) {
             if (board[i] !== '') return;
             board[i] = current;
@@ -97,8 +149,14 @@
                 return;
             }
             
-            current = current === 'X' ? 'O' : 'X';
-            document.getElementById('status').textContent = `نوبت ${current}`;
+            if (mode === 'bot' && current === 'X') {
+                current = 'O';
+                document.getElementById('status').textContent = 'ربات فکر می‌کنه...';
+                setTimeout(botPlay, 500);
+            } else {
+                current = current === 'X' ? 'O' : 'X';
+                document.getElementById('status').textContent = `نوبت ${current}`;
+            }
         }
         
         render();
