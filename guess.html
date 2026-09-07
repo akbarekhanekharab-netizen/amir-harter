@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حدس عدد | AmirHarter</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: linear-gradient(135deg, #0f0c29, #302b63); 
+            font-family: Tahoma; 
+            color: #fff; 
+            min-height: 100vh; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        h1 { margin-bottom: 10px; font-size: 2rem; }
+        .credit { margin-bottom: 20px; color: #ccc; font-size: 0.9rem; }
+        input {
+            padding: 12px 20px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            border: 2px solid #f093fb;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            outline: none;
+            text-align: center;
+            width: 200px;
+        }
+        button {
+            margin-top: 15px;
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        .hint { margin: 20px 0; font-size: 1.2rem; }
+        .back-btn {
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 25px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎯 حدس عدد</h1>
+    <p class="credit">ساخته شده توسط AmirHarter</p>
+    <input type="number" id="guessInput" placeholder="عددت رو بزن...">
+    <button onclick="checkGuess()">حدس بزن</button>
+    <div class="hint" id="hint">یه عدد بین ۱ تا ۱۰۰ حدس بزن!</div>
+    <a href="games.html" class="back-btn">بازگشت</a>
+    
+    <script>
+        const target = Math.floor(Math.random() * 100) + 1;
+        let attempts = 0;
+        
+        function checkGuess() {
+            const guess = parseInt(document.getElementById('guessInput').value);
+            if (!guess) return;
+            attempts++;
+            
+            if (guess === target) {
+                document.getElementById('hint').textContent = `آفرین! با ${attempts} بار حدس زدی! 🎉`;
+            } else if (guess < target) {
+                document.getElementById('hint').textContent = 'برو بالا! ⬆️';
+            } else {
+                document.getElementById('hint').textContent = 'بیا پایین! ⬇️';
+            }
+        }
+    </script>
+</body>
+</html>
