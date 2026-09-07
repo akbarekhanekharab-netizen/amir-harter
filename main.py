@@ -1,4 +1,3 @@
-import requests
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from pathlib import Path
@@ -380,7 +379,7 @@ html = f"""<!DOCTYPE html>
 
         .theme-float {{
             position: fixed;
-            top: 60px;
+            top: 80px;
             left: 15px;
             font-size: 2rem;
             z-index: 50;
@@ -872,39 +871,20 @@ html = f"""<!DOCTYPE html>
         function translateText() {{
             const text = document.getElementById('text').value;
             const from = document.getElementById('from').value;
-            const to = document.getElementById('to').value;
-            if (!text) return;
+            const to = document.getElementById('to').value;                                                         if (!text) return;
             const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${{from}}&tl=${{to}}&dt=t&q=${{encodeURIComponent(text)}}`;
             fetch(url)
                 .then(r => r.json())
-                .then(d => {{
-                    let translated = '';
-                    d[0].forEach(part => translated += part[0]);
-                    document.getElementById('result').textContent = translated;
-                }})
-                .catch(() => document.getElementById('result').textContent = 'خطا در ترجمه');
-        }}
+                .then(d => {{                                           let translated = '';                                d[0].forEach(part => translated += part[0]);                                                            document.getElementById('result').textContent = translated;                                         }})                                                 .catch(() => document.getElementById('result').textContent = 'خطا در ترجمه');                   }}
 
         function copyResult() {{
-            const result = document.getElementById('result').textContent;
-            const textarea = document.createElement('textarea');
-            textarea.value = result; document.body.appendChild(textarea);
-            textarea.select(); document.execCommand('copy');
-            document.body.removeChild(textarea); alert('کپی شد!');
-        }}
+            const result = document.getElementById('result').textContent;                                           const textarea = document.createElement('textarea');                                                    textarea.value = result; document.body.appendChild(textarea);                                           textarea.select(); document.execCommand('copy');                                                        document.body.removeChild(textarea); alert('کپی شد!');                                              }}
     </script>
 </body>
 </html>
-"""
-
+"""                                                 
 html = html.replace("{province_data}", province_data)
-
-with open(OUTPUT_DIR / 'index.html', 'w', encoding='utf-8') as f:
-    f.write(html)
-
-game_files = ['games.html', 'tictactoe.html', 'snake.html', 'guess.html', 'rps.html']
-for game_file in game_files:
-    if Path(game_file).exists():
-        shutil.copy(game_file, OUTPUT_DIR / game_file)
-
-print("سایت با موفقیت ساخته شد!")
+                                                    with open(OUTPUT_DIR / 'index.html', 'w', encoding='utf-8') as f:                                           f.write(html)
+                                                    game_files = ['games.html', 'tictactoe.html', 'snake.html', 'guess.html', 'rps.html']                   for game_file in game_files:
+    if Path(game_file).exists():                            shutil.copy(game_file, OUTPUT_DIR / game_file)                                                  
+print("سایت با موفقیت ساخته شد!")                   
