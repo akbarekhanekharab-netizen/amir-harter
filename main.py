@@ -119,6 +119,7 @@ def get_currency():
         ("لیر ترکیه", "price_try"), ("یوان چین", "price_cny"),
         ("روبل روسیه", "price_rub"), ("دینار عراق", "price_iqd"),
         ("افغانی", "price_afn"),
+        ("سکه", "sekee"), ("مثقال طلا", "mesghal"),
     ]
     items = ""
     for name, indicator in currencies:
@@ -291,8 +292,10 @@ html = f"""<!DOCTYPE html>
             align-items: center; 
             padding: 15px 20px; 
             background: linear-gradient(135deg, #f093fb, #4facfe); 
-            position: sticky; 
+            position: fixed; 
             top: 0; 
+            left: 0;
+            right: 0;
             z-index: 100; 
         }}
         .light-mode .header {{ 
@@ -373,18 +376,18 @@ html = f"""<!DOCTYPE html>
             cursor: pointer;
         }}
         
-        .main {{ max-width: 600px; margin: 0 auto; padding: 15px; }}
+        .main {{ max-width: 600px; margin: 70px auto 0; padding: 15px; }}
         
         .theme-float {{
             position: fixed;
-            top: 70px;
+            top: 15px;
             left: 15px;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             z-index: 50;
             background: none;
             border: none;
             cursor: pointer;
-            padding: 5px;
+            padding: 3px;
         }}
         
         .logo-animation {{
@@ -525,11 +528,14 @@ html = f"""<!DOCTYPE html>
         .currency-value.down {{ background: #dc3545; color: #fff; }}
         .currency-icon {{
             display: inline-block;
-            font-size: 2rem;
+            font-size: 1.8rem;
             animation: pulseCurrency 2s infinite;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
             padding: 8px;
+            border-radius: 50%;
+            box-shadow: 
+                0 0 10px rgba(255,255,255,0.3),
+                0 0 20px rgba(255,255,255,0.1);
         }}
         @keyframes pulseCurrency {{
             0%, 100% {{ transform: scale(1); }}
