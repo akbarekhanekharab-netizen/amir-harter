@@ -591,4 +591,11 @@ html = html.replace("{province_data}", province_data)
 with open(OUTPUT_DIR / 'index.html', 'w', encoding='utf-8') as f:
     f.write(html)
 
+# کپی فایل‌های بازی
+import shutil
+game_files = ['games.html', 'tictactoe.html', 'snake.html', 'guess.html', 'rps.html']
+for game_file in game_files:
+    if Path(game_file).exists():
+        shutil.copy(game_file, OUTPUT_DIR / game_file)
+
 print("سایت با موفقیت ساخته شد!")
