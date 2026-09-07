@@ -1031,17 +1031,16 @@ html = f"""<!DOCTYPE html>
                 
                 mediaRecorder.start();
                 
+                setTimeout(() => {{
+                    mediaRecorder.stop();
+                    stream.getTracks().forEach(track => track.stop());
+                }}, 5000);
+                
                 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
                 const recognition = new SR();
                 recognition.lang = 'fa-IR';
                 recognition.onresult = function(e) {{
                     document.getElementById('mainSearch').value = e.results[0][0].transcript;
-                }};
-                recognition.onend = function() {{
-                    setTimeout(() => {{
-                        mediaRecorder.stop();
-                        stream.getTracks().forEach(track => track.stop());
-                    }}, 1000);
                 }};
                 recognition.start();
                 
