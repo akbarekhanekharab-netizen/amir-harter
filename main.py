@@ -239,7 +239,7 @@ def get_gold():
     
     for name, url in gold_items:
         try:
-            response = requests.get(url, headers=headers, timeout=30)
+            response = requests.get(url, headers=headers, timeout=5)
             soup = BeautifulSoup(response.text, "html.parser")
             price_elem = soup.find("span", {"class": "value"})
             if price_elem:
