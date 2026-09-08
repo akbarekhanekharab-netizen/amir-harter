@@ -161,93 +161,50 @@ def get_gold():
     return items
 
 def get_football():
-    headers = {"x-apisports-key": "16f55d94baa0c91d666591efb19f633f"}
-    league_ids = [39, 140, 135, 78, 61, 2, 290]
-    league_names = {
-        39: "لیگ برتر انگلیس", 140: "لا لیگا", 135: "سری آ",
-        78: "بوندسلیگا", 61: "لوشامپیونه", 2: "چمپیونز لیگ",
-        290: "لیگ برتر ایران"
-    }
     matches = []
     seen = set()
-    
-    # بازی‌های زنده
     try:
-        url = "https://v3.football.api-sports.io/fixtures?live=all"
-        response = requests.get(url, headers=headers, timeout=15)
+        url = "https://www.scorebat.com/video-api/v3/"
+        response = requests.get(url, timeout=15)
         if response.status_code == 200:
             data = response.json()
             for match in data.get("response", []):
-                league_id = match.get("league", {}).get("id")
-                if league_id in league_ids:
-                    home = match.get("teams", {}).get("home", {}).get("name", "")
-                    away = match.get("teams", {}).get("away", {}).get("name", "")
-                    goals = match.get("goals", {})
-                    score = f"{goals.get('home', 0)} - {goals.get('away', 0)}"
-                    home_fa = translate_team(home)
-                    away_fa = translate_team(away)
-                    key = f"{home_fa}-{away_fa}-live"
-                    if key not in seen:
-                        seen.add(key)
-                        matches.append({
-                            "home": home_fa, "away": away_fa, "score": score,
-                            "status_text": "🔴 در حال برگزاری", "status_class": "live",
-                            "matchday": league_names.get(league_id, ""), "time": datetime.now()
-                        })
+                home = match.get("homeTeam", {}).get("name", "")
+                away = match.get("awayTeam", {}).get("name", "")
+                competition = match.get("competition", "")
+                date = match.get("date", "")
+                home_fa = translate_team(home)
+                away_fa = translate_team(away)
+                competition_fa = competition
+                if "Premier League" in competition:
+                    competition_fa = "لیگ برتر انگلیس"
+                elif "La Liga" in competition:
+                    competition_fa = "لا لیگا"
+                elif "Serie A" in competition:
+                    competition_fa = "سری آ"
+                elif "Bundesliga" in competition:
+                    competition_fa = "بوندسلیگا"
+                elif "Ligue 1" in competition:
+                    competition_fa = "لوشامپیونه"
+                elif "Champions League" in competition:
+                    competition_fa = "چمپیونز لیگ"
+                match_time = datetime.now()
+                try:
+                    match_time = datetime.strptime(date[:19], "%Y-%m-%dT%H:%M:%S")
+                except:
+                    pass
+                key = f"{home_fa}-{away_fa}-{competition_fa}"
+                if key not in seen:
+                    seen.add(key)
+                    matches.append({
+                        "home": home_fa, "away": away_fa, "score": "-",
+                        "status_text": "پیش‌رو", "status_class": "upcoming",
+                        "matchday": competition_fa, "time": match_time
+                    })
     except:
         pass
-    
-    # بازی‌های گذشته و آینده
-    for league_id in league_ids:
-        try:
-            url = f"https://v3.football.api-sports.io/fixtures?league={league_id}&season=2025&last=5"
-            response = requests.get(url, headers=headers, timeout=15)
-            if response.status_code == 200:
-                data = response.json()
-                for match in data.get("response", []):
-                    fixture = match.get("fixture", {})
-                    status = fixture.get("status", {}).get("short", "")
-                    home = match.get("teams", {}).get("home", {}).get("name", "")
-                    away = match.get("teams", {}).get("away", {}).get("name", "")
-                    goals = match.get("goals", {})
-                    home_fa = translate_team(home)
-                    away_fa = translate_team(away)
-                    
-                    if status == "FT":
-                        score = f"{goals.get('home', 0)} - {goals.get('away', 0)}"
-                        status_text = "پایان یافته"
-                        status_class = "finished"
-                    elif status == "NS":
-                        score = "-"
-                        status_text = "برگزار نشده"
-                        status_class = "upcoming"
-                    else:
-                        continue
-                    
-                    match_time = datetime.now()
-                    try:
-                        match_time = datetime.strptime(fixture.get("date", ""), "%Y-%m-%dT%H:%M:%S%z").replace(tzinfo=None)
-                    except:
-                        pass
-                    
-                    key = f"{home_fa}-{away_fa}-{score}-{status_class}"
-                    if key not in seen:
-                        seen.add(key)
-                        matches.append({
-                            "home": home_fa, "away": away_fa, "score": score,
-                            "status_text": status_text, "status_class": status_class,
-                            "matchday": league_names.get(league_id, ""), "time": match_time
-                        })
-        except:
-            pass
-    
-    live_matches = [m for m in matches if m["status_class"] == "live"]
-    finished_matches = [m for m in matches if m["status_class"] == "finished"]
-    upcoming_matches = [m for m in matches if m["status_class"] == "upcoming"]
-    finished_matches.sort(key=lambda x: x["time"], reverse=True)
-    upcoming_matches.sort(key=lambda x: x["time"])
-    
-    return live_matches + finished_matches + upcoming_matches
+    matches.sort(key=lambda x: x["time"], reverse=True)
+    return matches[:20]
 
 # ============ ساخت سایت ============
 print("🔍 در حال دریافت اطلاعات...")
@@ -261,12 +218,11 @@ all_matches = get_football()
 matches_html = ""
 for m in all_matches[:20]:
     matchday_text = f" | {m['matchday']}" if m['matchday'] else ""
-    tv_icon = ' <span onclick="window.open(\'https://telewebion.net/\', \'_blank\')" style="cursor:pointer;">📺</span>' if m['status_class'] == 'live' else ''
     matches_html += f'''<div class="match-item" data-status="{m['status_class']}">
         <div class="match-row">
             <span class="team-name right">{m['home']}</span>
             <span class="match-score">{m['score']}</span>
-            <span class="team-name left">{m['away']}{tv_icon}</span>
+            <span class="team-name left">{m['away']}</span>
         </div>
         <div class="match-status">{m['status_text']}{matchday_text}</div>
     </div>'''
@@ -377,7 +333,7 @@ html = f"""<!DOCTYPE html>
         <div class="settings-item" onclick="shareSite()">📤 اشتراک‌گذاری سایت</div>
         <div class="settings-item" onclick="showReportModal()">⚠️ گزارش مشکل</div>
         <div class="settings-item" onclick="showAboutModal()">📖 درباره ما</div>
-        <div class="settings-item">📌 نسخه: v40</div>
+        <div class="settings-item">📌 نسخه: v41</div>
     </div>
     <div class="modal-overlay" id="aboutModal"><div class="modal"><div class="modal-header"><span>📖 درباره ما</span><button class="modal-close" onclick="closeModal('aboutModal')">›</button></div><p>AmirHarter | پورتال هوشمند</p><br><p>AMIRHARTER ... فقط یک سایت نیست</p><p>یه دنیای کامله!</p><br><p>جایی که همه‌چیز یکجا جمع شده</p><p>از آخرین اخبار و قیمت ارز</p><p>تا آب و هوا، فوتبال و ترجمه!</p><br><p>ساخته شده برای اینکه دنیایی از اطلاعات دم دستت باشه</p><br><p>✨ قدرت در عین سادگی ✨</p><p>نسخه ۵.۰</p></div></div>
     <div class="modal-overlay" id="reportModal"><div class="modal"><div class="modal-header"><span>⚠️ گزارش مشکل</span><button class="modal-close" onclick="closeModal('reportModal')">›</button></div><p>در روبیکا پیام دهید:</p><br><p style="cursor:pointer; background: var(--card); padding: 10px; border-radius: 8px;" onclick="copyID()">@ID_HARTER</p></div></div>
@@ -398,7 +354,7 @@ html = f"""<!DOCTYPE html>
     <script>
         const languages = {{"fa":"فارسی","en":"انگلیسی","ar":"عربی","fr":"فرانسوی","de":"آلمانی","es":"اسپانیایی","it":"ایتالیایی","pt":"پرتغالی","ru":"روسی","tr":"ترکی","zh":"چینی","ja":"ژاپنی","ko":"کره‌ای","hi":"هندی","ur":"اردو","nl":"هلندی","pl":"لهستانی","sv":"سوئدی","no":"نروژی","da":"دانمارکی","fi":"فنلاندی","el":"یونانی","he":"عبری","th":"تایلندی","vi":"ویتنامی","id":"اندونزیایی","ms":"مالایی","cs":"چکی","sk":"اسلواکی","hu":"مجاری","ro":"رومانیایی","bg":"بلغاری","uk":"اوکراینی","sr":"صربی","hr":"کرواتی","sl":"اسلوونیایی","lt":"لیتوانیایی","lv":"لتونیایی","et":"استونیایی","sq":"آلبانیایی","mk":"مقدونی","hy":"ارمنی","ka":"گرجی","az":"آذربایجانی","kk":"قزاقی","uz":"ازبکی","ky":"قرقیزی","tg":"تاجیکی","mn":"مغولی","bn":"بنگالی","ta":"تامیلی","te":"تلوگو","mr":"مراتی","gu":"گجراتی","kn":"کانادا","ml":"مالایایی","si":"سینهالی","ne":"نپالی","km":"خمری","lo":"لائوسی","my":"برمه‌ای","fil":"فیلیپینی","sw":"سواحیلی","am":"آمهری","ha":"هوسا","yo":"یوروبایی","zu":"زولویی","af":"آفریکانس","ig":"ایگبو"}};
         let currentLang = 'fa';
-        function toggleLanguage() {{ if (currentLang === 'fa') {{ currentLang = 'en'; document.getElementById('langLabel').textContent = 'English'; document.body.style.direction = 'ltr'; }} else {{ currentLang = 'fa'; document.getElementById('langLabel').textContent = 'فارسی'; document.body.style.direction = 'rtl'; }} }}
+        function toggleLanguage() {{ if (currentLang === 'fa') {{ currentLang = 'en'; document.getElementById('langLabel').textContent = 'English'; document.body.style.direction = 'ltr'; document.querySelector('.search-btn').textContent = 'Search'; document.querySelector('.search-box').placeholder = 'Search in AMIR HARTER'; document.querySelectorAll('.search-option')[0].textContent = '📱 Google Play'; document.querySelectorAll('.search-option')[1].textContent = '📺 Telewebion'; document.querySelectorAll('.search-option')[2].textContent = '🎮 Games'; }} else {{ currentLang = 'fa'; document.getElementById('langLabel').textContent = 'فارسی'; document.body.style.direction = 'rtl'; document.querySelector('.search-btn').textContent = 'جستجو'; document.querySelector('.search-box').placeholder = 'در AMIR HARTER'; document.querySelectorAll('.search-option')[0].textContent = '📱 گوگل‌پلی'; document.querySelectorAll('.search-option')[1].textContent = '📺 تلوبیون'; document.querySelectorAll('.search-option')[2].textContent = '🎮 بازی‌ها'; }} }}
         function populateLanguages() {{ const from = document.getElementById('from'); const to = document.getElementById('to'); for (const code in languages) {{ from.innerHTML += `<option value="${{code}}">${{languages[code]}}</option>`; to.innerHTML += `<option value="${{code}}">${{languages[code]}}</option>`; }} from.value = 'fa'; to.value = 'en'; }}
         populateLanguages();
         const provinces = {province_data};
