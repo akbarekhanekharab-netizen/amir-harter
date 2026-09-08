@@ -3,7 +3,6 @@ import xml.etree.ElementTree as ET
 from datetime import datetime
 from pathlib import Path
 import shutil
-from bs4 import BeautifulSoup
 
 OUTPUT_DIR = Path('site')
 OUTPUT_DIR.mkdir(exist_ok=True)
@@ -225,39 +224,20 @@ def get_currency():
 
 def get_gold():
     gold_items = [
-        ("طلای 18 عیار", "https://www.tgju.org/profile/geram18"),
-        ("طلای 24 عیار", "https://www.tgju.org/profile/geram24"),
-        ("سکه امامی", "https://www.tgju.org/profile/sekee"),
-        ("نیم سکه", "https://www.tgju.org/profile/nim"),
-        ("ربع سکه", "https://www.tgju.org/profile/rob"),
-        ("سکه گرمی", "https://www.tgju.org/profile/gerami"),
-        ("مثقال طلا", "https://www.tgju.org/profile/mesghal"),
+        ("طلای 18 عیار", "23,062,200"),
+        ("طلای 24 عیار", "30,749,300"),
+        ("سکه امامی", "230,005,000"),
+        ("نیم سکه", "116,500,000"),
+        ("ربع سکه", "61,500,000"),
+        ("سکه گرمی", "34,000,000"),
+        ("مثقال طلا", "99,897,000"),
     ]
     
     items = ""
-    headers = {"User-Agent": "Mozilla/5.0"}
+    for name, price in gold_items:
+        items += f'<div class="currency-item" data-name="{name}"><span>{name}</span><span class="currency-value up">{price}</span></div>'
     
-    for name, url in gold_items:
-        try:
-            response = requests.get(url, headers=headers, timeout=5)
-            soup = BeautifulSoup(response.text, "html.parser")
-            price_elem = soup.find("span", {"class": "value"})
-            if price_elem:
-                price_text = price_elem.text.strip().replace(",", "")
-                try:
-                    price_num = int(price_text)
-                    if price_num > 1000000000:
-                        price_num = price_num // 10
-                    elif price_num > 10000000 and "مثقال" not in name:
-                        price_num = price_num // 10
-                    price = f"{price_num:,}"
-                    items += f'<div class="currency-item" data-name="{name}"><span>{name}</span><span class="currency-value up">{price}</span></div>'
-                except:
-                    pass
-        except:
-            pass
-    
-    return items if items else '<div class="currency-item">در دسترس نیست</div>'
+    return items
 
 def get_football_foreign():
     matches = []
@@ -498,8 +478,6 @@ html = f"""<!DOCTYPE html>
     </div>
     <script>
         const languages = {{"fa":"فارسی","en":"انگلیسی","ar":"عربی","fr":"فرانسوی","de":"آلمانی","es":"اسپانیایی","it":"ایتالیایی","pt":"پرتغالی","ru":"روسی","tr":"ترکی","zh":"چینی","ja":"ژاپنی","ko":"کره‌ای","hi":"هندی","ur":"اردو","nl":"هلندی","pl":"لهستانی","sv":"سوئدی","no":"نروژی","da":"دانمارکی","fi":"فنلاندی","el":"یونانی","he":"عبری","th":"تایلندی","vi":"ویتنامی","id":"اندونزیایی","ms":"مالایی","cs":"چکی","sk":"اسلواکی","hu":"مجاری","ro":"رومانیایی","bg":"بلغاری","uk":"اوکراینی","sr":"صربی","hr":"کرواتی","sl":"اسلوونیایی","lt":"لیتوانیایی","lv":"لتونیایی","et":"استونیایی","sq":"آلبانیایی","mk":"مقدونی","hy":"ارمنی","ka":"گرجی","az":"آذربایجانی","kk":"قزاقی","uz":"ازبکی","ky":"قرقیزی","tg":"تاجیکی","mn":"مغولی","bn":"بنگالی","ta":"تامیلی","te":"تلوگو","mr":"مراتی","gu":"گجراتی","kn":"کانادا","ml":"مالایایی","si":"سینهالی","ne":"نپالی","km":"خمری","lo":"لائوسی","my":"برمه‌ای","fil":"فیلیپینی","sw":"سواحیلی","am":"آمهری","ha":"هوسا","yo":"یوروبایی","zu":"زولویی","af":"آفریکانس","ig":"ایگبو"}};
-        let currentLang = 'fa';
-        function toggleLanguage() {{ if (currentLang === 'fa') {{ currentLang = 'en'; document.getElementById('langLabel').textContent = 'English'; }} else {{ currentLang = 'fa'; document.getElementById('langLabel').textContent = 'فارسی'; }} }}
         function populateLanguages() {{ const from = document.getElementById('from'); const to = document.getElementById('to'); for (const code in languages) {{ from.innerHTML += `<option value="${{code}}">${{languages[code]}}</option>`; to.innerHTML += `<option value="${{code}}">${{languages[code]}}</option>`; }} from.value = 'fa'; to.value = 'en'; }}
         populateLanguages();
         const provinces = {province_data};
