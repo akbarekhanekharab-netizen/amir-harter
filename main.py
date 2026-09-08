@@ -8,171 +8,72 @@ OUTPUT_DIR = Path('site')
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 team_names = {
-    "Arsenal": "آرسنال",
-    "Chelsea": "چلسی",
-    "Liverpool": "لیورپول",
-    "Manchester City": "منچستر سیتی",
-    "Manchester United": "منچستر یونایتد",
-    "Real Madrid": "رئال مادرید",
-    "Barcelona": "بارسلونا",
-    "Inter": "اینتر",
-    "AC Milan": "میلان",
-    "Juventus": "یوونتوس",
-    "Napoli": "ناپولی",
-    "Roma": "رم",
-    "Lazio": "لاتزیو",
-    "Atalanta": "آتالانتا",
-    "Bayern Munich": "بایرن مونیخ",
-    "Dortmund": "دورتموند",
-    "Leipzig": "لایپزیگ",
-    "Leverkusen": "لورکوزن",
-    "Frankfurt": "فرانکفورت",
-    "Stuttgart": "اشتوتگارت",
-    "PSG": "پاری سن ژرمن",
-    "Marseille": "مارسی",
-    "Lyon": "لیون",
-    "Monaco": "موناکو",
-    "Lille": "لیل",
-    "Nice": "نیس",
-    "Lens": "لانس",
-    "Rennes": "رن",
-    "Strasbourg": "استراسبورگ",
-    "Nantes": "نانت",
-    "Toulouse": "تولوز",
-    "Montpellier": "مون‌پولیه",
-    "Brest": "برست",
-    "Angers": "آنژه",
-    "Auxerre": "اوسر",
-    "Troyes": "تروا",
-    "Freiburg": "فرایبورگ",
-    "Mainz": "ماینتس",
-    "Augsburg": "آگسبورگ",
-    "Fiorentina": "فیورنتینا",
-    "Bologna": "بولونیا",
-    "Parma": "پارما",
-    "Monza": "مونتزا",
-    "Venezia": "ونتزیا",
-    "Tottenham": "تاتنهام",
-    "Newcastle": "نیوکاسل",
-    "Everton": "اورتون",
-    "West Ham": "وست هم",
-    "Fulham": "فولام",
-    "Wolves": "ولورهمپتون",
-    "Valencia": "والنسیا",
-    "Sevilla": "سویا",
-    "Villarreal": "ویارئال",
-    "Atletico Madrid": "اتلتیکو مادرید",
-    "Athletic Bilbao": "اتلتیک بیلبائو",
-    "Getafe": "ختافه",
-    "Crystal Palace": "کریستال پالاس",
-    "Southampton": "ساوتهمپتون",
-    "Brighton": "برایتون",
-    "Brentford": "برنتفورد",
-    "Aston Villa": "استون ویلا",
-    "Leicester": "لسترسیتی",
-    "Leeds": "لیدز یونایتد",
-    "Nottingham Forest": "ناتینگهام فارست",
-    "Bournemouth": "بورنموث",
-    "Real Sociedad": "رئال سوسیداد",
-    "Real Betis": "رئال بتیس",
-    "Celta Vigo": "سلتاویگو",
-    "Girona": "جیرونا",
-    "Osasuna": "اوساسونا",
-    "Mallorca": "مایورکا",
-    "Rayo Vallecano": "رایو وایکانو",
-    "Alaves": "آلاوس",
-    "Las Palmas": "لاس پالماس",
-    "Leganes": "لگانس",
-    "Espanyol": "اسپانیول",
-    "Valladolid": "رئال وایادولید",
-    "Udinese": "اودینزه",
-    "Torino": "تورینو",
-    "Genoa": "جنوا",
-    "Cagliari": "کالیاری",
-    "Empoli": "امپولی",
-    "Lecce": "لچه",
-    "Verona": "هلاس ورونا",
-    "Como": "کومو",
-    "Hoffenheim": "هوفنهایم",
-    "Werder Bremen": "وِردر برمن",
-    "Heidenheim": "هایدنهایم",
-    "St. Pauli": "سنت پائولی",
-    "Union Berlin": "یونیون برلین",
-    "Bochum": "بوخوم",
-    "Koln": "کلن",
-    "Holstein Kiel": "هولشتاین کیل",
-    "Wolfsburg": "وولفسبورگ",
-    "Reims": "رنس",
-    "Le Havre": "لو آور",
-    "Clermont": "کلرمون",
-    "Lorient": "لوریان",
-    "Metz": "متز",
-    "Benfica": "بنفیکا",
-    "Porto": "پورتو",
-    "Sporting CP": "اسپورتینگ لیسبون",
-    "Ajax": "آژاکس",
-    "PSV": "آیندهوون",
-    "Feyenoord": "فاینورد",
-    "Celtic": "سلتیک",
-    "Rangers": "رنجرز",
-    "Galatasaray": "گالاتاسرای",
-    "Fenerbahce": "فنرباغچه",
-    "Olympiacos": "المپیاکوس",
-    "Panathinaikos": "پاناتینایکوس",
-    "AEK Athens": "آ.ا.ک آتن",
-    "PAOK": "پائوک",
-    "Persepolis": "پرسپولیس",
-    "Esteghlal": "استقلال",
-    "Sepahan": "سپاهان",
-    "Tractor": "تراکتور",
-    "Foolad": "فولاد",
-    "Gol Gohar": "گل گهر",
-    "Malavan": "ملوان",
-    "Nassaji": "نساجی",
-    "Zob Ahan": "ذوب آهن",
-    "Aluminium Arak": "آلومینیوم",
-    "Shams Azar": "شمس آذر",
-    "Kheybar": "خیبر",
-    "Sanat Naft": "صنعت نفت",
-    "Fajr Sepasi": "فجر سپاسی",
-    "Chadormalou": "چادرملو",
-    "Havadar": "هوادار",
-    "Paykan": "پیکان",
-    "Mes Shahr-e Babak": "مس شهر بابک",
-    "Esteghlal Khuzestan": "استقلال خوزستان"
+    "Arsenal": "آرسنال", "Chelsea": "چلسی", "Liverpool": "لیورپول",
+    "Manchester City": "منچستر سیتی", "Manchester United": "منچستر یونایتد",
+    "Real Madrid": "رئال مادرید", "Barcelona": "بارسلونا", "Inter": "اینتر",
+    "AC Milan": "میلان", "Juventus": "یوونتوس", "Napoli": "ناپولی",
+    "Roma": "رم", "Lazio": "لاتزیو", "Atalanta": "آتالانتا",
+    "Bayern Munich": "بایرن مونیخ", "Dortmund": "دورتموند", "Leipzig": "لایپزیگ",
+    "Leverkusen": "لورکوزن", "Frankfurt": "فرانکفورت", "Stuttgart": "اشتوتگارت",
+    "PSG": "پاری سن ژرمن", "Marseille": "مارسی", "Lyon": "لیون",
+    "Monaco": "موناکو", "Lille": "لیل", "Nice": "نیس", "Lens": "لانس",
+    "Rennes": "رن", "Strasbourg": "استراسبورگ", "Nantes": "نانت",
+    "Toulouse": "تولوز", "Montpellier": "مون‌پولیه", "Brest": "برست",
+    "Angers": "آنژه", "Auxerre": "اوسر", "Troyes": "تروا",
+    "Freiburg": "فرایبورگ", "Mainz": "ماینتس", "Augsburg": "آگسبورگ",
+    "Fiorentina": "فیورنتینا", "Bologna": "بولونیا", "Parma": "پارما",
+    "Monza": "مونتزا", "Venezia": "ونتزیا", "Tottenham": "تاتنهام",
+    "Newcastle": "نیوکاسل", "Everton": "اورتون", "West Ham": "وست هم",
+    "Fulham": "فولام", "Wolves": "ولورهمپتون", "Valencia": "والنسیا",
+    "Sevilla": "سویا", "Villarreal": "ویارئال", "Atletico Madrid": "اتلتیکو مادرید",
+    "Athletic Bilbao": "اتلتیک بیلبائو", "Getafe": "ختافه",
+    "Crystal Palace": "کریستال پالاس", "Southampton": "ساوتهمپتون",
+    "Brighton": "برایتون", "Brentford": "برنتفورد", "Aston Villa": "استون ویلا",
+    "Leicester": "لسترسیتی", "Leeds": "لیدز یونایتد",
+    "Nottingham Forest": "ناتینگهام فارست", "Bournemouth": "بورنموث",
+    "Real Sociedad": "رئال سوسیداد", "Real Betis": "رئال بتیس",
+    "Celta Vigo": "سلتاویگو", "Girona": "جیرونا", "Osasuna": "اوساسونا",
+    "Mallorca": "مایورکا", "Rayo Vallecano": "رایو وایکانو",
+    "Alaves": "آلاوس", "Las Palmas": "لاس پالماس", "Leganes": "لگانس",
+    "Espanyol": "اسپانیول", "Valladolid": "رئال وایادولید",
+    "Udinese": "اودینزه", "Torino": "تورینو", "Genoa": "جنوا",
+    "Cagliari": "کالیاری", "Empoli": "امپولی", "Lecce": "لچه",
+    "Verona": "هلاس ورونا", "Como": "کومو", "Hoffenheim": "هوفنهایم",
+    "Werder Bremen": "وِردر برمن", "Heidenheim": "هایدنهایم",
+    "St. Pauli": "سنت پائولی", "Union Berlin": "یونیون برلین",
+    "Bochum": "بوخوم", "Koln": "کلن", "Holstein Kiel": "هولشتاین کیل",
+    "Wolfsburg": "وولفسبورگ", "Reims": "رنس", "Le Havre": "لو آور",
+    "Clermont": "کلرمون", "Lorient": "لوریان", "Metz": "متز",
+    "Benfica": "بنفیکا", "Porto": "پورتو", "Sporting CP": "اسپورتینگ لیسبون",
+    "Ajax": "آژاکس", "PSV": "آیندهوون", "Feyenoord": "فاینورد",
+    "Celtic": "سلتیک", "Rangers": "رنجرز", "Galatasaray": "گالاتاسرای",
+    "Fenerbahce": "فنرباغچه", "Olympiacos": "المپیاکوس",
+    "Panathinaikos": "پاناتینایکوس", "AEK Athens": "آ.ا.ک آتن", "PAOK": "پائوک",
+    "Persepolis": "پرسپولیس", "Esteghlal": "استقلال", "Sepahan": "سپاهان",
+    "Tractor": "تراکتور", "Foolad": "فولاد", "Gol Gohar": "گل گهر",
+    "Malavan": "ملوان", "Nassaji": "نساجی", "Zob Ahan": "ذوب آهن",
+    "Aluminium Arak": "آلومینیوم", "Shams Azar": "شمس آذر", "Kheybar": "خیبر",
+    "Sanat Naft": "صنعت نفت", "Fajr Sepasi": "فجر سپاسی",
+    "Chadormalou": "چادرملو", "Havadar": "هوادار", "Paykan": "پیکان",
+    "Mes Shahr-e Babak": "مس شهر بابک", "Esteghlal Khuzestan": "استقلال خوزستان"
 }
 
 provinces = {
-    "تهران": (35.6892, 51.3890),
-    "مشهد": (36.2605, 59.6168),
-    "اصفهان": (32.6546, 51.6680),
-    "شیراز": (29.5918, 52.5837),
-    "تبریز": (38.0962, 46.2738),
-    "اهواز": (31.3183, 48.6706),
-    "قم": (34.6416, 50.8746),
-    "کرج": (35.8400, 50.9391),
-    "کرمانشاه": (34.3142, 47.0650),
-    "رشت": (37.2808, 49.5832),
-    "زاهدان": (29.4963, 60.8629),
-    "همدان": (34.7983, 48.5148),
-    "ارومیه": (37.5527, 45.0760),
-    "یزد": (31.8974, 54.3569),
-    "اردبیل": (38.2498, 48.2933),
-    "بندرعباس": (27.1832, 56.2666),
-    "اراک": (34.0949, 49.7016),
-    "زنجان": (36.6830, 48.5087),
-    "سنندج": (35.3219, 46.9862),
-    "قزوین": (36.2860, 50.0040),
-    "خرم‌آباد": (33.4871, 48.3558),
-    "گرگان": (36.8386, 54.4346),
-    "ساری": (36.5633, 53.0601),
-    "بوشهر": (28.9234, 50.8203),
-    "بیرجند": (32.8649, 59.2212),
-    "ایلام": (33.6375, 46.4227),
-    "شهرکرد": (32.3256, 50.8644),
-    "یاسوج": (30.6684, 51.5875),
-    "بجنورد": (37.4749, 57.3290),
-    "سمنان": (35.5729, 53.3971)
+    "تهران": (35.6892, 51.3890), "مشهد": (36.2605, 59.6168),
+    "اصفهان": (32.6546, 51.6680), "شیراز": (29.5918, 52.5837),
+    "تبریز": (38.0962, 46.2738), "اهواز": (31.3183, 48.6706),
+    "قم": (34.6416, 50.8746), "کرج": (35.8400, 50.9391),
+    "کرمانشاه": (34.3142, 47.0650), "رشت": (37.2808, 49.5832),
+    "زاهدان": (29.4963, 60.8629), "همدان": (34.7983, 48.5148),
+    "ارومیه": (37.5527, 45.0760), "یزد": (31.8974, 54.3569),
+    "اردبیل": (38.2498, 48.2933), "بندرعباس": (27.1832, 56.2666),
+    "اراک": (34.0949, 49.7016), "زنجان": (36.6830, 48.5087),
+    "سنندج": (35.3219, 46.9862), "قزوین": (36.2860, 50.0040),
+    "خرم‌آباد": (33.4871, 48.3558), "گرگان": (36.8386, 54.4346),
+    "ساری": (36.5633, 53.0601), "بوشهر": (28.9234, 50.8203),
+    "بیرجند": (32.8649, 59.2212), "ایلام": (33.6375, 46.4227),
+    "شهرکرد": (32.3256, 50.8644), "یاسوج": (30.6684, 51.5875),
+    "بجنورد": (37.4749, 57.3290), "سمنان": (35.5729, 53.3971)
 }
 
 def translate_team(name):
@@ -218,14 +119,10 @@ def get_weather(lat=35.6892, lon=51.3890, city="تهران"):
 
 def get_currency():
     currencies = [
-        ("دلار", "price_dollar_rl"),
-        ("یورو", "price_eur"),
-        ("درهم", "price_aed"),
-        ("پوند", "price_gbp"),
-        ("لیر ترکیه", "price_try"),
-        ("یوان چین", "price_cny"),
-        ("روبل روسیه", "price_rub"),
-        ("دینار عراق", "price_iqd"),
+        ("دلار", "price_dollar_rl"), ("یورو", "price_eur"),
+        ("درهم", "price_aed"), ("پوند", "price_gbp"),
+        ("لیر ترکیه", "price_try"), ("یوان چین", "price_cny"),
+        ("روبل روسیه", "price_rub"), ("دینار عراق", "price_iqd"),
         ("افغانی", "price_afn"),
     ]
     items = ""
@@ -253,12 +150,9 @@ def get_currency():
 
 def get_gold():
     gold_items = [
-        ("طلای 18 عیار", "23,062,200"),
-        ("طلای 24 عیار", "30,749,300"),
-        ("سکه امامی", "230,005,000"),
-        ("نیم سکه", "116,500,000"),
-        ("ربع سکه", "61,500,000"),
-        ("سکه گرمی", "34,000,000"),
+        ("طلای 18 عیار", "23,062,200"), ("طلای 24 عیار", "30,749,300"),
+        ("سکه امامی", "230,005,000"), ("نیم سکه", "116,500,000"),
+        ("ربع سکه", "61,500,000"), ("سکه گرمی", "34,000,000"),
         ("مثقال طلا", "99,897,000"),
     ]
     items = ""
@@ -267,21 +161,17 @@ def get_gold():
     return items
 
 def get_football():
-    headers = {
-        "x-apisports-key": "16f55d94baa0c91d666591efb19f633f"
-    }
+    headers = {"x-apisports-key": "16f55d94baa0c91d666591efb19f633f"}
     league_ids = [39, 140, 135, 78, 61, 2, 290]
     league_names = {
-        39: "لیگ برتر انگلیس",
-        140: "لا لیگا",
-        135: "سری آ",
-        78: "بوندسلیگا",
-        61: "لوشامپیونه",
-        2: "چمپیونز لیگ",
+        39: "لیگ برتر انگلیس", 140: "لا لیگا", 135: "سری آ",
+        78: "بوندسلیگا", 61: "لوشامپیونه", 2: "چمپیونز لیگ",
         290: "لیگ برتر ایران"
     }
     matches = []
     seen = set()
+    
+    # بازی‌های زنده
     try:
         url = "https://v3.football.api-sports.io/fixtures?live=all"
         response = requests.get(url, headers=headers, timeout=15)
@@ -299,9 +189,15 @@ def get_football():
                     key = f"{home_fa}-{away_fa}-live"
                     if key not in seen:
                         seen.add(key)
-                        matches.append({"home": home_fa, "away": away_fa, "score": score, "status_text": "🔴 در حال برگزاری", "status_class": "live", "matchday": league_names.get(league_id, ""), "time": datetime.now()})
+                        matches.append({
+                            "home": home_fa, "away": away_fa, "score": score,
+                            "status_text": "🔴 در حال برگزاری", "status_class": "live",
+                            "matchday": league_names.get(league_id, ""), "time": datetime.now()
+                        })
     except:
         pass
+    
+    # بازی‌های گذشته و آینده
     for league_id in league_ids:
         try:
             url = f"https://v3.football.api-sports.io/fixtures?league={league_id}&season=2025&last=5"
@@ -316,6 +212,7 @@ def get_football():
                     goals = match.get("goals", {})
                     home_fa = translate_team(home)
                     away_fa = translate_team(away)
+                    
                     if status == "FT":
                         score = f"{goals.get('home', 0)} - {goals.get('away', 0)}"
                         status_text = "پایان یافته"
@@ -326,24 +223,33 @@ def get_football():
                         status_class = "upcoming"
                     else:
                         continue
+                    
                     match_time = datetime.now()
                     try:
                         match_time = datetime.strptime(fixture.get("date", ""), "%Y-%m-%dT%H:%M:%S%z").replace(tzinfo=None)
                     except:
                         pass
+                    
                     key = f"{home_fa}-{away_fa}-{score}-{status_class}"
                     if key not in seen:
                         seen.add(key)
-                        matches.append({"home": home_fa, "away": away_fa, "score": score, "status_text": status_text, "status_class": status_class, "matchday": league_names.get(league_id, ""), "time": match_time})
+                        matches.append({
+                            "home": home_fa, "away": away_fa, "score": score,
+                            "status_text": status_text, "status_class": status_class,
+                            "matchday": league_names.get(league_id, ""), "time": match_time
+                        })
         except:
             pass
+    
     live_matches = [m for m in matches if m["status_class"] == "live"]
     finished_matches = [m for m in matches if m["status_class"] == "finished"]
     upcoming_matches = [m for m in matches if m["status_class"] == "upcoming"]
     finished_matches.sort(key=lambda x: x["time"], reverse=True)
     upcoming_matches.sort(key=lambda x: x["time"])
+    
     return live_matches + finished_matches + upcoming_matches
 
+# ============ ساخت سایت ============
 print("🔍 در حال دریافت اطلاعات...")
 news_html = get_news()
 weather_html = get_weather()
