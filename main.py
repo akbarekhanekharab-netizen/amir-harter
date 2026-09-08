@@ -66,51 +66,85 @@ team_names = {
     "CA Osasuna": "اوساسونا",
     "Málaga CF": "مالاگا",
     "Levante UD": "لوانته",
-    "US Sassuolo Calcio": "ساسولو"
-}
-
-iran_teams = {
+    "US Sassuolo Calcio": "ساسولو",
+    "Athletic Bilbao": "اتلتیک بیلبائو",
+    "Getafe": "ختافه",
+    "Crystal Palace": "کریستال پالاس",
+    "Southampton": "ساوتهمپتون",
+    "Brighton": "برایتون",
+    "Brentford": "برنتفورد",
+    "Aston Villa": "استون ویلا",
+    "Leicester": "لسترسیتی",
+    "Leeds": "لیدز یونایتد",
+    "Nottingham Forest": "ناتینگهام فارست",
+    "Bournemouth": "بورنموث",
+    "Real Sociedad": "رئال سوسیداد",
+    "Real Betis": "رئال بتیس",
+    "Celta Vigo": "سلتاویگو",
+    "Girona": "جیرونا",
+    "Osasuna": "اوساسونا",
+    "Mallorca": "مایورکا",
+    "Rayo Vallecano": "رایو وایکانو",
+    "Alaves": "آلاوس",
+    "Las Palmas": "لاس پالماس",
+    "Leganes": "لگانس",
+    "Espanyol": "اسپانیول",
+    "Valladolid": "رئال وایادولید",
+    "Udinese": "اودینزه",
+    "Torino": "تورینو",
+    "Genoa": "جنوا",
+    "Cagliari": "کالیاری",
+    "Empoli": "امپولی",
+    "Lecce": "لچه",
+    "Verona": "هلاس ورونا",
+    "Como": "کومو",
+    "Hoffenheim": "هوفنهایم",
+    "Werder Bremen": "وِردر برمن",
+    "Heidenheim": "هایدنهایم",
+    "St. Pauli": "سنت پائولی",
+    "Union Berlin": "یونیون برلین",
+    "Bochum": "بوخوم",
+    "Koln": "کلن",
+    "Holstein Kiel": "هولشتاین کیل",
+    "Wolfsburg": "وولفسبورگ",
+    "Reims": "رنس",
+    "Le Havre": "لو آور",
+    "Clermont": "کلرمون",
+    "Lorient": "لوریان",
+    "Metz": "متز",
+    "Benfica": "بنفیکا",
+    "Porto": "پورتو",
+    "Sporting CP": "اسپورتینگ لیسبون",
+    "Ajax": "آژاکس",
+    "PSV": "آیندهوون",
+    "Feyenoord": "فاینورد",
+    "Celtic": "سلتیک",
+    "Rangers": "رنجرز",
+    "Galatasaray": "گالاتاسرای",
+    "Fenerbahce": "فنرباغچه",
+    "Olympiacos": "المپیاکوس",
+    "Panathinaikos": "پاناتینایکوس",
+    "AEK Athens": "آ.ا.ک آتن",
+    "PAOK": "پائوک",
     "Persepolis": "پرسپولیس",
     "Esteghlal": "استقلال",
     "Sepahan": "سپاهان",
     "Tractor": "تراکتور",
-    "Foolad Khuzestan": "فولاد",
-    "Gol Gohar Sirjan": "گل گهر",
+    "Foolad": "فولاد",
+    "Gol Gohar": "گل گهر",
     "Malavan": "ملوان",
-    "Nassaji Mazandaran": "نساجی",
+    "Nassaji": "نساجی",
     "Zob Ahan": "ذوب آهن",
     "Aluminium Arak": "آلومینیوم",
-    "Shams Azar Qazvin": "شمس آذر",
-    "Kheybar Khorramabad": "خیبر",
+    "Shams Azar": "شمس آذر",
+    "Kheybar": "خیبر",
     "Sanat Naft": "صنعت نفت",
-    "Fajr Sepasi Shiraz": "فجر سپاسی",
-    "Chadormalou Ardakan": "چادرملو",
+    "Fajr Sepasi": "فجر سپاسی",
+    "Chadormalou": "چادرملو",
     "Havadar": "هوادار",
     "Paykan": "پیکان",
     "Mes Shahr-e Babak": "مس شهر بابک",
     "Esteghlal Khuzestan": "استقلال خوزستان"
-}
-
-team_ids = {
-    "139013": "پرسپولیس",
-    "139012": "استقلال",
-    "139014": "سپاهان",
-    "139162": "تراکتور",
-    "139165": "فولاد",
-    "139157": "گل گهر",
-    "139183": "ملوان",
-    "139158": "نساجی",
-    "139159": "ذوب آهن",
-    "139172": "آلومینیوم",
-    "144143": "شمس آذر",
-    "141318": "خیبر",
-    "139166": "صنعت نفت",
-    "139173": "فجر سپاسی",
-    "149162": "چادرملو",
-    "141317": "هوادار",
-    "139164": "پیکان",
-    "144140": "مس شهر بابک",
-    "139184": "استقلال خوزستان"
 }
 
 provinces = {
@@ -146,9 +180,9 @@ provinces = {
     "سمنان": (35.5729, 53.3971)
 }
 
-valid_leagues = ["PL", "PD", "SA", "BL1", "FL1"]
-
 def translate_team(name):
+    if not name:
+        return "نامشخص"
     for eng, fa in team_names.items():
         if eng.lower() in name.lower():
             return fa
@@ -222,122 +256,129 @@ def get_currency():
             pass
     return items if items else '<div class="currency-item">در دسترس نیست</div>'
 
-def get_gold():
-    gold_items = [
-        ("طلای 18 عیار", "23,062,200"),
-        ("طلای 24 عیار", "30,749,300"),
-        ("سکه امامی", "230,005,000"),
-        ("نیم سکه", "116,500,000"),
-        ("ربع سکه", "61,500,000"),
-        ("سکه گرمی", "34,000,000"),
-        ("مثقال طلا", "99,897,000"),
-    ]
+def get_football():
+    headers = {
+        "x-apisports-key": "16f55d94baa0c91d666591efb19f633f"
+    }
     
-    items = ""
-    for name, price in gold_items:
-        items += f'<div class="currency-item" data-name="{name}"><span>{name}</span><span class="currency-value up">{price}</span></div>'
+    league_ids = [39, 140, 135, 78, 61, 2, 290]
+    league_names = {
+        39: "لیگ برتر انگلیس",
+        140: "لا لیگا",
+        135: "سری آ",
+        78: "بوندسلیگا",
+        61: "لوشامپیونه",
+        2: "چمپیونز لیگ",
+        290: "لیگ برتر ایران"
+    }
     
-    return items
-
-def get_football_foreign():
-    matches = []
-    try:
-        url = "https://api.football-data.org/v4/matches?season=2026"
-        headers = {"X-Auth-Token": "efd72515902e44019da93c99e04f7dbb"}
-        response = requests.get(url, headers=headers, timeout=15)
-        data = response.json()
-        for match in data.get("matches", []):
-            league_code = match.get("competition", {}).get("code", "")
-            if league_code not in valid_leagues:
-                continue
-            home = translate_team(match["homeTeam"]["name"])
-            away = translate_team(match["awayTeam"]["name"])
-            status = match["status"]
-            matchday = match.get("matchday", "")
-            utc_date = match.get("utcDate", "")
-            match_time = datetime.now()
-            if utc_date:
-                try:
-                    match_time = datetime.strptime(utc_date[:19], "%Y-%m-%dT%H:%M:%S")
-                except:
-                    pass
-            if status == "FINISHED":
-                score = f"{match['score']['fullTime']['home']} - {match['score']['fullTime']['away']}"
-                status_text = "پایان یافته"
-                status_class = "finished"
-            elif status == "IN_PLAY":
-                score = f"{match['score']['fullTime']['home']} - {match['score']['fullTime']['away']}"
-                status_text = "در حال برگزاری"
-                status_class = "live"
-            else:
-                score = "-"
-                status_text = "برگزار نشده"
-                status_class = "upcoming"
-            matches.append({
-                "home": home,
-                "away": away,
-                "score": score,
-                "status_text": status_text,
-                "status_class": status_class,
-                "matchday": f"هفته {matchday}" if matchday else "",
-                "time": match_time
-            })
-    except:
-        pass
-    return matches
-
-def get_football_iran():
     matches = []
     seen = set()
-    for id_team, name in team_ids.items():
-        try:
-            url = f"https://www.thesportsdb.com/api/v1/json/3/eventslast.php?id={id_team}"
-            response = requests.get(url, timeout=10)
-            if response.status_code == 200:
-                data = response.json()
-                events = data.get("results", [])
-                for event in events:
-                    home = event.get("strHomeTeam", "")
-                    away = event.get("strAwayTeam", "")
-                    home_score = event.get("intHomeScore", "0")
-                    away_score = event.get("intAwayScore", "0")
+    
+    # بازی‌های زنده
+    try:
+        url = "https://v3.football.api-sports.io/fixtures?live=all"
+        response = requests.get(url, headers=headers, timeout=15)
+        if response.status_code == 200:
+            data = response.json()
+            for match in data.get("response", []):
+                league_id = match.get("league", {}).get("id")
+                if league_id in league_ids:
+                    home = match.get("teams", {}).get("home", {}).get("name", "")
+                    away = match.get("teams", {}).get("away", {}).get("name", "")
+                    goals = match.get("goals", {})
+                    score = f"{goals.get('home', 0)} - {goals.get('away', 0)}"
+                    
                     home_fa = translate_team(home)
                     away_fa = translate_team(away)
-                    for eng, fa in iran_teams.items():
-                        if eng.lower() in home.lower():
-                            home_fa = fa
-                        if eng.lower() in away.lower():
-                            away_fa = fa
-                    match_key = f"{home_fa}-{away_fa}-{home_score}-{away_score}"
-                    if match_key in seen:
+                    
+                    key = f"{home_fa}-{away_fa}-live"
+                    if key not in seen:
+                        seen.add(key)
+                        matches.append({
+                            "home": home_fa,
+                            "away": away_fa,
+                            "score": score,
+                            "status_text": "🔴 در حال برگزاری",
+                            "status_class": "live",
+                            "matchday": league_names.get(league_id, ""),
+                            "time": datetime.now()
+                        })
+    except:
+        pass
+    
+    # بازی‌های گذشته و آینده
+    for league_id in league_ids:
+        try:
+            url = f"https://v3.football.api-sports.io/fixtures?league={league_id}&season=2025&last=5"
+            response = requests.get(url, headers=headers, timeout=15)
+            if response.status_code == 200:
+                data = response.json()
+                for match in data.get("response", []):
+                    fixture = match.get("fixture", {})
+                    status = fixture.get("status", {}).get("short", "")
+                    
+                    home = match.get("teams", {}).get("home", {}).get("name", "")
+                    away = match.get("teams", {}).get("away", {}).get("name", "")
+                    goals = match.get("goals", {})
+                    
+                    home_fa = translate_team(home)
+                    away_fa = translate_team(away)
+                    
+                    if status == "FT":
+                        score = f"{goals.get('home', 0)} - {goals.get('away', 0)}"
+                        status_text = "پایان یافته"
+                        status_class = "finished"
+                    elif status == "NS":
+                        score = "-"
+                        status_text = "برگزار نشده"
+                        status_class = "upcoming"
+                    else:
                         continue
-                    seen.add(match_key)
-                    matches.append({
-                        "home": home_fa,
-                        "away": away_fa,
-                        "score": f"{home_score} - {away_score}",
-                        "status_text": "پایان یافته",
-                        "status_class": "finished",
-                        "matchday": "لیگ برتر ایران",
-                        "time": datetime.now()
-                    })
+                    
+                    match_time = datetime.now()
+                    try:
+                        match_time = datetime.strptime(fixture.get("date", ""), "%Y-%m-%dT%H:%M:%S%z").replace(tzinfo=None)
+                    except:
+                        pass
+                    
+                    key = f"{home_fa}-{away_fa}-{score}-{status_class}"
+                    if key not in seen:
+                        seen.add(key)
+                        matches.append({
+                            "home": home_fa,
+                            "away": away_fa,
+                            "score": score,
+                            "status_text": status_text,
+                            "status_class": status_class,
+                            "matchday": league_names.get(league_id, ""),
+                            "time": match_time
+                        })
         except:
             pass
-    return matches
+    
+    # مرتب‌سازی
+    live_matches = [m for m in matches if m["status_class"] == "live"]
+    finished_matches = [m for m in matches if m["status_class"] == "finished"]
+    upcoming_matches = [m for m in matches if m["status_class"] == "upcoming"]
+    
+    finished_matches.sort(key=lambda x: x["time"], reverse=True)
+    upcoming_matches.sort(key=lambda x: x["time"])
+    
+    return live_matches + finished_matches + upcoming_matches
 
+# ساخت سایت
+print("🔍 در حال دریافت اطلاعات...")
 news_html = get_news()
 weather_html = get_weather()
 currency_html = get_currency()
-gold_html = get_gold()
-foreign_matches = get_football_foreign()
-iran_matches = get_football_iran()
-all_matches = iran_matches + foreign_matches
+print("⚽ در حال دریافت فوتبال...")
+all_matches = get_football()
 
 finished = [m for m in all_matches if m["status_class"] == "finished"]
 live = [m for m in all_matches if m["status_class"] == "live"]
 upcoming = [m for m in all_matches if m["status_class"] == "upcoming"]
-finished.sort(key=lambda x: x["time"], reverse=True)
-all_matches = finished + live + upcoming
+all_matches = live + finished + upcoming
 
 matches_html = ""
 for m in all_matches[:20]:
@@ -435,8 +476,7 @@ html = f"""<!DOCTYPE html>
         .lang-search {{ width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 0.75rem; }}
         .lang-search-btn {{ width: 100%; padding: 10px; border: none; border-radius: 25px; background: linear-gradient(45deg, #f093fb, #f5576c); color: #fff; cursor: pointer; font-size: 1.2rem; margin-top: 6px; }}
         .lang-select {{ width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 0.8rem; margin-top: 5px; }}
-        .swap-btn {{ width: 40px; height: 40px; border: none; border-radius: 50%; background: linear-gradient(45deg, #f093fb, #f5576c); color: #fff; cursor: pointer; font-size: 1.3rem; align-self: center; transition: transform 0.5s ease; }}
-        .swap-btn.rotated {{ transform: rotate(180deg); }}
+        .swap-btn {{ width: 40px; height: 40px; border: none; border-radius: 50%; background: linear-gradient(45deg, #f093fb, #f5576c); color: #fff; cursor: pointer; font-size: 1.3rem; align-self: center; }}
         textarea {{ width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); min-height: 100px; }}
         .btn-row {{ display: flex; gap: 10px; margin-top: 10px; }}
         .btn-row button {{ flex: 1; padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }}
@@ -458,9 +498,9 @@ html = f"""<!DOCTYPE html>
         <div class="settings-item" onclick="shareSite()">📤 اشتراک‌گذاری سایت</div>
         <div class="settings-item" onclick="showReportModal()">⚠️ گزارش مشکل</div>
         <div class="settings-item" onclick="showAboutModal()">📖 درباره ما</div>
-        <div class="settings-item">📌 نسخه: v37</div>
+        <div class="settings-item">📌 نسخه: v39</div>
     </div>
-    <div class="modal-overlay" id="aboutModal"><div class="modal"><div class="modal-header"><span>📖 درباره ما</span><button class="modal-close" onclick="closeModal('aboutModal')">›</button></div><p>AmirHarter | پورتال هوشمند</p><br><p>AMIRHARTER ... فقط یک سایت نیست</p><p>یه دنیای کامله!</p><br><p>جایی که همه‌چیز یکجا جمع شده</p><p>از آخرین اخبار و قیمت ارز</p><p>تا آب و هوا، فوتبال و ترجمه!</p><br><p>ساخته شده برای اینکه دنیایی از اطلاعات دم دستت باشه</p><br><p>✨ قدرت در عین سادگی ✨</p><p>نسخه ۴.۰</p></div></div>
+    <div class="modal-overlay" id="aboutModal"><div class="modal"><div class="modal-header"><span>📖 درباره ما</span><button class="modal-close" onclick="closeModal('aboutModal')">›</button></div><p>AmirHarter | پورتال هوشمند</p><br><p>AMIRHARTER ... فقط یک سایت نیست</p><p>یه دنیای کامله!</p><br><p>جایی که همه‌چیز یکجا جمع شده</p><p>از آخرین اخبار و قیمت ارز</p><p>تا آب و هوا، فوتبال و ترجمه!</p><br><p>ساخته شده برای اینکه دنیایی از اطلاعات دم دستت باشه</p><br><p>✨ قدرت در عین سادگی ✨</p><p>نسخه ۵.۰</p></div></div>
     <div class="modal-overlay" id="reportModal"><div class="modal"><div class="modal-header"><span>⚠️ گزارش مشکل</span><button class="modal-close" onclick="closeModal('reportModal')">›</button></div><p>در روبیکا پیام دهید:</p><br><p style="cursor:pointer; background: var(--card); padding: 10px; border-radius: 8px;" onclick="copyID()">@ID_HARTER</p></div></div>
     <div class="modal-overlay" id="fontModal"><div class="modal"><div class="modal-header"><span>🔤 انتخاب فونت</span><button class="modal-close" onclick="closeModal('fontModal')">›</button></div><div class="settings-item" onclick="setFontSize('0.9rem', 'کوچیک')">کوچیک</div><div class="settings-item" onclick="setFontSize('1rem', 'متوسط')">متوسط</div><div class="settings-item" onclick="setFontSize('1.2rem', 'بزرگ')">بزرگ</div></div></div>
     <div class="main">
@@ -470,14 +510,15 @@ html = f"""<!DOCTYPE html>
         <div class="clock-section"><div class="clock-icon">🕐</div><div class="clock" id="clock">--:--:--</div><div class="date" id="date">---</div></div>
         <div class="card"><div class="card-title">🌤 آب و هوا</div><div class="weather-card" id="weatherData">{weather_html}</div><select class="province-select" onchange="changeProvince(this.value)"><option value="">انتخاب استان...</option>{provinces_options}</select></div>
         <div class="card"><div class="card-title"><span class="currency-icon">💱</span> قیمت ارز</div><input class="currency-search" placeholder="🔍 جستجوی ارز..." onkeyup="filterCurrency(this.value)"><div class="currency-scroll" id="currencyList">{currency_html}</div></div>
-        <div class="card"><div class="card-title"><span class="currency-icon">💰</span> طلا و سکه</div><input class="currency-search" placeholder="🔍 جستجوی طلا..." onkeyup="filterGold(this.value)"><div class="currency-scroll" id="goldList">{gold_html}</div></div>
         <div class="card"><div class="card-title">⚽ بازی‌های داغ</div><div class="filter-btns"><button class="filter-btn active" onclick="filterMatches('all', this)">همه</button><button class="filter-btn" onclick="filterMatches('finished', this)">پایان یافته</button><button class="filter-btn" onclick="filterMatches('live', this)">در حال انجام</button><button class="filter-btn" onclick="filterMatches('upcoming', this)">برگزار نشده</button></div><div class="football-scroll">{matches_html}</div></div>
         <div class="card"><div class="card-title">📰 آخرین اخبار</div><div class="news-scroll">{news_html}</div></div>
-        <div class="card"><div class="card-title">🌐 ترجمه</div><div class="lang-row"><div class="lang-box"><input class="lang-search" id="fromSearch" placeholder="🔍 تغییر زبان مبدا..."><button class="lang-search-btn" onclick="searchFrom()">🔍</button><select class="lang-select" id="from"></select></div><button class="swap-btn" id="swapBtn" onclick="swapLanguages()">⇄</button><div class="lang-box"><input class="lang-search" id="toSearch" placeholder="🔍 تغییر زبان مقصد..."><button class="lang-search-btn" onclick="searchTo()">🔍</button><select class="lang-select" id="to"></select></div></div><textarea id="text" placeholder="متن خود را وارد کنید..."></textarea><div class="result" id="result">نتیجه ترجمه...</div><div class="btn-row"><button class="translate-btn" onclick="translateText()">ترجمه</button><button class="copy-btn" onclick="copyResult()">کپی</button></div></div>
+        <div class="card"><div class="card-title">🌐 ترجمه</div><div class="lang-row"><div class="lang-box"><input class="lang-search" id="fromSearch" placeholder="🔍 تغییر زبان مبدا..."><button class="lang-search-btn" onclick="searchFrom()">🔍</button><select class="lang-select" id="from"></select></div><button class="swap-btn" onclick="swapLanguages()">⇄</button><div class="lang-box"><input class="lang-search" id="toSearch" placeholder="🔍 تغییر زبان مقصد..."><button class="lang-search-btn" onclick="searchTo()">🔍</button><select class="lang-select" id="to"></select></div></div><textarea id="text" placeholder="متن خود را وارد کنید..."></textarea><div class="result" id="result">نتیجه ترجمه...</div><div class="btn-row"><button class="translate-btn" onclick="translateText()">ترجمه</button><button class="copy-btn" onclick="copyResult()">کپی</button></div></div>
         <div class="footer">© 2026 AmirHarter - تمامی حقوق محفوظ است</div>
     </div>
     <script>
         const languages = {{"fa":"فارسی","en":"انگلیسی","ar":"عربی","fr":"فرانسوی","de":"آلمانی","es":"اسپانیایی","it":"ایتالیایی","pt":"پرتغالی","ru":"روسی","tr":"ترکی","zh":"چینی","ja":"ژاپنی","ko":"کره‌ای","hi":"هندی","ur":"اردو","nl":"هلندی","pl":"لهستانی","sv":"سوئدی","no":"نروژی","da":"دانمارکی","fi":"فنلاندی","el":"یونانی","he":"عبری","th":"تایلندی","vi":"ویتنامی","id":"اندونزیایی","ms":"مالایی","cs":"چکی","sk":"اسلواکی","hu":"مجاری","ro":"رومانیایی","bg":"بلغاری","uk":"اوکراینی","sr":"صربی","hr":"کرواتی","sl":"اسلوونیایی","lt":"لیتوانیایی","lv":"لتونیایی","et":"استونیایی","sq":"آلبانیایی","mk":"مقدونی","hy":"ارمنی","ka":"گرجی","az":"آذربایجانی","kk":"قزاقی","uz":"ازبکی","ky":"قرقیزی","tg":"تاجیکی","mn":"مغولی","bn":"بنگالی","ta":"تامیلی","te":"تلوگو","mr":"مراتی","gu":"گجراتی","kn":"کانادا","ml":"مالایایی","si":"سینهالی","ne":"نپالی","km":"خمری","lo":"لائوسی","my":"برمه‌ای","fil":"فیلیپینی","sw":"سواحیلی","am":"آمهری","ha":"هوسا","yo":"یوروبایی","zu":"زولویی","af":"آفریکانس","ig":"ایگبو"}};
+        let currentLang = 'fa';
+        function toggleLanguage() {{ if (currentLang === 'fa') {{ currentLang = 'en'; document.getElementById('langLabel').textContent = 'English'; document.body.style.direction = 'ltr'; }} else {{ currentLang = 'fa'; document.getElementById('langLabel').textContent = 'فارسی'; document.body.style.direction = 'rtl'; }} }}
         function populateLanguages() {{ const from = document.getElementById('from'); const to = document.getElementById('to'); for (const code in languages) {{ from.innerHTML += `<option value="${{code}}">${{languages[code]}}</option>`; to.innerHTML += `<option value="${{code}}">${{languages[code]}}</option>`; }} from.value = 'fa'; to.value = 'en'; }}
         populateLanguages();
         const provinces = {province_data};
@@ -490,15 +531,14 @@ html = f"""<!DOCTYPE html>
         function setFontSize(size, label) {{ document.body.style.fontSize = size; document.getElementById('fontLabel').textContent = label; closeModal('fontModal'); }}
         function shareSite() {{ const url = window.location.href; if (navigator.share) {{ navigator.share({{title: 'AmirHarter', url: url}}); }} else {{ prompt('لینک سایت:', url); }} }}
         function changeProvince(name) {{ if (!name || !provinces[name]) return; const [lat, lon] = provinces[name]; fetch(`https://api.open-meteo.com/v1/forecast?latitude=${{lat}}&longitude=${{lon}}&current_weather=true&timezone=Asia%2FTehran`).then(r => r.json()).then(d => {{ const temp = d.current_weather.temperature; const wind = d.current_weather.windspeed; const code = d.current_weather.weathercode; const descs = {{0:'آفتابی',1:'نیمه آفتابی',2:'نیمه ابری',3:'ابری',45:'مه',61:'باران',71:'برف'}}; const desc = descs[code] || 'نامشخص'; document.getElementById('weatherData').innerHTML = `<div class="weather-icon">🌤</div><div class="weather-temp">${{temp}}°C</div><div class="weather-desc">${{name}}<br>${{desc}}<br>باد: ${{wind}} km/h</div>`; }}); }}
-        function filterCurrency(query) {{ document.querySelectorAll('#currencyList .currency-item').forEach(item => {{ const name = item.getAttribute('data-name') || ''; item.style.display = name.includes(query) || query === '' ? 'flex' : 'none'; }}); }}
-        function filterGold(query) {{ document.querySelectorAll('#goldList .currency-item').forEach(item => {{ const name = item.getAttribute('data-name') || ''; item.style.display = name.includes(query) || query === '' ? 'flex' : 'none'; }}); }}
+        function filterCurrency(query) {{ document.querySelectorAll('.currency-item').forEach(item => {{ const name = item.getAttribute('data-name') || ''; item.style.display = name.includes(query) || query === '' ? 'flex' : 'none'; }}); }}
         function updateClock() {{ const now = new Date(); document.getElementById('clock').textContent = now.toLocaleTimeString('fa-IR'); document.getElementById('date').textContent = now.toLocaleDateString('fa-IR', {{weekday:'long',year:'numeric',month:'long',day:'numeric'}}); }}
         setInterval(updateClock, 1000); updateClock();
         function toggleTheme() {{ document.body.classList.toggle('light-mode'); const isLight = document.body.classList.contains('light-mode'); document.getElementById('themeFloat').textContent = isLight ? '🌙' : '☀️'; }}
         function searchGoogle(q) {{ if (q) window.open('https://www.google.com/search?q=' + encodeURIComponent(q), '_blank'); }}
         function voiceSearch() {{ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {{ const SR = window.SpeechRecognition || window.webkitSpeechRecognition; const recognition = new SR(); recognition.lang = 'fa-IR'; recognition.onresult = function(e) {{ document.getElementById('mainSearch').value = e.results[0][0].transcript; }}; recognition.start(); }} else {{ alert('مرورگر شما از تایپ صوتی پشتیبانی نمی‌کند'); }} }}
         function filterMatches(type, btn) {{ document.querySelectorAll('.match-item').forEach(item => {{ if (type === 'all') item.style.display = 'block'; else item.style.display = item.dataset.status === type ? 'block' : 'none'; }}); document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }}
-        function swapLanguages() {{ const from = document.getElementById('from'); const to = document.getElementById('to'); const temp = from.value; from.value = to.value; to.value = temp; document.getElementById('swapBtn').classList.toggle('rotated'); }}
+        function swapLanguages() {{ const from = document.getElementById('from'); const to = document.getElementById('to'); const temp = from.value; from.value = to.value; to.value = temp; }}
         function searchFrom() {{ const q = document.getElementById('fromSearch').value.trim().toLowerCase(); const select = document.getElementById('from'); for (const code in languages) {{ if (languages[code].toLowerCase().includes(q)) {{ select.value = code; document.getElementById('fromSearch').value = ''; break; }} }} }}
         function searchTo() {{ const q = document.getElementById('toSearch').value.trim().toLowerCase(); const select = document.getElementById('to'); for (const code in languages) {{ if (languages[code].toLowerCase().includes(q)) {{ select.value = code; document.getElementById('toSearch').value = ''; break; }} }} }}
         function translateText() {{ const text = document.getElementById('text').value; const from = document.getElementById('from').value; const to = document.getElementById('to').value; if (!text) return; const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${{from}}&tl=${{to}}&dt=t&q=${{encodeURIComponent(text)}}`; fetch(url).then(r => r.json()).then(d => {{ let translated = ''; d[0].forEach(part => translated += part[0]); document.getElementById('result').textContent = translated; }}).catch(() => document.getElementById('result').textContent = 'خطا در ترجمه'); }}
