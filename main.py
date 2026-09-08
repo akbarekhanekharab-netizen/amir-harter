@@ -98,7 +98,7 @@ def get_news():
             for item in root.findall(".//item")[:15]:
                 title = item.find("title").text
                 link = item.find("link").text
-                news_items += f'<div class="news-item" onclick="window.open(\'{link}\', \'_blank\')"><span>📰</span>{title}</div>'
+                news_items += f'<div class="news-item" data-title-fa="{title}" onclick="window.open(\'{link}\', \'_blank\')"><span>📰 {title}</span></div>'
         except:
             pass
     return news_items
@@ -216,7 +216,9 @@ def get_football():
                 if key not in seen:
                     seen.add(key)
                     matches.append({
-                        "home": home_fa, "away": away_fa, "score": "-",
+                        "home": home_fa, "away": away_fa,
+                        "home_en": home, "away_en": away,
+                        "score": "-",
                         "status_text": "پیش‌رو", "status_class": "upcoming",
                         "matchday": competition_fa, "time": match_time
                     })
@@ -237,7 +239,7 @@ all_matches = get_football()
 matches_html = ""
 for m in all_matches[:20]:
     matchday_text = f" | {m['matchday']}" if m['matchday'] else ""
-    matches_html += f'''<div class="match-item" data-status="{m['status_class']}">
+    matches_html += f'''<div class="match-item" data-status="{m['status_class']}" data-home-en="{m['home_en']}" data-away-en="{m['away_en']}">
         <div class="match-row">
             <span class="team-name right">{m['home']}</span>
             <span class="match-score">{m['score']}</span>
@@ -295,7 +297,7 @@ html = f"""<!DOCTYPE html>
         .date {{ color: var(--muted); font-size: 0.9rem; }}
         .card {{ background: var(--card); border: 1px solid var(--border); border-radius: 15px; padding: 18px; margin: 15px 0; backdrop-filter: blur(10px); }}
         .card-title {{ font-size: 1.15rem; margin-bottom: 10px; }}
-        .news-scroll, .football-scroll, .currency-scroll {{ max-height: 180px; overflow-y: auto; }}
+        .news-scroll, .football-scroll, .currency-scroll {{ max-height: 250px; overflow-y: auto; }}
         .news-item {{ padding: 8px; border-bottom: 1px solid var(--border); cursor: pointer; font-size: 0.85rem; }}
         .news-item:hover {{ color: var(--accent); }}
         .currency-search {{ width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 0.85rem; margin-bottom: 10px; }}
@@ -347,7 +349,7 @@ html = f"""<!DOCTYPE html>
         <div class="settings-item" onclick="shareSite()">📤 اشتراک‌گذاری سایت</div>
         <div class="settings-item" onclick="showReportModal()">⚠️ گزارش مشکل</div>
         <div class="settings-item" onclick="showAboutModal()">📖 درباره ما</div>
-        <div class="settings-item">📌 نسخه: v42</div>
+        <div class="settings-item">📌 نسخه: v43</div>
     </div>
     <div class="modal-overlay" id="aboutModal"><div class="modal"><div class="modal-header"><span>📖 درباره ما</span><button class="modal-close" onclick="closeModal('aboutModal')">›</button></div><p>AmirHarter | پورتال هوشمند</p><br><p>AMIRHARTER ... فقط یک سایت نیست</p><p>یه دنیای کامله!</p><br><p>جایی که همه‌چیز یکجا جمع شده</p><p>از آخرین اخبار و قیمت ارز</p><p>تا آب و هوا، فوتبال و ترجمه!</p><br><p>ساخته شده برای اینکه دنیایی از اطلاعات دم دستت باشه</p><br><p>✨ قدرت در عین سادگی ✨</p><p>نسخه ۵.۰</p></div></div>
     <div class="modal-overlay" id="reportModal"><div class="modal"><div class="modal-header"><span>⚠️ گزارش مشکل</span><button class="modal-close" onclick="closeModal('reportModal')">›</button></div><p>در روبیکا پیام دهید:</p><br><p style="cursor:pointer; background: var(--card); padding: 10px; border-radius: 8px;" onclick="copyID()">@ID_HARTER</p></div></div>
@@ -364,16 +366,36 @@ html = f"""<!DOCTYPE html>
         <div class="card"><div class="card-title"><span class="currency-icon">💰</span> طلا و سکه</div><input class="currency-search" placeholder="🔍 جستجوی طلا..." onkeyup="filterGold(this.value)"><div class="currency-scroll" id="goldList">{gold_html}</div></div>
         <div class="card"><div class="card-title">⚽ بازی‌های داغ</div><div class="filter-btns"><button class="filter-btn active" onclick="filterMatches('all', this)">همه</button><button class="filter-btn" onclick="filterMatches('finished', this)">پایان یافته</button><button class="filter-btn" onclick="filterMatches('live', this)">در حال انجام</button><button class="filter-btn" onclick="filterMatches('upcoming', this)">برگزار نشده</button></div><div class="football-scroll">{matches_html}</div></div>
         <div class="card"><div class="card-title">📰 آخرین اخبار</div><div class="news-scroll">{news_html}</div></div>
-        <div class="card"><div class="card-title">🌐 ترجمه</div><div class="lang-row"><div class="lang-box"><div class="lang-display" onclick="showLangModal('from')" id="fromDisplay">فارسی</div></div><button class="swap-btn" id="swapBtn" onclick="swapLanguages()">⇄</button><div class="lang-box"><div class="lang-display" onclick="showLangModal('to')" id="toDisplay">English</div></div></div><textarea id="text" placeholder="متن خود را وارد کنید..."></textarea><div class="result" id="result">نتیجه ترجمه...</div><div class="btn-row"><button class="translate-btn" onclick="translateText()">ترجمه</button><button class="copy-btn" onclick="copyResult()">کپی</button></div></div>
+        <div class="card"><div class="card-title">🌐 ترجمه</div><div class="lang-row"><div class="lang-box"><div class="lang-display" onclick="showLangModal('from')" id="fromDisplay">انتخاب زبان مبدا</div></div><button class="swap-btn" id="swapBtn" onclick="swapLanguages()">⇄</button><div class="lang-box"><div class="lang-display" onclick="showLangModal('to')" id="toDisplay">انتخاب زبان مقصد</div></div></div><textarea id="text" placeholder="متن خود را وارد کنید..."></textarea><div class="result" id="result">نتیجه ترجمه...</div><div class="btn-row"><button class="translate-btn" onclick="translateText()">ترجمه</button><button class="copy-btn" onclick="copyResult()">کپی</button></div></div>
         <div class="footer">© 2026 AmirHarter - تمامی حقوق محفوظ است</div>
     </div>
     <script>
         const languagesFa = {{"fa":"فارسی","en":"انگلیسی","ar":"عربی","fr":"فرانسوی","de":"آلمانی","es":"اسپانیایی","it":"ایتالیایی","pt":"پرتغالی","ru":"روسی","tr":"ترکی","zh":"چینی","ja":"ژاپنی","ko":"کره‌ای","hi":"هندی","ur":"اردو","nl":"هلندی","pl":"لهستانی","sv":"سوئدی","no":"نروژی","da":"دانمارکی","fi":"فنلاندی","el":"یونانی","he":"عبری","th":"تایلندی","vi":"ویتنامی","id":"اندونزیایی","ms":"مالایی","cs":"چکی","sk":"اسلواکی","hu":"مجاری","ro":"رومانیایی","bg":"بلغاری","uk":"اوکراینی","sr":"صربی","hr":"کرواتی","sl":"اسلوونیایی"}};
         const languagesEn = {{"fa":"Persian","en":"English","ar":"Arabic","fr":"French","de":"German","es":"Spanish","it":"Italian","pt":"Portuguese","ru":"Russian","tr":"Turkish","zh":"Chinese","ja":"Japanese","ko":"Korean","hi":"Hindi","ur":"Urdu","nl":"Dutch","pl":"Polish","sv":"Swedish","no":"Norwegian","da":"Danish","fi":"Finnish","el":"Greek","he":"Hebrew","th":"Thai","vi":"Vietnamese","id":"Indonesian","ms":"Malay","cs":"Czech","sk":"Slovak","hu":"Hungarian","ro":"Romanian","bg":"Bulgarian","uk":"Ukrainian","sr":"Serbian","hr":"Croatian","sl":"Slovenian"}};
+        
+        const currencyNamesEn = {{"دلار":"Dollar","یورو":"Euro","درهم":"Dirham","پوند":"Pound","لیر ترکیه":"Turkish Lira","یوان چین":"Chinese Yuan","روبل روسیه":"Russian Ruble","دینار عراق":"Iraqi Dinar","افغانی":"Afghani"}};
+        const goldNamesEn = {{"طلای 18 عیار":"18K Gold","طلای 24 عیار":"24K Gold","سکه امامی":"Emami Coin","نیم سکه":"Half Coin","ربع سکه":"Quarter Coin","سکه گرمی":"Gram Coin","مثقال طلا":"Gold Mesghal"}};
+        
         let currentLang = 'fa';
         let fromLang = 'fa';
         let toLang = 'en';
         let langMode = 'from';
+        
+        async function translateNewsTitles() {{
+            const newsItems = document.querySelectorAll('.news-item');
+            for (let item of newsItems) {{
+                const faTitle = item.getAttribute('data-title-fa');
+                if (!faTitle) continue;
+                try {{
+                    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=fa&tl=en&dt=t&q=${{encodeURIComponent(faTitle)}}`;
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    let translated = '';
+                    data[0].forEach(part => translated += part[0]);
+                    item.querySelector('span').textContent = '📰 ' + translated;
+                }} catch(e) {{}}
+            }}
+        }}
         
         function toggleLanguage() {{
             if (currentLang === 'fa') {{
@@ -381,6 +403,13 @@ html = f"""<!DOCTYPE html>
                 document.body.style.direction = 'ltr';
                 document.getElementById('langLabel').textContent = 'English';
                 document.querySelector('.settings-title').textContent = '⚙️ Settings';
+                document.querySelectorAll('.settings-item')[0].innerHTML = '🌐 Language: <span id="langLabel">English</span>';
+                document.querySelectorAll('.settings-item')[1].textContent = '🌙 Change Theme';
+                document.querySelectorAll('.settings-item')[2].innerHTML = '🔤 Font: <span id="fontLabel">Medium</span>';
+                document.querySelectorAll('.settings-item')[3].textContent = '📤 Share Site';
+                document.querySelectorAll('.settings-item')[4].textContent = '⚠️ Report Issue';
+                document.querySelectorAll('.settings-item')[5].textContent = '📖 About Us';
+                document.querySelectorAll('.settings-item')[6].textContent = '📌 Version: v43';
                 document.querySelector('.search-btn').textContent = 'Search';
                 document.querySelector('.search-box').placeholder = 'Search in AMIR HARTER';
                 document.querySelectorAll('.search-option')[0].textContent = '📱 Google Play';
@@ -404,13 +433,54 @@ html = f"""<!DOCTYPE html>
                 document.querySelector('.translate-btn').textContent = 'Translate';
                 document.querySelector('.copy-btn').textContent = 'Copy';
                 document.querySelector('.footer').textContent = '© 2026 AmirHarter - All rights reserved';
-                document.getElementById('fromDisplay').textContent = languagesEn[fromLang];
-                document.getElementById('toDisplay').textContent = languagesEn[toLang];
+                document.getElementById('fromDisplay').textContent = 'Select source language';
+                document.getElementById('toDisplay').textContent = 'Select target language';
+                
+                // ترجمه ارزها
+                document.querySelectorAll('#currencyList .currency-item').forEach(item => {{
+                    const faName = item.getAttribute('data-name');
+                    const nameSpan = item.querySelector('span:first-child');
+                    if (faName && currencyNamesEn[faName]) nameSpan.textContent = currencyNamesEn[faName];
+                }});
+                
+                // ترجمه طلا
+                document.querySelectorAll('#goldList .currency-item').forEach(item => {{
+                    const faName = item.getAttribute('data-name');
+                    const nameSpan = item.querySelector('span:first-child');
+                    if (faName && goldNamesEn[faName]) nameSpan.textContent = goldNamesEn[faName];
+                }});
+                
+                // ترجمه تیم‌ها
+                document.querySelectorAll('.match-item').forEach(item => {{
+                    const homeSpan = item.querySelector('.team-name.right');
+                    const awaySpan = item.querySelector('.team-name.left');
+                    const homeEn = item.getAttribute('data-home-en');
+                    const awayEn = item.getAttribute('data-away-en');
+                    if (homeSpan && homeEn) homeSpan.textContent = homeEn;
+                    if (awaySpan && awayEn) awaySpan.textContent = awayEn;
+                }});
+                
+                // ترجمه خبرا
+                translateNewsTitles();
+                
+                // مودال درباره ما
+                document.querySelector('#aboutModal .modal').innerHTML = '<div class="modal-header"><span>📖 About Us</span><button class="modal-close" onclick="closeModal(\'aboutModal\')">›</button></div><p>AmirHarter | Smart Portal</p><br><p>AMIRHARTER ... not just a website</p><p>It\'s a whole world!</p><br><p>Everything in one place</p><p>From latest news and currency rates</p><p>To weather, football and translation!</p><br><p>Made so you have a world of information at your fingertips</p><br><p>✨ Power in simplicity ✨</p><p>Version 5.0</p>';
+                
+                // مودال گزارش مشکل
+                document.querySelector('#reportModal .modal').innerHTML = '<div class="modal-header"><span>⚠️ Report Issue</span><button class="modal-close" onclick="closeModal(\'reportModal\')">›</button></div><p>Message us on Rubika:</p><br><p style="cursor:pointer; background: var(--card); padding: 10px; border-radius: 8px;" onclick="copyID()">@ID_HARTER</p>';
+                
             }} else {{
                 currentLang = 'fa';
                 document.body.style.direction = 'rtl';
                 document.getElementById('langLabel').textContent = 'فارسی';
                 document.querySelector('.settings-title').textContent = '⚙️ تنظیمات';
+                document.querySelectorAll('.settings-item')[0].innerHTML = '🌐 زبان: <span id="langLabel">فارسی</span>';
+                document.querySelectorAll('.settings-item')[1].textContent = '🌙 تغییر تم';
+                document.querySelectorAll('.settings-item')[2].innerHTML = '🔤 فونت: <span id="fontLabel">متوسط</span>';
+                document.querySelectorAll('.settings-item')[3].textContent = '📤 اشتراک‌گذاری سایت';
+                document.querySelectorAll('.settings-item')[4].textContent = '⚠️ گزارش مشکل';
+                document.querySelectorAll('.settings-item')[5].textContent = '📖 درباره ما';
+                document.querySelectorAll('.settings-item')[6].textContent = '📌 نسخه: v43';
                 document.querySelector('.search-btn').textContent = 'جستجو';
                 document.querySelector('.search-box').placeholder = 'در AMIR HARTER';
                 document.querySelectorAll('.search-option')[0].textContent = '📱 گوگل‌پلی';
@@ -434,8 +504,34 @@ html = f"""<!DOCTYPE html>
                 document.querySelector('.translate-btn').textContent = 'ترجمه';
                 document.querySelector('.copy-btn').textContent = 'کپی';
                 document.querySelector('.footer').textContent = '© 2026 AmirHarter - تمامی حقوق محفوظ است';
-                document.getElementById('fromDisplay').textContent = languagesFa[fromLang];
-                document.getElementById('toDisplay').textContent = languagesFa[toLang];
+                document.getElementById('fromDisplay').textContent = 'انتخاب زبان مبدا';
+                document.getElementById('toDisplay').textContent = 'انتخاب زبان مقصد';
+                
+                // برگردوندن ارزها
+                document.querySelectorAll('#currencyList .currency-item').forEach(item => {{
+                    const faName = item.getAttribute('data-name');
+                    const nameSpan = item.querySelector('span:first-child');
+                    if (faName) nameSpan.textContent = faName;
+                }});
+                
+                // برگردوندن طلا
+                document.querySelectorAll('#goldList .currency-item').forEach(item => {{
+                    const faName = item.getAttribute('data-name');
+                    const nameSpan = item.querySelector('span:first-child');
+                    if (faName) nameSpan.textContent = faName;
+                }});
+                
+                // برگردوندن خبرا
+                document.querySelectorAll('.news-item').forEach(item => {{
+                    const faTitle = item.getAttribute('data-title-fa');
+                    if (faTitle) item.querySelector('span').textContent = '📰 ' + faTitle;
+                }});
+                
+                // مودال درباره ما
+                document.querySelector('#aboutModal .modal').innerHTML = '<div class="modal-header"><span>📖 درباره ما</span><button class="modal-close" onclick="closeModal(\'aboutModal\')">›</button></div><p>AmirHarter | پورتال هوشمند</p><br><p>AMIRHARTER ... فقط یک سایت نیست</p><p>یه دنیای کامله!</p><br><p>جایی که همه‌چیز یکجا جمع شده</p><p>از آخرین اخبار و قیمت ارز</p><p>تا آب و هوا، فوتبال و ترجمه!</p><br><p>ساخته شده برای اینکه دنیایی از اطلاعات دم دستت باشه</p><br><p>✨ قدرت در عین سادگی ✨</p><p>نسخه ۵.۰</p>';
+                
+                // مودال گزارش مشکل
+                document.querySelector('#reportModal .modal').innerHTML = '<div class="modal-header"><span>⚠️ گزارش مشکل</span><button class="modal-close" onclick="closeModal(\'reportModal\')">›</button></div><p>در روبیکا پیام دهید:</p><br><p style="cursor:pointer; background: var(--card); padding: 10px; border-radius: 8px;" onclick="copyID()">@ID_HARTER</p>';
             }}
             updateClock();
         }}
