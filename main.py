@@ -9,171 +9,85 @@ OUTPUT_DIR = Path('site')
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 team_names = {
-    "Arsenal": "آرسنال",
-    "Chelsea": "چلسی",
-    "Liverpool": "لیورپول",
-    "Manchester City": "منچستر سیتی",
-    "Manchester United": "منچستر یونایتد",
-    "Real Madrid": "رئال مادرید",
-    "Barcelona": "بارسلونا",
-    "Inter": "اینتر",
-    "AC Milan": "میلان",
-    "Juventus": "یوونتوس",
-    "Napoli": "ناپولی",
-    "Roma": "رم",
-    "Lazio": "لاتزیو",
-    "Atalanta": "آتالانتا",
-    "Bayern Munich": "بایرن مونیخ",
-    "Dortmund": "دورتموند",
-    "Leipzig": "لایپزیگ",
-    "Leverkusen": "لورکوزن",
-    "Frankfurt": "فرانکفورت",
-    "Stuttgart": "اشتوتگارت",
-    "PSG": "پاری سن ژرمن",
-    "Marseille": "مارسی",
-    "Lyon": "لیون",
-    "Monaco": "موناکو",
-    "Lille": "لیل",
-    "Nice": "نیس",
-    "Lens": "لانس",
-    "Rennes": "رن",
-    "Strasbourg": "استراسبورگ",
-    "Nantes": "نانت",
-    "Toulouse": "تولوز",
-    "Montpellier": "مون‌پولیه",
-    "Brest": "برست",
-    "Angers": "آنژه",
-    "Auxerre": "اوسر",
-    "Troyes": "تروا",
-    "Freiburg": "فرایبورگ",
-    "Mainz": "ماینتس",
-    "Augsburg": "آگسبورگ",
-    "Fiorentina": "فیورنتینا",
-    "Bologna": "بولونیا",
-    "Parma": "پارما",
-    "Monza": "مونتزا",
-    "Venezia": "ونتزیا",
-    "Tottenham": "تاتنهام",
-    "Newcastle": "نیوکاسل",
-    "Everton": "اورتون",
-    "West Ham": "وست هم",
-    "Fulham": "فولام",
-    "Wolves": "ولورهمپتون",
-    "Valencia": "والنسیا",
-    "Sevilla": "سویا",
-    "Villarreal": "ویارئال",
-    "Atletico Madrid": "اتلتیکو مادرید",
-    "Athletic Bilbao": "اتلتیک بیلبائو",
-    "Getafe": "ختافه",
-    "Crystal Palace": "کریستال پالاس",
-    "Southampton": "ساوتهمپتون",
-    "Brighton": "برایتون",
-    "Brentford": "برنتفورد",
-    "Aston Villa": "استون ویلا",
-    "Leicester": "لسترسیتی",
-    "Leeds": "لیدز یونایتد",
-    "Nottingham Forest": "ناتینگهام فارست",
-    "Bournemouth": "بورنموث",
-    "Real Sociedad": "رئال سوسیداد",
-    "Real Betis": "رئال بتیس",
-    "Celta Vigo": "سلتاویگو",
-    "Girona": "جیرونا",
-    "Osasuna": "اوساسونا",
-    "Mallorca": "مایورکا",
-    "Rayo Vallecano": "رایو وایکانو",
-    "Alaves": "آلاوس",
-    "Las Palmas": "لاس پالماس",
-    "Leganes": "لگانس",
-    "Espanyol": "اسپانیول",
-    "Valladolid": "رئال وایادولید",
-    "Udinese": "اودینزه",
-    "Torino": "تورینو",
-    "Genoa": "جنوا",
-    "Cagliari": "کالیاری",
-    "Empoli": "امپولی",
-    "Lecce": "لچه",
-    "Verona": "هلاس ورونا",
-    "Como": "کومو",
-    "Hoffenheim": "هوفنهایم",
-    "Werder Bremen": "وِردر برمن",
-    "Heidenheim": "هایدنهایم",
-    "St. Pauli": "سنت پائولی",
-    "Union Berlin": "یونیون برلین",
-    "Bochum": "بوخوم",
-    "Koln": "کلن",
-    "Holstein Kiel": "هولشتاین کیل",
-    "Wolfsburg": "وولفسبورگ",
-    "Reims": "رنس",
-    "Le Havre": "لو آور",
-    "Clermont": "کلرمون",
-    "Lorient": "لوریان",
-    "Metz": "متز",
-    "Benfica": "بنفیکا",
-    "Porto": "پورتو",
-    "Sporting CP": "اسپورتینگ لیسبون",
-    "Ajax": "آژاکس",
-    "PSV": "آیندهوون",
-    "Feyenoord": "فاینورد",
-    "Celtic": "سلتیک",
-    "Rangers": "رنجرز",
-    "Galatasaray": "گالاتاسرای",
-    "Fenerbahce": "فنرباغچه",
-    "Olympiacos": "المپیاکوس",
-    "Panathinaikos": "پاناتینایکوس",
-    "AEK Athens": "آ.ا.ک آتن",
-    "PAOK": "پائوک",
-    "Persepolis": "پرسپولیس",
-    "Esteghlal": "استقلال",
-    "Sepahan": "سپاهان",
-    "Tractor": "تراکتور",
-    "Foolad": "فولاد",
-    "Gol Gohar": "گل گهر",
-    "Malavan": "ملوان",
-    "Nassaji": "نساجی",
-    "Zob Ahan": "ذوب آهن",
-    "Aluminium Arak": "آلومینیوم",
-    "Shams Azar": "شمس آذر",
-    "Kheybar": "خیبر",
-    "Sanat Naft": "صنعت نفت",
-    "Fajr Sepasi": "فجر سپاسی",
-    "Chadormalou": "چادرملو",
-    "Havadar": "هوادار",
-    "Paykan": "پیکان",
-    "Mes Shahr-e Babak": "مس شهر بابک",
-    "Esteghlal Khuzestan": "استقلال خوزستان"
+    "Arsenal": "آرسنال", "Chelsea": "چلسی", "Liverpool": "لیورپول",
+    "Manchester City": "منچستر سیتی", "Manchester United": "منچستر یونایتد",
+    "Real Madrid": "رئال مادرید", "Barcelona": "بارسلونا", "Inter": "اینتر",
+    "AC Milan": "میلان", "Juventus": "یوونتوس", "Napoli": "ناپولی",
+    "Roma": "رم", "Lazio": "لاتزیو", "Atalanta": "آتالانتا",
+    "Bayern Munich": "بایرن مونیخ", "Dortmund": "دورتموند", "Leipzig": "لایپزیگ",
+    "Leverkusen": "لورکوزن", "Frankfurt": "فرانکفورت", "Stuttgart": "اشتوتگارت",
+    "PSG": "پاری سن ژرمن", "Marseille": "مارسی", "Lyon": "لیون",
+    "Monaco": "موناکو", "Lille": "لیل", "Nice": "نیس", "Lens": "لانس",
+    "Rennes": "رن", "Strasbourg": "استراسبورگ", "Nantes": "نانت",
+    "Toulouse": "تولوز", "Montpellier": "مون‌پولیه", "Brest": "برست",
+    "Angers": "آنژه", "Auxerre": "اوسر", "Troyes": "تروا",
+    "Freiburg": "فرایبورگ", "Mainz": "ماینتس", "Augsburg": "آگسبورگ",
+    "Fiorentina": "فیورنتینا", "Bologna": "بولونیا", "Parma": "پارما",
+    "Monza": "مونتزا", "Venezia": "ونتزیا", "Tottenham": "تاتنهام",
+    "Newcastle": "نیوکاسل", "Everton": "اورتون", "West Ham": "وست هم",
+    "Fulham": "فولام", "Wolves": "ولورهمپتون", "Valencia": "والنسیا",
+    "Sevilla": "سویا", "Villarreal": "ویارئال", "Atletico Madrid": "اتلتیکو مادرید",
+    "Athletic Bilbao": "اتلتیک بیلبائو", "Getafe": "ختافه",
+    "Crystal Palace": "کریستال پالاس", "Southampton": "ساوتهمپتون",
+    "Brighton": "برایتون", "Brentford": "برنتفورد", "Aston Villa": "استون ویلا",
+    "Leicester": "لسترسیتی", "Leeds": "لیدز یونایتد",
+    "Nottingham Forest": "ناتینگهام فارست", "Bournemouth": "بورنموث",
+    "Real Sociedad": "رئال سوسیداد", "Real Betis": "رئال بتیس",
+    "Celta Vigo": "سلتاویگو", "Girona": "جیرونا", "Osasuna": "اوساسونا",
+    "Mallorca": "مایورکا", "Rayo Vallecano": "رایو وایکانو",
+    "Alaves": "آلاوس", "Las Palmas": "لاس پالماس", "Leganes": "لگانس",
+    "Espanyol": "اسپانیول", "Valladolid": "رئال وایادولید",
+    "Udinese": "اودینزه", "Torino": "تورینو", "Genoa": "جنوا",
+    "Cagliari": "کالیاری", "Empoli": "امپولی", "Lecce": "لچه",
+    "Verona": "هلاس ورونا", "Como": "کومو", "Hoffenheim": "هوفنهایم",
+    "Werder Bremen": "وِردر برمن", "Heidenheim": "هایدنهایم",
+    "St. Pauli": "سنت پائولی", "Union Berlin": "یونیون برلین",
+    "Bochum": "بوخوم", "Koln": "کلن", "Holstein Kiel": "هولشتاین کیل",
+    "Wolfsburg": "وولفسبورگ", "Reims": "رنس", "Le Havre": "لو آور",
+    "Clermont": "کلرمون", "Lorient": "لوریان", "Metz": "متز",
+    "Benfica": "بنفیکا", "Porto": "پورتو", "Sporting CP": "اسپورتینگ لیسبون",
+    "Ajax": "آژاکس", "PSV": "آیندهوون", "Feyenoord": "فاینورد",
+    "Celtic": "سلتیک", "Rangers": "رنجرز", "Galatasaray": "گالاتاسرای",
+    "Fenerbahce": "فنرباغچه", "Olympiacos": "المپیاکوس",
+    "Panathinaikos": "پاناتینایکوس", "AEK Athens": "آ.ا.ک آتن", "PAOK": "پائوک",
+    "Persepolis": "پرسپولیس", "Esteghlal": "استقلال", "Sepahan": "سپاهان",
+    "Tractor": "تراکتور", "Foolad": "فولاد", "Gol Gohar": "گل گهر",
+    "Malavan": "ملوان", "Nassaji": "نساجی", "Zob Ahan": "ذوب آهن",
+    "Aluminium Arak": "آلومینیوم", "Shams Azar": "شمس آذر", "Kheybar": "خیبر",
+    "Sanat Naft": "صنعت نفت", "Fajr Sepasi": "فجر سپاسی",
+    "Chadormalou": "چادرملو", "Havadar": "هوادار", "Paykan": "پیکان",
+    "Mes Shahr-e Babak": "مس شهر بابک", "Esteghlal Khuzestan": "استقلال خوزستان"
 }
 
 provinces = {
-    "تهران": (35.6892, 51.3890),
-    "مشهد": (36.2605, 59.6168),
-    "اصفهان": (32.6546, 51.6680),
-    "شیراز": (29.5918, 52.5837),
-    "تبریز": (38.0962, 46.2738),
-    "اهواز": (31.3183, 48.6706),
-    "قم": (34.6416, 50.8746),
-    "کرج": (35.8400, 50.9391),
-    "کرمانشاه": (34.3142, 47.0650),
-    "رشت": (37.2808, 49.5832),
-    "زاهدان": (29.4963, 60.8629),
-    "همدان": (34.7983, 48.5148),
-    "ارومیه": (37.5527, 45.0760),
-    "یزد": (31.8974, 54.3569),
-    "اردبیل": (38.2498, 48.2933),
-    "بندرعباس": (27.1832, 56.2666),
-    "اراک": (34.0949, 49.7016),
-    "زنجان": (36.6830, 48.5087),
-    "سنندج": (35.3219, 46.9862),
-    "قزوین": (36.2860, 50.0040),
-    "خرم‌آباد": (33.4871, 48.3558),
-    "گرگان": (36.8386, 54.4346),
-    "ساری": (36.5633, 53.0601),
-    "بوشهر": (28.9234, 50.8203),
-    "بیرجند": (32.8649, 59.2212),
-    "ایلام": (33.6375, 46.4227),
-    "شهرکرد": (32.3256, 50.8644),
-    "یاسوج": (30.6684, 51.5875),
-    "بجنورد": (37.4749, 57.3290),
-    "سمنان": (35.5729, 53.3971)
+    "تهران": (35.6892, 51.3890), "مشهد": (36.2605, 59.6168),
+    "اصفهان": (32.6546, 51.6680), "شیراز": (29.5918, 52.5837),
+    "تبریز": (38.0962, 46.2738), "اهواز": (31.3183, 48.6706),
+    "قم": (34.6416, 50.8746), "کرج": (35.8400, 50.9391),
+    "کرمانشاه": (34.3142, 47.0650), "رشت": (37.2808, 49.5832),
+    "زاهدان": (29.4963, 60.8629), "همدان": (34.7983, 48.5148),
+    "ارومیه": (37.5527, 45.0760), "یزد": (31.8974, 54.3569),
+    "اردبیل": (38.2498, 48.2933), "بندرعباس": (27.1832, 56.2666),
+    "اراک": (34.0949, 49.7016), "زنجان": (36.6830, 48.5087),
+    "سنندج": (35.3219, 46.9862), "قزوین": (36.2860, 50.0040),
+    "خرم‌آباد": (33.4871, 48.3558), "گرگان": (36.8386, 54.4346),
+    "ساری": (36.5633, 53.0601), "بوشهر": (28.9234, 50.8203),
+    "بیرجند": (32.8649, 59.2212), "ایلام": (33.6375, 46.4227),
+    "شهرکرد": (32.3256, 50.8644), "یاسوج": (30.6684, 51.5875),
+    "بجنورد": (37.4749, 57.3290), "سمنان": (35.5729, 53.3971)
+}
+
+province_names_en = {
+    "تهران": "Tehran", "مشهد": "Mashhad", "اصفهان": "Isfahan",
+    "شیراز": "Shiraz", "تبریز": "Tabriz", "اهواز": "Ahvaz",
+    "قم": "Qom", "کرج": "Karaj", "کرمانشاه": "Kermanshah",
+    "رشت": "Rasht", "زاهدان": "Zahedan", "همدان": "Hamedan",
+    "ارومیه": "Urmia", "یزد": "Yazd", "اردبیل": "Ardabil",
+    "بندرعباس": "Bandar Abbas", "اراک": "Arak", "زنجان": "Zanjan",
+    "سنندج": "Sanandaj", "قزوین": "Qazvin", "خرم‌آباد": "Khorramabad",
+    "گرگان": "Gorgan", "ساری": "Sari", "بوشهر": "Bushehr",
+    "بیرجند": "Birjand", "ایلام": "Ilam", "شهرکرد": "Shahr-e Kord",
+    "یاسوج": "Yasuj", "بجنورد": "Bojnord", "سمنان": "Semnan"
 }
 
 translations = {
@@ -185,6 +99,7 @@ translations = {
         "games": "🎮 بازی‌ها",
         "weather": "🌤 آب و هوا",
         "select_province": "انتخاب استان...",
+        "search_province": "🔍 جستجوی استان...",
         "currency": "💱 قیمت ارز",
         "search_currency": "🔍 جستجوی ارز...",
         "gold": "💰 طلا و سکه",
@@ -210,7 +125,8 @@ translations = {
         "report": "گزارش مشکل",
         "about": "درباره ما",
         "version": "نسخه",
-        "footer": "© 2026 AmirHarter - تمامی حقوق محفوظ است"
+        "footer": "© 2026 AmirHarter - تمامی حقوق محفوظ است",
+        "search_lang": "🔍 جستجوی زبان..."
     },
     "en": {
         "search_placeholder": "در AMIR HARTER",
@@ -220,6 +136,7 @@ translations = {
         "games": "🎮 Games",
         "weather": "🌤 Weather",
         "select_province": "Select province...",
+        "search_province": "🔍 Search province...",
         "currency": "💱 Currency Rates",
         "search_currency": "🔍 Search currency...",
         "gold": "💰 Gold & Coins",
@@ -245,27 +162,44 @@ translations = {
         "report": "Report Issue",
         "about": "About Us",
         "version": "Version",
-        "footer": "© 2026 AmirHarter - All rights reserved"
+        "footer": "© 2026 AmirHarter - All rights reserved",
+        "search_lang": "🔍 Search language..."
     }
 }
 
 currency_names_en = {
-    "دلار": "Dollar",
-    "یورو": "Euro",
-    "درهم": "Dirham",
-    "پوند": "Pound",
-    "لیر ترکیه": "Turkish Lira",
-    "یوان چین": "Chinese Yuan",
-    "روبل روسیه": "Russian Ruble",
-    "دینار عراق": "Iraqi Dinar",
-    "افغانی": "Afghani",
-    "طلای 18 عیار": "18K Gold",
-    "طلای 24 عیار": "24K Gold",
-    "سکه امامی": "Emami Coin",
-    "نیم سکه": "Half Coin",
-    "ربع سکه": "Quarter Coin",
-    "سکه گرمی": "Gram Coin",
+    "دلار": "Dollar", "یورو": "Euro", "درهم": "Dirham",
+    "پوند": "Pound", "لیر ترکیه": "Turkish Lira",
+    "یوان چین": "Chinese Yuan", "روبل روسیه": "Russian Ruble",
+    "دینار عراق": "Iraqi Dinar", "افغانی": "Afghani",
+    "طلای 18 عیار": "18K Gold", "طلای 24 عیار": "24K Gold",
+    "سکه امامی": "Emami Coin", "نیم سکه": "Half Coin",
+    "ربع سکه": "Quarter Coin", "سکه گرمی": "Gram Coin",
     "مثقال طلا": "Gold Mithqal"
+}
+
+languages_fa = {
+    "fa": "فارسی", "en": "انگلیسی", "ar": "عربی", "fr": "فرانسوی",
+    "de": "آلمانی", "es": "اسپانیایی", "it": "ایتالیایی", "pt": "پرتغالی",
+    "ru": "روسی", "tr": "ترکی", "zh": "چینی", "ja": "ژاپنی",
+    "ko": "کره‌ای", "hi": "هندی", "ur": "اردو", "nl": "هلندی",
+    "pl": "لهستانی", "sv": "سوئدی", "no": "نروژی", "da": "دانمارکی",
+    "fi": "فنلاندی", "el": "یونانی", "he": "عبری", "th": "تایلندی",
+    "vi": "ویتنامی", "id": "اندونزیایی", "ms": "مالایی", "cs": "چکی",
+    "sk": "اسلواکی", "hu": "مجاری", "ro": "رومانیایی", "bg": "بلغاری",
+    "uk": "اوکراینی", "sr": "صربی", "hr": "کرواتی", "sl": "اسلوونیایی"
+}
+
+languages_en = {
+    "fa": "Persian", "en": "English", "ar": "Arabic", "fr": "French",
+    "de": "German", "es": "Spanish", "it": "Italian", "pt": "Portuguese",
+    "ru": "Russian", "tr": "Turkish", "zh": "Chinese", "ja": "Japanese",
+    "ko": "Korean", "hi": "Hindi", "ur": "Urdu", "nl": "Dutch",
+    "pl": "Polish", "sv": "Swedish", "no": "Norwegian", "da": "Danish",
+    "fi": "Finnish", "el": "Greek", "he": "Hebrew", "th": "Thai",
+    "vi": "Vietnamese", "id": "Indonesian", "ms": "Malay", "cs": "Czech",
+    "sk": "Slovak", "hu": "Hungarian", "ro": "Romanian", "bg": "Bulgarian",
+    "uk": "Ukrainian", "sr": "Serbian", "hr": "Croatian", "sl": "Slovenian"
 }
 
 def translate_team(name, to_persian=True):
@@ -533,6 +467,10 @@ html = f"""<!DOCTYPE html>
         .copy-btn {{ background: #4facfe; color: #fff; }}
         .result {{ background: var(--card); padding: 15px; border-radius: 10px; margin: 10px 0; }}
         .footer {{ text-align: center; padding: 20px; color: var(--muted); font-size: 0.8rem; }}
+        .flag-row {{ display: flex; justify-content: center; gap: 20px; margin-bottom: 5px; }}
+        .flag-btn {{ font-size: 2rem; background: none; border: none; cursor: pointer; }}
+        .lang-name-row {{ display: flex; justify-content: center; gap: 20px; }}
+        .lang-name {{ font-size: 0.85rem; }}
     </style>
 </head>
 <body>
@@ -547,9 +485,9 @@ html = f"""<!DOCTYPE html>
         <div class="settings-item" onclick="shareSite()">📤 اشتراک‌گذاری سایت</div>
         <div class="settings-item" onclick="showReportModal()">⚠️ گزارش مشکل</div>
         <div class="settings-item" onclick="showAboutModal()">📖 درباره ما</div>
-        <div class="settings-item">📌 نسخه: v47</div>
+        <div class="settings-item">📌 نسخه: v48</div>
     </div>
-    <div class="modal-overlay" id="languageModal"><div class="modal"><div class="modal-header"><span>🌐 انتخاب زبان</span><button class="modal-close" onclick="closeModal('languageModal')">×</button></div><div class="settings-item" onclick="setLanguage('fa')">🇮🇷 فارسی</div><div class="settings-item" onclick="setLanguage('en')">🇬🇧 English</div></div></div>
+    <div class="modal-overlay" id="languageModal"><div class="modal"><div class="modal-header"><span>🌐 انتخاب زبان</span><button class="modal-close" onclick="closeModal('languageModal')">×</button></div><div class="flag-row"><button class="flag-btn" onclick="setLanguage('fa')">🇮🇷</button><button class="flag-btn" onclick="setLanguage('en')">🇬🇧</button></div><div class="lang-name-row"><span class="lang-name">فارسی</span><span class="lang-name">ENGLISH</span></div></div></div>
     <div class="modal-overlay" id="aboutModal"><div class="modal"><div class="modal-header"><span>📖 درباره ما</span><button class="modal-close" onclick="closeModal('aboutModal')">×</button></div><p>AmirHarter | پورتال هوشمند</p><br><p>AMIRHARTER ... فقط یک سایت نیست</p><p>یه دنیای کامله!</p><br><p>جایی که همه‌چیز یکجا جمع شده</p><p>از آخرین اخبار و قیمت ارز</p><p>تا آب و هوا، فوتبال و ترجمه!</p><br><p>ساخته شده برای اینکه دنیایی از اطلاعات دم دستت باشه</p><br><p>✨ قدرت در عین سادگی ✨</p><p>نسخه ۵.۰</p></div></div>
     <div class="modal-overlay" id="reportModal"><div class="modal"><div class="modal-header"><span>⚠️ گزارش مشکل</span><button class="modal-close" onclick="closeModal('reportModal')">×</button></div><p>در روبیکا پیام دهید:</p><br><p style="cursor:pointer; background: var(--card); padding: 10px; border-radius: 8px;" onclick="copyID()">@ID_HARTER</p></div></div>
     <div class="modal-overlay" id="fontModal"><div class="modal"><div class="modal-header"><span>🔤 انتخاب فونت</span><button class="modal-close" onclick="closeModal('fontModal')">×</button></div><div class="settings-item" onclick="setFontSize('0.9rem', 'کوچیک')">کوچیک</div><div class="settings-item" onclick="setFontSize('1rem', 'متوسط')">متوسط</div><div class="settings-item" onclick="setFontSize('1.2rem', 'بزرگ')">بزرگ</div></div></div>
@@ -571,10 +509,11 @@ html = f"""<!DOCTYPE html>
     <script>
         const translations = {json.dumps(translations, ensure_ascii=False)};
         const currencyNamesEn = {json.dumps(currency_names_en, ensure_ascii=False)};
+        const provinceNamesEn = {json.dumps(province_names_en, ensure_ascii=False)};
+        const languagesFa = {json.dumps(languages_fa, ensure_ascii=False)};
+        const languagesEn = {json.dumps(languages_en, ensure_ascii=False)};
         let currentLang = 'fa';
         const provinces = {province_data};
-        
-        const languages = {{"fa":"فارسی","en":"انگلیسی","ar":"عربی","fr":"فرانسوی","de":"آلمانی","es":"اسپانیایی","it":"ایتالیایی","pt":"پرتغالی","ru":"روسی","tr":"ترکی","zh":"چینی","ja":"ژاپنی","ko":"کره‌ای","hi":"هندی","ur":"اردو","nl":"هلندی","pl":"لهستانی","sv":"سوئدی","no":"نروژی","da":"دانمارکی","fi":"فنلاندی","el":"یونانی","he":"عبری","th":"تایلندی","vi":"ویتنامی","id":"اندونزیایی","ms":"مالایی","cs":"چکی","sk":"اسلواکی","hu":"مجاری","ro":"رومانیایی","bg":"بلغاری","uk":"اوکراینی","sr":"صربی","hr":"کرواتی","sl":"اسلوونیایی","lt":"لیتوانیایی","lv":"لتونیایی","et":"استونیایی","sq":"آلبانیایی","mk":"مقدونی","hy":"ارمنی","ka":"گرجی","az":"آذربایجانی","kk":"قزاقی","uz":"ازبکی","ky":"قرقیزی","tg":"تاجیکی","mn":"مغولی","bn":"بنگالی","ta":"تامیلی","te":"تلوگو","mr":"مراتی","gu":"گجراتی","kn":"کانادا","ml":"مالایایی","si":"سینهالی","ne":"نپالی","km":"خمری","lo":"لائوسی","my":"برمه‌ای","fil":"فیلیپینی","sw":"سواحیلی","am":"آمهری","ha":"هوسا","yo":"یوروبایی","zu":"زولویی","af":"آفریکانس","ig":"ایگبو"}};
         
         let fromLang = 'fa';
         let toLang = 'en';
@@ -599,6 +538,8 @@ html = f"""<!DOCTYPE html>
             document.querySelectorAll('.card-title')[5].textContent = translations[lang].translate;
             document.querySelectorAll('.currency-search')[0].placeholder = translations[lang].search_currency;
             document.querySelectorAll('.currency-search')[1].placeholder = translations[lang].search_gold;
+            document.getElementById('provinceSearchInput').placeholder = translations[lang].search_province;
+            document.getElementById('langSearchInput').placeholder = translations[lang].search_lang;
             document.querySelectorAll('.filter-btn')[0].textContent = translations[lang].all;
             document.querySelectorAll('.filter-btn')[1].textContent = translations[lang].finished;
             document.querySelectorAll('.filter-btn')[2].textContent = translations[lang].live;
@@ -609,6 +550,13 @@ html = f"""<!DOCTYPE html>
             document.querySelector('.copy-btn').textContent = translations[lang].copy_btn;
             document.querySelector('.footer').textContent = translations[lang].footer;
             document.querySelector('.settings-title').textContent = '⚙️ ' + translations[lang].settings;
+            document.querySelectorAll('.settings-item')[0].innerHTML = '🌐 ' + translations[lang].language + ': <span id="langLabel">' + (lang === 'fa' ? 'فارسی' : 'English') + '</span>';
+            document.querySelectorAll('.settings-item')[1].textContent = '🌙 ' + translations[lang].theme;
+            document.querySelectorAll('.settings-item')[2].innerHTML = '🔤 ' + translations[lang].font + ': <span id="fontLabel">' + (lang === 'fa' ? 'متوسط' : 'Medium') + '</span>';
+            document.querySelectorAll('.settings-item')[3].textContent = '📤 ' + translations[lang].share;
+            document.querySelectorAll('.settings-item')[4].textContent = '⚠️ ' + translations[lang].report;
+            document.querySelectorAll('.settings-item')[5].textContent = '📖 ' + translations[lang].about;
+            document.querySelectorAll('.settings-item')[6].textContent = '📌 ' + translations[lang].version + ': v48';
             
             document.getElementById('provinceDisplay').textContent = translations[lang].select_province;
             document.getElementById('fromDisplay').textContent = translations[lang].from_lang;
@@ -640,19 +588,29 @@ html = f"""<!DOCTYPE html>
                 }}
             }});
             
+            if (lang === 'en') {{
+                document.querySelector('#aboutModal .modal').innerHTML = '<div class="modal-header"><span>📖 About Us</span><button class="modal-close" onclick="closeModal(\'aboutModal\')">×</button></div><p>AmirHarter | Smart Portal</p><br><p>AMIRHARTER ... not just a website</p><p>It\'s a whole world!</p><br><p>Everything in one place</p><p>From latest news and currency rates</p><p>To weather, football and translation!</p><br><p>Made so you have a world of information at your fingertips</p><br><p>✨ Power in simplicity ✨</p><p>Version 5.0</p>';
+                document.querySelector('#reportModal .modal').innerHTML = '<div class="modal-header"><span>⚠️ Report Issue</span><button class="modal-close" onclick="closeModal(\'reportModal\')">×</button></div><p>Message us on Rubika:</p><br><p style="cursor:pointer; background: var(--card); padding: 10px; border-radius: 8px;" onclick="copyID()">@ID_HARTER</p>';
+            }} else {{
+                document.querySelector('#aboutModal .modal').innerHTML = '<div class="modal-header"><span>📖 درباره ما</span><button class="modal-close" onclick="closeModal(\'aboutModal\')">×</button></div><p>AmirHarter | پورتال هوشمند</p><br><p>AMIRHARTER ... فقط یک سایت نیست</p><p>یه دنیای کامله!</p><br><p>جایی که همه‌چیز یکجا جمع شده</p><p>از آخرین اخبار و قیمت ارز</p><p>تا آب و هوا، فوتبال و ترجمه!</p><br><p>ساخته شده برای اینکه دنیایی از اطلاعات دم دستت باشه</p><br><p>✨ قدرت در عین سادگی ✨</p><p>نسخه ۵.۰</p>';
+                document.querySelector('#reportModal .modal').innerHTML = '<div class="modal-header"><span>⚠️ گزارش مشکل</span><button class="modal-close" onclick="closeModal(\'reportModal\')">×</button></div><p>در روبیکا پیام دهید:</p><br><p style="cursor:pointer; background: var(--card); padding: 10px; border-radius: 8px;" onclick="copyID()">@ID_HARTER</p>';
+            }}
+            
+            renderLangList();
+            renderProvinceList();
             updateClock();
         }}
         
         function showLanguageModal() {{ document.getElementById('languageModal').style.display = 'flex'; toggleSettings(); }}
-        function showLangModal(mode) {{ langMode = mode; document.getElementById('langModalTitle').textContent = mode === 'from' ? '🌐 انتخاب زبان مبدا' : '🌐 انتخاب زبان مقصد'; document.getElementById('langModal').style.display = 'flex'; renderLangList(); }}
-        function renderLangList() {{ const list = document.getElementById('langList'); list.innerHTML = ''; for (const code in languages) {{ list.innerHTML += `<div class="lang-item" onclick="selectLang('${{code}}')">${{languages[code]}}</div>`; }} }}
-        function selectLang(code) {{ if (langMode === 'from') {{ fromLang = code; document.getElementById('fromDisplay').textContent = languages[code]; }} else {{ toLang = code; document.getElementById('toDisplay').textContent = languages[code]; }} closeModal('langModal'); }}
-        function filterLanguages(query) {{ const list = document.getElementById('langList'); list.innerHTML = ''; for (const code in languages) {{ if (languages[code].toLowerCase().includes(query.toLowerCase()) || query === '') {{ list.innerHTML += `<div class="lang-item" onclick="selectLang('${{code}}')">${{languages[code]}}</div>`; }} }} }}
+        function showLangModal(mode) {{ langMode = mode; document.getElementById('langModalTitle').textContent = currentLang === 'fa' ? (mode === 'from' ? '🌐 انتخاب زبان مبدا' : '🌐 انتخاب زبان مقصد') : (mode === 'from' ? '🌐 Select source' : '🌐 Select target'); document.getElementById('langModal').style.display = 'flex'; renderLangList(); }}
+        function renderLangList() {{ const list = document.getElementById('langList'); if (!list) return; const langs = currentLang === 'fa' ? languagesFa : languagesEn; list.innerHTML = ''; for (const code in langs) {{ list.innerHTML += `<div class="lang-item" onclick="selectLang('${{code}}')">${{langs[code]}}</div>`; }} }}
+        function selectLang(code) {{ const langs = currentLang === 'fa' ? languagesFa : languagesEn; if (langMode === 'from') {{ fromLang = code; document.getElementById('fromDisplay').textContent = langs[code]; }} else {{ toLang = code; document.getElementById('toDisplay').textContent = langs[code]; }} closeModal('langModal'); }}
+        function filterLanguages(query) {{ const list = document.getElementById('langList'); const langs = currentLang === 'fa' ? languagesFa : languagesEn; list.innerHTML = ''; for (const code in langs) {{ if (langs[code].toLowerCase().includes(query.toLowerCase()) || query === '') {{ list.innerHTML += `<div class="lang-item" onclick="selectLang('${{code}}')">${{langs[code]}}</div>`; }} }} }}
         
         function showProvinceModal() {{ document.getElementById('provinceModal').style.display = 'flex'; renderProvinceList(); }}
-        function renderProvinceList() {{ const list = document.getElementById('provinceList'); list.innerHTML = ''; for (const name in provinces) {{ list.innerHTML += `<div class="province-item" onclick="selectProvince('${{name}}')">${{name}}</div>`; }} }}
-        function selectProvince(name) {{ document.getElementById('provinceDisplay').textContent = name; closeModal('provinceModal'); const [lat, lon] = provinces[name]; fetch(`https://api.open-meteo.com/v1/forecast?latitude=${{lat}}&longitude=${{lon}}&current_weather=true&timezone=Asia%2FTehran`).then(r => r.json()).then(d => {{ const temp = d.current_weather.temperature; const wind = d.current_weather.windspeed; const code = d.current_weather.weathercode; const descs = {{0:'آفتابی',1:'نیمه آفتابی',2:'نیمه ابری',3:'ابری',45:'مه',61:'باران',71:'برف'}}; const desc = descs[code] || 'نامشخص'; document.getElementById('weatherData').innerHTML = `<div class="weather-icon">🌤</div><div class="weather-temp">${{temp}}°C</div><div class="weather-desc">${{name}}<br>${{desc}}<br>باد: ${{wind}} km/h</div>`; }}); }}
-        function filterProvinces(query) {{ const list = document.getElementById('provinceList'); list.innerHTML = ''; for (const name in provinces) {{ if (name.includes(query) || query === '') {{ list.innerHTML += `<div class="province-item" onclick="selectProvince('${{name}}')">${{name}}</div>`; }} }} }}
+        function renderProvinceList() {{ const list = document.getElementById('provinceList'); if (!list) return; list.innerHTML = ''; for (const name in provinces) {{ const displayName = currentLang === 'fa' ? name : (provinceNamesEn[name] || name); list.innerHTML += `<div class="province-item" onclick="selectProvince('${{name}}')">${{displayName}}</div>`; }} }}
+        function selectProvince(name) {{ const displayName = currentLang === 'fa' ? name : (provinceNamesEn[name] || name); document.getElementById('provinceDisplay').textContent = displayName; closeModal('provinceModal'); const [lat, lon] = provinces[name]; fetch(`https://api.open-meteo.com/v1/forecast?latitude=${{lat}}&longitude=${{lon}}&current_weather=true&timezone=Asia%2FTehran`).then(r => r.json()).then(d => {{ const temp = d.current_weather.temperature; const wind = d.current_weather.windspeed; const code = d.current_weather.weathercode; const descs = {{0:'آفتابی',1:'نیمه آفتابی',2:'نیمه ابری',3:'ابری',45:'مه',61:'باران',71:'برف'}}; const desc = descs[code] || 'نامشخص'; document.getElementById('weatherData').innerHTML = `<div class="weather-icon">🌤</div><div class="weather-temp">${{temp}}°C</div><div class="weather-desc">${{displayName}}<br>${{desc}}<br>باد: ${{wind}} km/h</div>`; }}); }}
+        function filterProvinces(query) {{ const list = document.getElementById('provinceList'); list.innerHTML = ''; for (const name in provinces) {{ const displayName = currentLang === 'fa' ? name : (provinceNamesEn[name] || name); if (displayName.toLowerCase().includes(query.toLowerCase()) || query === '') {{ list.innerHTML += `<div class="province-item" onclick="selectProvince('${{name}}')">${{displayName}}</div>`; }} }} }}
         
         function toggleSettings() {{ document.getElementById('settingsPanel').classList.toggle('open'); document.getElementById('settingsOverlay').style.display = document.getElementById('settingsPanel').classList.contains('open') ? 'block' : 'none'; }}
         function showAboutModal() {{ toggleSettings(); document.getElementById('aboutModal').style.display = 'flex'; }}
@@ -670,7 +628,7 @@ html = f"""<!DOCTYPE html>
         function searchGoogle(q) {{ if (q) window.open('https://www.google.com/search?q=' + encodeURIComponent(q), '_blank'); }}
         function voiceSearch() {{ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {{ const SR = window.SpeechRecognition || window.webkitSpeechRecognition; const recognition = new SR(); recognition.lang = currentLang === 'fa' ? 'fa-IR' : 'en-US'; recognition.onresult = function(e) {{ document.getElementById('mainSearch').value = e.results[0][0].transcript; }}; recognition.start(); }} else {{ alert('مرورگر شما از تایپ صوتی پشتیبانی نمی‌کند'); }} }}
         function filterMatches(type, btn) {{ document.querySelectorAll('.match-item').forEach(item => {{ if (type === 'all') item.style.display = 'block'; else item.style.display = item.dataset.status === type ? 'block' : 'none'; }}); document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }}
-        function swapLanguages() {{ const temp = fromLang; fromLang = toLang; toLang = temp; document.getElementById('fromDisplay').textContent = languages[fromLang]; document.getElementById('toDisplay').textContent = languages[toLang]; document.getElementById('swapBtn').classList.toggle('rotated'); }}
+        function swapLanguages() {{ const temp = fromLang; fromLang = toLang; toLang = temp; const langs = currentLang === 'fa' ? languagesFa : languagesEn; document.getElementById('fromDisplay').textContent = langs[fromLang]; document.getElementById('toDisplay').textContent = langs[toLang]; document.getElementById('swapBtn').classList.toggle('rotated'); }}
         function translateText() {{ const text = document.getElementById('text').value; if (!text) return; const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${{fromLang}}&tl=${{toLang}}&dt=t&q=${{encodeURIComponent(text)}}`; fetch(url).then(r => r.json()).then(d => {{ let translated = ''; d[0].forEach(part => translated += part[0]); document.getElementById('result').textContent = translated; }}).catch(() => document.getElementById('result').textContent = 'خطا در ترجمه'); }}
         function copyResult() {{ const result = document.getElementById('result').textContent; const textarea = document.createElement('textarea'); textarea.value = result; document.body.appendChild(textarea); textarea.select(); document.execCommand('copy'); document.body.removeChild(textarea); alert('کپی شد!'); }}
     </script>
