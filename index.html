@@ -42,7 +42,7 @@
         .date { color: var(--muted); font-size: 0.9rem; }
         .card { background: var(--card); border: 1px solid var(--border); border-radius: 15px; padding: 18px; margin: 15px 0; backdrop-filter: blur(10px); }
         .card-title { font-size: 1.15rem; margin-bottom: 10px; }
-        .news-scroll, .football-scroll, .currency-scroll { max-height: 200px; overflow-y: auto; }
+        .news-scroll, .football-scroll, .currency-scroll { max-height: 180px; overflow-y: auto; }
         .news-item { padding: 8px; border-bottom: 1px solid var(--border); cursor: pointer; font-size: 0.85rem; }
         .news-item:hover { color: var(--accent); }
         .currency-search { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 0.85rem; margin-bottom: 10px; }
@@ -56,7 +56,7 @@
         .weather-icon { font-size: 3rem; }
         .weather-temp { font-size: 2rem; font-weight: 900; color: var(--accent); }
         .weather-desc { margin-top: 10px; color: var(--muted); }
-        .lang-display { width: 100%; padding: 10px 8px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); cursor: pointer; text-align: center; font-size: 0.75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .lang-display { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); cursor: pointer; text-align: center; font-size: 0.9rem; margin-top: 10px; }
         .province-item, .lang-item { padding: 12px; margin: 5px 0; background: var(--card); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; text-align: center; font-size: 0.9rem; }
         .province-item:hover, .lang-item:hover { background: rgba(255,255,255,0.15); }
         .filter-btns { display: flex; gap: 8px; margin-bottom: 15px; }
@@ -69,9 +69,9 @@
         .team-name.left { text-align: left; }
         .match-score { color: var(--accent); font-weight: bold; }
         .match-status { text-align: center; font-size: 0.75rem; color: var(--muted); }
-        .lang-row { display: flex; gap: 8px; margin-bottom: 15px; align-items: center; }
-        .lang-box { flex: 1; min-width: 0; }
-        .swap-btn { width: 40px; height: 40px; min-width: 40px; border: none; border-radius: 50%; background: linear-gradient(45deg, #f093fb, #f5576c); color: #fff; cursor: pointer; font-size: 1.3rem; align-self: center; transition: transform 0.5s ease; }
+        .lang-row { display: flex; gap: 10px; margin-bottom: 15px; }
+        .lang-box { flex: 1; }
+        .swap-btn { width: 40px; height: 40px; border: none; border-radius: 50%; background: linear-gradient(45deg, #f093fb, #f5576c); color: #fff; cursor: pointer; font-size: 1.3rem; align-self: center; transition: transform 0.5s ease; }
         .swap-btn.rotated { transform: rotate(180deg); }
         textarea { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); min-height: 100px; }
         .btn-row { display: flex; gap: 10px; margin-top: 10px; }
@@ -80,10 +80,6 @@
         .copy-btn { background: #4facfe; color: #fff; }
         .result { background: var(--card); padding: 15px; border-radius: 10px; margin: 10px 0; }
         .footer { text-align: center; padding: 20px; color: var(--muted); font-size: 0.8rem; }
-        .flag-row { display: flex; justify-content: center; gap: 20px; margin-bottom: 5px; }
-        .flag-btn { font-size: 2rem; background: none; border: none; cursor: pointer; }
-        .lang-name-row { display: flex; justify-content: center; gap: 20px; }
-        .lang-name { font-size: 0.85rem; }
     </style>
 </head>
 <body>
@@ -92,162 +88,161 @@
     <div class="settings-overlay" id="settingsOverlay" onclick="toggleSettings()"></div>
     <div class="settings-panel" id="settingsPanel">
         <div class="settings-title">⚙️ تنظیمات</div>
-        <div class="settings-item" onclick="showLanguageModal()">🌐 زبان: <span id="langLabel">فارسی</span></div>
+        <div class="settings-item" onclick="toggleLanguage()">🌐 زبان: <span id="langLabel">فارسی</span></div>
         <div class="settings-item" onclick="toggleTheme()">🌙 تغییر تم</div>
         <div class="settings-item" onclick="showFontModal()">🔤 فونت: <span id="fontLabel">متوسط</span></div>
         <div class="settings-item" onclick="shareSite()">📤 اشتراک‌گذاری سایت</div>
         <div class="settings-item" onclick="showReportModal()">⚠️ گزارش مشکل</div>
         <div class="settings-item" onclick="showAboutModal()">📖 درباره ما</div>
-        <div class="settings-item">📌 نسخه: v48</div>
+        <div class="settings-item">📌 نسخه: v42</div>
     </div>
-    <div class="modal-overlay" id="languageModal"><div class="modal"><div class="modal-header"><span>🌐 انتخاب زبان</span><button class="modal-close" onclick="closeModal('languageModal')">×</button></div><div class="flag-row"><button class="flag-btn" onclick="setLanguage('fa')">🇮🇷</button><button class="flag-btn" onclick="setLanguage('en')">🇬🇧</button></div><div class="lang-name-row"><span class="lang-name">فارسی</span><span class="lang-name">ENGLISH</span></div></div></div>
-    <div class="modal-overlay" id="aboutModal"><div class="modal"><div class="modal-header"><span>📖 درباره ما</span><button class="modal-close" onclick="closeModal('aboutModal')">×</button></div><p>AmirHarter | پورتال هوشمند</p><br><p>AMIRHARTER ... فقط یک سایت نیست</p><p>یه دنیای کامله!</p><br><p>جایی که همه‌چیز یکجا جمع شده</p><p>از آخرین اخبار و قیمت ارز</p><p>تا آب و هوا، فوتبال و ترجمه!</p><br><p>ساخته شده برای اینکه دنیایی از اطلاعات دم دستت باشه</p><br><p>✨ قدرت در عین سادگی ✨</p><p>نسخه ۵.۰</p></div></div>
-    <div class="modal-overlay" id="reportModal"><div class="modal"><div class="modal-header"><span>⚠️ گزارش مشکل</span><button class="modal-close" onclick="closeModal('reportModal')">×</button></div><p>در روبیکا پیام دهید:</p><br><p style="cursor:pointer; background: var(--card); padding: 10px; border-radius: 8px;" onclick="copyID()">@ID_HARTER</p></div></div>
-    <div class="modal-overlay" id="fontModal"><div class="modal"><div class="modal-header"><span>🔤 انتخاب فونت</span><button class="modal-close" onclick="closeModal('fontModal')">×</button></div><div class="settings-item" onclick="setFontSize('0.9rem', 'کوچیک')">کوچیک</div><div class="settings-item" onclick="setFontSize('1rem', 'متوسط')">متوسط</div><div class="settings-item" onclick="setFontSize('1.2rem', 'بزرگ')">بزرگ</div></div></div>
-    <div class="modal-overlay" id="langModal"><div class="modal"><div class="modal-header"><span id="langModalTitle">🌐 انتخاب زبان</span><button class="modal-close" onclick="closeModal('langModal')">×</button></div><input class="currency-search" id="langSearchInput" placeholder="🔍 جستجوی زبان..." onkeyup="filterLanguages(this.value)"><div id="langList" style="max-height: 300px; overflow-y: auto;"></div></div></div>
-    <div class="modal-overlay" id="provinceModal"><div class="modal"><div class="modal-header"><span>📍 انتخاب استان</span><button class="modal-close" onclick="closeModal('provinceModal')">×</button></div><input class="currency-search" id="provinceSearchInput" placeholder="🔍 جستجوی استان..." onkeyup="filterProvinces(this.value)"><div id="provinceList" style="max-height: 300px; overflow-y: auto;"></div></div></div>
+    <div class="modal-overlay" id="aboutModal"><div class="modal"><div class="modal-header"><span>📖 درباره ما</span><button class="modal-close" onclick="closeModal('aboutModal')">›</button></div><p>AmirHarter | پورتال هوشمند</p><br><p>AMIRHARTER ... فقط یک سایت نیست</p><p>یه دنیای کامله!</p><br><p>جایی که همه‌چیز یکجا جمع شده</p><p>از آخرین اخبار و قیمت ارز</p><p>تا آب و هوا، فوتبال و ترجمه!</p><br><p>ساخته شده برای اینکه دنیایی از اطلاعات دم دستت باشه</p><br><p>✨ قدرت در عین سادگی ✨</p><p>نسخه ۵.۰</p></div></div>
+    <div class="modal-overlay" id="reportModal"><div class="modal"><div class="modal-header"><span>⚠️ گزارش مشکل</span><button class="modal-close" onclick="closeModal('reportModal')">›</button></div><p>در روبیکا پیام دهید:</p><br><p style="cursor:pointer; background: var(--card); padding: 10px; border-radius: 8px;" onclick="copyID()">@ID_HARTER</p></div></div>
+    <div class="modal-overlay" id="fontModal"><div class="modal"><div class="modal-header"><span>🔤 انتخاب فونت</span><button class="modal-close" onclick="closeModal('fontModal')">›</button></div><div class="settings-item" onclick="setFontSize('0.9rem', 'کوچیک')">کوچیک</div><div class="settings-item" onclick="setFontSize('1rem', 'متوسط')">متوسط</div><div class="settings-item" onclick="setFontSize('1.2rem', 'بزرگ')">بزرگ</div></div></div>
+    <div class="modal-overlay" id="langModal"><div class="modal"><div class="modal-header"><span id="langModalTitle">🌐 انتخاب زبان</span><button class="modal-close" onclick="closeModal('langModal')">›</button></div><input class="currency-search" id="langSearchInput" placeholder="🔍 جستجوی زبان..." onkeyup="filterLanguages(this.value)"><div id="langList" style="max-height: 300px; overflow-y: auto;"></div></div></div>
+    <div class="modal-overlay" id="provinceModal"><div class="modal"><div class="modal-header"><span>📍 انتخاب استان</span><button class="modal-close" onclick="closeModal('provinceModal')">›</button></div><input class="currency-search" id="provinceSearchInput" placeholder="🔍 جستجوی استان..." onkeyup="filterProvinces(this.value)"><div id="provinceList" style="max-height: 300px; overflow-y: auto;"></div></div></div>
     <div class="main">
         <div class="logo-animation"><div class="logo-text">AmirHarter</div></div>
         <div class="search-container"><button class="search-btn" onclick="searchGoogle(document.getElementById('mainSearch').value)">جستجو</button><button class="mic-btn" onclick="voiceSearch()">🎤</button><input class="search-box" id="mainSearch" placeholder="در AMIR HARTER" onkeypress="if(event.key==='Enter') searchGoogle(this.value)"></div>
         <div class="search-options"><a href="https://play.google.com/" target="_blank" class="search-option">📱 گوگل‌پلی</a><a href="https://telewebion.net/" target="_blank" class="search-option">📺 تلوبیون</a><a href="games.html" class="search-option">🎮 بازی‌ها</a></div>
         <div class="clock-section"><div class="clock-icon">🕐</div><div class="clock" id="clock">--:--:--</div><div class="date" id="date">---</div></div>
-        <div class="card"><div class="card-title">🌤 آب و هوا</div><div class="weather-card" id="weatherData"><div class="weather-icon">🌤</div><div class="weather-temp">31.3°C</div><div class="weather-desc">تهران<br>نیمه آفتابی<br>باد: 8.7 km/h</div></div><div class="lang-display" onclick="showProvinceModal()" id="provinceDisplay">انتخاب استان...</div></div>
+        <div class="card"><div class="card-title">🌤 آب و هوا</div><div class="weather-card" id="weatherData"><div class="weather-icon">🌤</div><div class="weather-temp">31.4°C</div><div class="weather-desc">تهران<br>نیمه آفتابی<br>باد: 8.7 km/h</div></div><div class="lang-display" onclick="showProvinceModal()" id="provinceDisplay">انتخاب استان...</div></div>
         <div class="card"><div class="card-title"><span class="currency-icon">💱</span> قیمت ارز</div><input class="currency-search" placeholder="🔍 جستجوی ارز..." onkeyup="filterCurrency(this.value)"><div class="currency-scroll" id="currencyList"><div class="currency-item" data-name="دلار"><span>دلار</span><span class="currency-value down">2,232,650</span></div><div class="currency-item" data-name="یورو"><span>یورو</span><span class="currency-value down">2,600,100</span></div><div class="currency-item" data-name="درهم"><span>درهم</span><span class="currency-value down">612,620</span></div><div class="currency-item" data-name="پوند"><span>پوند</span><span class="currency-value down">3,030,200</span></div><div class="currency-item" data-name="لیر ترکیه"><span>لیر ترکیه</span><span class="currency-value up">47,000</span></div><div class="currency-item" data-name="یوان چین"><span>یوان چین</span><span class="currency-value down">336,000</span></div><div class="currency-item" data-name="روبل روسیه"><span>روبل روسیه</span><span class="currency-value down">25,740</span></div><div class="currency-item" data-name="دینار عراق"><span>دینار عراق</span><span class="currency-value down">1,444</span></div><div class="currency-item" data-name="افغانی"><span>افغانی</span><span class="currency-value down">34,210</span></div></div></div>
         <div class="card"><div class="card-title"><span class="currency-icon">💰</span> طلا و سکه</div><input class="currency-search" placeholder="🔍 جستجوی طلا..." onkeyup="filterGold(this.value)"><div class="currency-scroll" id="goldList"><div class="currency-item" data-name="طلای 18 عیار"><span>طلای 18 عیار</span><span class="currency-value up">23,062,200</span></div><div class="currency-item" data-name="طلای 24 عیار"><span>طلای 24 عیار</span><span class="currency-value up">30,749,300</span></div><div class="currency-item" data-name="سکه امامی"><span>سکه امامی</span><span class="currency-value up">230,005,000</span></div><div class="currency-item" data-name="نیم سکه"><span>نیم سکه</span><span class="currency-value up">116,500,000</span></div><div class="currency-item" data-name="ربع سکه"><span>ربع سکه</span><span class="currency-value up">61,500,000</span></div><div class="currency-item" data-name="سکه گرمی"><span>سکه گرمی</span><span class="currency-value up">34,000,000</span></div><div class="currency-item" data-name="مثقال طلا"><span>مثقال طلا</span><span class="currency-value up">99,897,000</span></div></div></div>
-        <div class="card"><div class="card-title">⚽ بازی‌های داغ</div><div class="filter-btns"><button class="filter-btn active" onclick="filterMatches('all', this)">همه</button><button class="filter-btn" onclick="filterMatches('finished', this)">پایان یافته</button><button class="filter-btn" onclick="filterMatches('live', this)">در حال انجام</button><button class="filter-btn" onclick="filterMatches('upcoming', this)">برگزار نشده</button></div><div class="football-scroll"><div class="match-item" data-status="upcoming" data-home-original="Toulouse" data-away-original="Monaco" data-home-fa="تولوز" data-away-fa="موناکو">
+        <div class="card"><div class="card-title">⚽ بازی‌های داغ</div><div class="filter-btns"><button class="filter-btn active" onclick="filterMatches('all', this)">همه</button><button class="filter-btn" onclick="filterMatches('finished', this)">پایان یافته</button><button class="filter-btn" onclick="filterMatches('live', this)">در حال انجام</button><button class="filter-btn" onclick="filterMatches('upcoming', this)">برگزار نشده</button></div><div class="football-scroll"><div class="match-item" data-status="upcoming">
         <div class="match-row">
             <span class="team-name right">تولوز</span>
             <span class="match-score">-</span>
             <span class="team-name left">موناکو</span>
         </div>
         <div class="match-status">پیش‌رو | لوشامپیونه</div>
-    </div><div class="match-item" data-status="upcoming" data-home-original="Atletico Madrid" data-away-original="Athletic Bilbao" data-home-fa="اتلتیکو مادرید" data-away-fa="اتلتیک بیلبائو">
+    </div><div class="match-item" data-status="upcoming">
         <div class="match-row">
             <span class="team-name right">اتلتیکو مادرید</span>
             <span class="match-score">-</span>
             <span class="team-name left">اتلتیک بیلبائو</span>
         </div>
         <div class="match-status">پیش‌رو | لا لیگا</div>
-    </div><div class="match-item" data-status="upcoming" data-home-original="Verona" data-away-original="Lecce" data-home-fa="هلاس ورونا" data-away-fa="لچه">
+    </div><div class="match-item" data-status="upcoming">
         <div class="match-row">
             <span class="team-name right">هلاس ورونا</span>
             <span class="match-score">-</span>
             <span class="team-name left">لچه</span>
         </div>
         <div class="match-status">پیش‌رو | سری آ</div>
-    </div><div class="match-item" data-status="upcoming" data-home-original="Angers" data-away-original="PSG" data-home-fa="آنژه" data-away-fa="پاری سن ژرمن">
+    </div><div class="match-item" data-status="upcoming">
         <div class="match-row">
             <span class="team-name right">آنژه</span>
             <span class="match-score">-</span>
             <span class="team-name left">پاری سن ژرمن</span>
         </div>
         <div class="match-status">پیش‌رو | لوشامپیونه</div>
-    </div><div class="match-item" data-status="upcoming" data-home-original="Arsenal" data-away-original="Newcastle United" data-home-fa="آرسنال" data-away-fa="نیوکاسل">
+    </div><div class="match-item" data-status="upcoming">
         <div class="match-row">
             <span class="team-name right">آرسنال</span>
             <span class="match-score">-</span>
             <span class="team-name left">نیوکاسل</span>
         </div>
         <div class="match-status">پیش‌رو | لیگ برتر انگلیس</div>
-    </div><div class="match-item" data-status="upcoming" data-home-original="Valencia" data-away-original="Girona" data-home-fa="والنسیا" data-away-fa="جیرونا">
+    </div><div class="match-item" data-status="upcoming">
         <div class="match-row">
             <span class="team-name right">والنسیا</span>
             <span class="match-score">-</span>
             <span class="team-name left">جیرونا</span>
         </div>
         <div class="match-status">پیش‌رو | لا لیگا</div>
-    </div><div class="match-item" data-status="upcoming" data-home-original="Hamburg" data-away-original="Hoffenheim" data-home-fa="Hamburg" data-away-fa="هوفنهایم">
+    </div><div class="match-item" data-status="upcoming">
         <div class="match-row">
             <span class="team-name right">Hamburg</span>
             <span class="match-score">-</span>
             <span class="team-name left">هوفنهایم</span>
         </div>
         <div class="match-status">پیش‌رو | بوندسلیگا</div>
-    </div><div class="match-item" data-status="upcoming" data-home-original="Al Ahli Jeddah" data-away-original="Machida Zelvia" data-home-fa="Al Ahli Jeddah" data-away-fa="Machida Zelvia">
+    </div><div class="match-item" data-status="upcoming">
         <div class="match-row">
             <span class="team-name right">Al Ahli Jeddah</span>
             <span class="match-score">-</span>
             <span class="team-name left">Machida Zelvia</span>
         </div>
         <div class="match-status">پیش‌رو | چمپیونز لیگ</div>
-    </div><div class="match-item" data-status="upcoming" data-home-original="Bologna" data-away-original="Roma" data-home-fa="بولونیا" data-away-fa="رم">
+    </div><div class="match-item" data-status="upcoming">
         <div class="match-row">
             <span class="team-name right">بولونیا</span>
             <span class="match-score">-</span>
             <span class="team-name left">رم</span>
         </div>
         <div class="match-status">پیش‌رو | سری آ</div>
-    </div><div class="match-item" data-status="upcoming" data-home-original="Getafe" data-away-original="Barcelona" data-home-fa="ختافه" data-away-fa="بارسلونا">
+    </div><div class="match-item" data-status="upcoming">
         <div class="match-row">
             <span class="team-name right">ختافه</span>
             <span class="match-score">-</span>
             <span class="team-name left">بارسلونا</span>
         </div>
         <div class="match-status">پیش‌رو | لا لیگا</div>
-    </div><div class="match-item" data-status="upcoming" data-home-original="Liverpool" data-away-original="Crystal Palace" data-home-fa="لیورپول" data-away-fa="کریستال پالاس">
+    </div><div class="match-item" data-status="upcoming">
         <div class="match-row">
             <span class="team-name right">لیورپول</span>
             <span class="match-score">-</span>
             <span class="team-name left">کریستال پالاس</span>
         </div>
         <div class="match-status">پیش‌رو | لیگ برتر انگلیس</div>
-    </div><div class="match-item" data-status="upcoming" data-home-original="Wolves" data-away-original="Tottenham Hotspur" data-home-fa="ولورهمپتون" data-away-fa="تاتنهام">
+    </div><div class="match-item" data-status="upcoming">
         <div class="match-row">
             <span class="team-name right">ولورهمپتون</span>
             <span class="match-score">-</span>
             <span class="team-name left">تاتنهام</span>
         </div>
         <div class="match-status">پیش‌رو | لیگ برتر انگلیس</div>
-    </div><div class="match-item" data-status="upcoming" data-home-original="Koln" data-away-original="Bayer Leverkusen" data-home-fa="کلن" data-away-fa="لورکوزن">
+    </div><div class="match-item" data-status="upcoming">
         <div class="match-row">
             <span class="team-name right">کلن</span>
             <span class="match-score">-</span>
             <span class="team-name left">لورکوزن</span>
         </div>
         <div class="match-status">پیش‌رو | بوندسلیگا</div>
-    </div><div class="match-item" data-status="upcoming" data-home-original="Mainz" data-away-original="Bayern Munich" data-home-fa="ماینتس" data-away-fa="بایرن مونیخ">
+    </div><div class="match-item" data-status="upcoming">
         <div class="match-row">
             <span class="team-name right">ماینتس</span>
             <span class="match-score">-</span>
             <span class="team-name left">بایرن مونیخ</span>
         </div>
         <div class="match-status">پیش‌رو | بوندسلیگا</div>
-    </div><div class="match-item" data-status="upcoming" data-home-original="Real Betis" data-away-original="Real Madrid" data-home-fa="رئال بتیس" data-away-fa="رئال مادرید">
+    </div><div class="match-item" data-status="upcoming">
         <div class="match-row">
             <span class="team-name right">رئال بتیس</span>
             <span class="match-score">-</span>
             <span class="team-name left">رئال مادرید</span>
         </div>
         <div class="match-status">پیش‌رو | لا لیگا</div>
-    </div><div class="match-item" data-status="upcoming" data-home-original="Napoli" data-away-original="Cremonese" data-home-fa="ناپولی" data-away-fa="Cremonese">
+    </div><div class="match-item" data-status="upcoming">
         <div class="match-row">
             <span class="team-name right">ناپولی</span>
             <span class="match-score">-</span>
             <span class="team-name left">Cremonese</span>
         </div>
         <div class="match-status">پیش‌رو | سری آ</div>
-    </div><div class="match-item" data-status="upcoming" data-home-original="Barcelona" data-away-original="Celta Vigo" data-home-fa="بارسلونا" data-away-fa="سلتاویگو">
+    </div><div class="match-item" data-status="upcoming">
         <div class="match-row">
             <span class="team-name right">بارسلونا</span>
             <span class="match-score">-</span>
             <span class="team-name left">سلتاویگو</span>
         </div>
         <div class="match-status">پیش‌رو | لا لیگا</div>
-    </div><div class="match-item" data-status="upcoming" data-home-original="Burnley" data-away-original="Manchester City" data-home-fa="Burnley" data-away-fa="منچستر سیتی">
+    </div><div class="match-item" data-status="upcoming">
         <div class="match-row">
             <span class="team-name right">Burnley</span>
             <span class="match-score">-</span>
             <span class="team-name left">منچستر سیتی</span>
         </div>
         <div class="match-status">پیش‌رو | لیگ برتر انگلیس</div>
-    </div><div class="match-item" data-status="upcoming" data-home-original="PSG" data-away-original="Nantes" data-home-fa="پاری سن ژرمن" data-away-fa="نانت">
+    </div><div class="match-item" data-status="upcoming">
         <div class="match-row">
             <span class="team-name right">پاری سن ژرمن</span>
             <span class="match-score">-</span>
             <span class="team-name left">نانت</span>
         </div>
         <div class="match-status">پیش‌رو | لوشامپیونه</div>
-    </div><div class="match-item" data-status="upcoming" data-home-original="Elche" data-away-original="Atletico Madrid" data-home-fa="Elche" data-away-fa="اتلتیکو مادرید">
+    </div><div class="match-item" data-status="upcoming">
         <div class="match-row">
             <span class="team-name right">Elche</span>
             <span class="match-score">-</span>
@@ -255,115 +250,176 @@
         </div>
         <div class="match-status">پیش‌رو | لا لیگا</div>
     </div></div></div>
-        <div class="card"><div class="card-title">📰 آخرین اخبار</div><div class="news-scroll"><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812378/%D9%BE%D8%A7%DB%8C-%D8%AF%D8%B1%D8%AF-%D9%88-%D8%AF%D9%84-%D8%AA%D9%88%D9%84%DB%8C%D8%AF%DA%A9%D9%86%D9%86%D8%AF%DA%AF%D8%A7%D9%86-%D8%B5%D9%86%D8%B9%D8%AA-%D9%86%D8%B3%D8%A7%D8%AC%DB%8C-%D9%85%D9%88%D8%A7%D8%AF-%D8%A7%D9%88%D9%84%DB%8C%D9%87-%D9%87%D8%B3%D8%AA-%D8%A7%D9%85%D8%A7-%D8%AA%D9%88%D9%84%DB%8C%D8%AF', '_blank')"><span>📰</span>پای درد و دل تولیدکنندگان صنعت نساجی: مواد اولیه هست، اما تولید سخت‌تر شد!</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812474/%D8%B1%D8%A6%DB%8C%D8%B3-%D8%B4%D9%88%D8%B1%D8%A7%DB%8C-%D8%B4%D9%87%D8%B1-%D8%A8%D8%A7%D8%BA-%D9%87%D8%A7-%D8%A8%D8%AE%D8%B4%DB%8C-%D8%A7%D8%B2-%D9%87%D9%88%DB%8C%D8%AA-%D8%B4%DB%8C%D8%B1%D8%A7%D8%B2-%D9%87%D8%B3%D8%AA%D9%86%D8%AF-%D8%AA%D9%88%D8%B3%D8%B9%D9%87-%D9%86%DB%8C%D8%A7%D8%B2%D9%85%D9%86%D8%AF', '_blank')"><span>📰</span>رئیس شورای شهر: باغ‌ها بخشی از هویت شیراز هستند/ توسعه نیازمند کار و عقلانیت است</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812470/%D9%86%DA%AF%D8%A7%D9%87-%D8%A2%D9%85%D8%A7%D8%B1%DB%8C-%D8%A8%D9%87-%D8%A8%D8%B1%D8%AF-%D9%88%D8%A7%D9%84%DB%8C%D8%A8%D8%A7%D9%84-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86-%D9%85%D9%82%D8%A7%D8%A8%D9%84-%DA%86%DB%8C%D9%86-%D8%AE%D8%A7%D9%86%D8%B2%D8%A7%D8%AF%D9%87-%D8%AF%D8%B1%D8%AE%D8%B4%DB%8C%D8%AF', '_blank')"><span>📰</span>نگاه آماری به برد والیبال ایران مقابل چین/ خانزاده درخشید</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812473/%D8%AA%D8%AD%D8%B1%DB%8C%D9%85-%D8%B4%D9%87%D8%B1%DA%A9-%D9%87%D8%A7-%D8%AF%D9%85%D9%88%DA%A9%D8%B1%D8%A7%D8%AA-%D9%87%D8%A7-%D8%AA%D8%B1%D8%A7%D9%85%D9%BE-%D8%B1%D8%A7-%D8%A8%D9%87-%D9%BE%DB%8C%D8%B1%D9%88%DB%8C-%D8%A7%D8%B2-%D8%A7%D8%B1%D9%88%D9%BE%D8%A7-%D9%81%D8%B1%D8%A7%D8%AE%D9%88%D8%A7%D9%86%D8%AF%D9%86%D8%AF', '_blank')"><span>📰</span>تحریم شهرک‌ها؛ دموکرات‌ها ترامپ را به پیروی از اروپا فراخواندند</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812472/%D8%B6%D8%B1%D8%A8%D9%87-%D8%B3%D8%A7%D8%B2%D9%85%D8%A7%D9%86-%D8%A7%D8%B7%D9%84%D8%A7%D8%B9%D8%A7%D8%AA-%D8%B3%D9%BE%D8%A7%D9%87-%D8%A7%DB%8C%D9%84%D8%A7%D9%85-%D8%A8%D9%87-%D8%B4%D8%A8%DA%A9%D9%87-%D9%81%D8%B3%D8%A7%D8%AF-%D9%85%D8%A7%D9%84%DB%8C-%D9%88-%DA%A9%D9%84%D8%A7%D9%87%D8%A8%D8%B1%D8%AF%D8%A7%D8%B1%DB%8C', '_blank')"><span>📰</span>ضربه سازمان اطلاعات سپاه ایلام به شبکه فساد مالی و کلاهبرداری ۷۰۰ میلیارد ریالی خرید گندم</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812471/%D9%82%D8%AF%D8%B1%D8%AF%D8%A7%D9%86%DB%8C-%D9%BE%D8%B2%D8%B4%DA%A9%DB%8C%D8%A7%D9%86-%D8%A7%D8%B2-%D9%87%D9%85%D8%B1%D8%A7%D9%87%DB%8C-%D9%85%D8%B1%D8%AF%D9%85-%D9%88-%D8%B9%D9%88%D8%A7%D9%85%D9%84-%D8%A7%D8%AC%D8%B1%D8%A7%DB%8C%DB%8C-%D8%AF%D8%B1-%D8%A7%D8%AC%D8%B1%D8%A7%DB%8C-%D8%B7%D8%B1%D8%AD-%D8%A8%D9%86%D8%B2%DB%8C%D9%86', '_blank')"><span>📰</span>قدردانی پزشکیان از همراهی مردم و عوامل اجرایی در اجرای طرح بنزین</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812346/%DA%86%D8%B1%D8%A7-%D9%81%D8%B1%D8%A7%D8%B9%D9%86%D9%87-%D8%B2%D9%86-%D8%AF%D8%B1-%D8%AA%D8%A7%D8%B1%DB%8C%D8%AE-%D9%81%D8%B1%D8%A7%D9%85%D9%88%D8%B4-%D8%B4%D8%AF%D9%86%D8%AF', '_blank')"><span>📰</span>چرا فراعنه زن در تاریخ فراموش شدند؟</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812469/%D9%85%D8%AF%DB%8C%D8%B1%DA%A9%D9%84-%D8%AA%D8%B9%D8%A7%D9%88%D9%86-%D8%A7%D8%B3%D8%AA%D8%A7%D9%86-%D8%AA%D8%B9%D8%A7%D9%88%D9%86%DB%8C-%D9%87%D8%A7%DB%8C-%D8%AF%D8%A7%D9%86%D8%B4-%D8%A8%D9%86%DB%8C%D8%A7%D9%86-%D8%AF%D8%B1-%D9%82%D8%B2%D9%88%DB%8C%D9%86-%D8%AA%D8%B4%DA%A9%DB%8C%D9%84-%D9%85%DB%8C-%D8%B4%D9%88%D9%86%D8%AF', '_blank')"><span>📰</span>مدیرکل تعاون استان: تعاونی‌های دانش بنیان در قزوین تشکیل می‌شوند</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812468/%D8%A2%D8%BA%D8%A7%D8%B2-%D8%B3%D8%B1%D8%B4%D9%85%D8%A7%D8%B1%DB%8C-%D8%B3%D8%B1%D8%A7%D8%B3%D8%B1%DB%8C-%DA%A9%D9%84%D9%86%DB%8C-%D9%87%D8%A7%DB%8C-%D8%B2%D9%86%D8%A8%D9%88%D8%B1-%D8%B9%D8%B3%D9%84-%D9%81%D8%A7%D8%B1%D8%B3-%D8%AF%D8%B1-%D9%85%D9%87%D8%B1%D9%85%D8%A7%D9%87', '_blank')"><span>📰</span>آغاز سرشماری سراسری کلنی‌های زنبور عسل فارس در مهرماه</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812467/%DB%B2%DB%B1%DB%B9%DB%B7-%D9%88%D8%A7%D8%AD%D8%AF-%D9%85%D8%B3%DA%A9%D9%86-%D8%B1%D9%88%D8%B3%D8%AA%D8%A7%DB%8C%DB%8C-%D8%AF%D8%B1-%DA%AF%DB%8C%D9%84%D8%A7%D9%86-%D8%A8%D9%87-%D8%A8%D9%87%D8%B1%D9%87-%D8%A8%D8%B1%D8%AF%D8%A7%D8%B1%DB%8C-%D8%B1%D8%B3%DB%8C%D8%AF', '_blank')"><span>📰</span>۲۱۹۷ واحد مسکن روستایی در گیلان به بهره‌برداری رسید</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812466/%D8%A7%D8%B1%D8%A8%D8%B9%DB%8C%D9%86-%DB%8C%DA%A9-%D8%AC%D8%B1%DB%8C%D8%A7%D9%86-%D8%AA%D9%85%D8%AF%D9%86%DB%8C-%D8%A7%D8%B3%D8%AA-%D9%85%D9%88%DA%A9%D8%A8-%D8%AF%D8%A7%D8%B1%D8%A7%D9%86-%D8%AC%D9%86%D9%88%D8%A8-%DA%A9%D8%B1%D9%85%D8%A7%D9%86-%D8%AE%D8%B7-%D9%85%D9%82%D8%AF%D9%85-%D8%AE%D8%AF%D9%85%D8%AA-%D8%B1%D8%B3%D8%A7%D9%86%DB%8C', '_blank')"><span>📰</span>موکب‌داران اربعینی جنوب کرمان تجلیل شدند</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812465/%D8%A8%DB%8C%D8%A7%D9%86%DB%8C%D9%87-%D9%88%D8%B2%D8%A7%D8%B1%D8%AA-%D8%A7%D9%85%D9%88%D8%B1-%D8%AE%D8%A7%D8%B1%D8%AC%D9%87-%D8%AF%D8%B1%D8%A8%D8%A7%D8%B1%D9%87-%D8%AA%D8%B9%D8%B1%D8%B6-%D8%A7%D8%B1%D8%AA%D8%B4-%D8%AA%D8%B1%D9%88%D8%B1%DB%8C%D8%B3%D8%AA%DB%8C-%D8%A2%D9%85%D8%B1%DB%8C%DA%A9%D8%A7-%D8%A8%D9%87-%D8%B4%D9%86%D8%A7%D9%88%D8%B1%D9%87%D8%A7%DB%8C', '_blank')"><span>📰</span>بیانیه وزارت امور خارجه درباره تعرض ارتش تروریستی آمریکا به شناورهای ایرانی</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812464/%D8%AA%D9%88%D9%84%DB%8C%D8%AF-%D8%A8%DB%8C%D8%B4-%D8%A7%D8%B2-%DB%B3%DB%B7-%D9%87%D8%B2%D8%A7%D8%B1-%D8%AA%D9%86-%D8%A7%D9%86%DA%AF%D9%88%D8%B1-%D8%AF%D8%B1-%D8%AA%D8%A7%DA%A9%D8%B3%D8%AA%D8%A7%D9%86-%D9%87%D8%A7%DB%8C-%D8%AC%D9%87%D8%B1%D9%85', '_blank')"><span>📰</span>تولید بیش از ۳۷ هزار تن انگور در تاکستان‌های جهرم</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812463/%D9%86%D8%AE%D8%B3%D8%AA-%D9%88%D8%B2%DB%8C%D8%B1-%D8%A7%D8%B3%D8%A8%D9%82-%D8%B5%D9%87%DB%8C%D9%88%D9%86%DB%8C%D8%B3%D8%AA%DB%8C-%D9%86%D8%AA%D8%A7%D9%86%DB%8C%D8%A7%D9%87%D9%88-%D8%B1%D8%A7-%D8%A8%D9%87-%D9%82%D8%B5%D9%88%D8%B1-%D9%81%D8%A7%D8%AD%D8%B4-%D8%A7%D9%85%D9%86%DB%8C%D8%AA%DB%8C-%D9%85%D8%AA%D9%87%D9%85', '_blank')"><span>📰</span>نخست‌وزیر اسبق صهیونیستی، نتانیاهو را به «قصور فاحش امنیتی» متهم کرد</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812462/%D8%A7%D8%AC%D8%B1%D8%A7%DB%8C-%D9%BE%D9%88%DB%8C%D8%B4-%D9%87%D9%85%D9%87-%D8%AD%D8%A7%D8%B6%D8%B1-%D8%A8%D8%B1%D8%A7%DB%8C-%D8%AD%D9%85%D8%A7%DB%8C%D8%AA-%D8%A7%D8%B2-%D8%AF%D8%A7%D9%86%D8%B4-%D8%A2%D9%85%D9%88%D8%B2%D8%A7%D9%86-%D8%AA%D8%AD%D8%AA-%D9%BE%D9%88%D8%B4%D8%B4-%D8%A8%D9%87%D8%B2%DB%8C%D8%B3%D8%AA%DB%8C', '_blank')"><span>📰</span>اجرای پویش «همه حاضر» برای حمایت از دانش‌آموزان تحت پوشش بهزیستی در اردبیل</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067422/%D8%AC%D8%B2%D8%A6%DB%8C%D8%A7%D8%AA-%D9%85%D8%AD%D8%AF%D9%88%D8%AF%D9%87-%D9%85%D9%85%D9%86%D9%88%D8%B9%D9%87-%D8%AC%D8%AF%DB%8C%D8%AF-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86-%D8%AF%D8%B1-%D8%AA%D9%86%DA%AF%D9%87-%D9%87%D8%B1%D9%85%D8%B2-%D8%B3%D8%AE%D9%86%DA%AF%D9%88%DB%8C-%D8%B3%D9%BE%D8%A7%D9%87-%D8%A7%DA%AF%D8%B1', '_blank')"><span>📰</span>جزئیات محدوده ممنوعه جدید ایران در تنگه هرمز | سخنگوی سپاه: اگر هر شناوری بدون هماهنگی وارد این منطقه شود...</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067204/%D9%82%D8%AF%DB%8C%D9%85%DB%8C-%D9%87%D8%A7-%D9%85%D9%87%D8%B1-%D8%AC%D8%AF%DB%8C%D8%AF-%D9%87%D8%A7-%D8%A2%D8%A8%D8%A7%D9%86', '_blank')"><span>📰</span>قدیمی ها مهر، جدید ها آبان</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067198/%DB%B3%DB%B1%DB%B3-%D9%87%D8%B2%D8%A7%D8%B1-%D8%AC%D8%A7%D9%86%D9%81%D8%AF%D8%A7-%D8%A8%D9%87-%D8%B5%D9%81', '_blank')"><span>📰</span> ۳۱۳ هزار جانفدا، به صف</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067195/%D8%B7%D8%B1%D8%AD-%D8%AC%D8%AF%DB%8C%D8%AF-%D8%A8%D9%87%D8%B2%DB%8C%D8%B3%D8%AA%DB%8C-%D8%A8%D8%B1%D8%A7%DB%8C-%DA%86%D9%86%D8%AF%D9%82%D9%84%D9%88%D9%87%D8%A7-%D9%85%D8%A7%D8%AF%D8%B1%D8%A7%D9%86-%DA%86%D9%86%D8%AF%D9%82%D9%84%D9%88%D9%87%D8%A7-%D8%AF%DB%8C%DA%AF%D8%B1-%D8%AA%D9%86%D9%87%D8%A7-%D9%86%DB%8C%D8%B3%D8%AA%D9%86%D8%AF', '_blank')"><span>📰</span>طرح جدید بهزیستی برای چندقلوها| مادران چندقلوها دیگر تنها نیستند</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067417/%D8%AA%D9%81%D9%88%DB%8C%D8%B6-%D8%A7%D8%AE%D8%AA%DB%8C%D8%A7%D8%B1-%D8%AA%D9%82%D8%B3%DB%8C%D8%B7-%D8%A8%D8%AF%D9%87%DB%8C-%D9%85%D8%A7%D9%84%DB%8C%D8%A7%D8%AA%DB%8C-%D8%A7%D8%A8%D8%B1%D8%A7%D8%B2%DB%8C-%D8%A7%D8%B4%D8%AE%D8%A7%D8%B5-%D8%AD%D9%82%D9%88%D9%82%DB%8C-%D8%B9%D9%85%D9%84%DA%A9%D8%B1%D8%AF-%D8%B3%D8%A7%D9%84', '_blank')"><span>📰</span>تفویض اختیار تقسیط بدهی مالیاتی ابرازی اشخاص حقوقی عملکرد سال ۱۴۰۴</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067418/%D9%87%D8%B4%D8%AF%D8%A7%D8%B1-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86-%D8%A8%D9%87-%D8%A2%D9%85%D8%B1%DB%8C%DA%A9%D8%A7-%D8%A8%DB%8C%D8%A7%D9%86%DB%8C%D9%87-%D9%88%D8%B2%D8%A7%D8%B1%D8%AA-%D8%A7%D9%85%D9%88%D8%B1-%D8%AE%D8%A7%D8%B1%D8%AC%D9%87-%D8%AF%D8%B1%D8%A8%D8%A7%D8%B1%D9%87-%D8%AD%D9%85%D9%84%D9%87-%D8%A2%D9%85%D8%B1%DB%8C%DA%A9%D8%A7', '_blank')"><span>📰</span>هشدار ایران به آمریکا؛ بیانیه وزارت امور خارجه درباره حمله آمریکا به شناورهای ایرانی</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067394/%D9%87%D8%AF%D9%81-%DA%AF%D8%B0%D8%A7%D8%B1%DB%8C-%D8%A8%D8%B1%D8%A7%DB%8C-%D8%B1%D8%B3%DB%8C%D8%AF%D9%86-%D8%A8%D9%87-%DB%B9-%D9%87%D8%B2%D8%A7%D8%B1-%D8%AF%D8%B3%D8%AA%DA%AF%D8%A7%D9%87-%D8%A7%D8%AA%D9%88%D8%A8%D9%88%D8%B3', '_blank')"><span>📰</span>هدف‌گذاری برای رسیدن به ۹ هزار دستگاه اتوبوس</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067416/%D8%A8%DB%8C%D8%A7%D9%86%DB%8C%D9%87-%D9%88%D8%B2%D8%A7%D8%B1%D8%AA-%D8%AE%D8%A7%D8%B1%D8%AC%D9%87-%D8%AF%D8%B1%D8%A8%D8%A7%D8%B1%D9%87-%D8%AF%D8%B1%DA%AF%DB%8C%D8%B1%DB%8C-%D8%A8%D8%A7-%D8%A2%D9%85%D8%B1%DB%8C%DA%A9%D8%A7-%D8%AC%D8%B2%D8%A6%DB%8C%D8%A7%D8%AA-%D9%BE%D8%A7%D8%B3%D8%AE-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86', '_blank')"><span>📰</span>بیانیه وزارت خارجه درباره درگیری با آمریکا؛ جزئیات پاسخ ایران به تعرض علیه نفتکش‌ها</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067412/%D9%88%D9%82%D8%AA-%D8%A7%D8%AE%D8%B1%D8%A7%D8%AC-%D9%87%DA%AF%D8%B3%D8%AA-%D8%B1%D8%B3%DB%8C%D8%AF%D9%87-%D8%A7%D8%B3%D8%AA', '_blank')"><span>📰</span>وقت اخراج هگست رسیده است</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067410/%D9%85%D8%B5%D8%AF%D9%88%D9%85%DB%8C%D8%AA-%D8%B1%D9%88%D8%B2%D8%A8%D9%87-%DA%86%D8%B4%D9%85%DB%8C-%DA%A9%D8%A7%D9%BE%DB%8C%D8%AA%D8%A7%D9%86-%D8%A7%D8%B3%D8%AA%D9%82%D9%84%D8%A7%D9%84-%D9%85%D9%82%D8%A7%D8%A8%D9%84-%D9%BE%DB%8C%DA%A9%D8%A7%D9%86-%D9%85%D8%B9%D8%B1%D9%81%DB%8C-%D8%B4%D8%AF', '_blank')"><span>📰</span>مصدومیت روزبه چشمی؛ کاپیتان استقلال مقابل پیکان معرفی شد</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067383/%D9%84%D8%B2%D9%88%D9%85-%D8%AA%D8%AC%D9%87%DB%8C%D8%B2-%D9%88-%D8%A8%D8%A7%D8%B2%D8%A2%D9%81%D8%B1%DB%8C%D9%86%DB%8C-%D8%B2%DB%8C%D8%B1%D8%B3%D8%A7%D8%AE%D8%AA-%D9%87%D8%A7-%D8%A8%D8%B1%D8%A7%DB%8C-%D8%AA%D9%88%D8%B3%D8%B9%D9%87-%D8%AD%D9%85%D9%84-%D9%88-%D9%86%D9%82%D9%84-%D9%BE%D8%A7%DA%A9', '_blank')"><span>📰</span>لزوم تجهیز و بازآفرینی زیرساخت‌ها برای توسعه حمل و نقل پاک</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067407/%D8%B1%D9%88%D8%B3-%D9%87%D8%A7-%D8%A8%D9%87-%D8%A7%DB%8C%D9%86-%D9%81%DB%8C%D9%84%D9%85-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86%DB%8C-%D8%AF%D8%B1%D8%A8%D8%A7%D8%B1%D9%87-%D8%BA%D8%B2%D9%87-%D8%AC%D8%A7%DB%8C%D8%B2%D9%87-%D8%AF%D8%A7%D8%AF%D9%86%D8%AF', '_blank')"><span>📰</span>روس ها به این فیلم ایرانی درباره غزه جایزه دادند</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067409/%D8%AD%D8%A7%D8%AF%D8%AB%D9%87-%D8%AF%D8%B1-%D8%AE%D9%84%DB%8C%D8%AC-%D9%81%D8%A7%D8%B1%D8%B3-%DA%AF%D8%B2%D8%A7%D8%B1%D8%B4-%D9%87%D8%AF%D9%81-%D9%82%D8%B1%D8%A7%D8%B1%DA%AF%D8%B1%D9%81%D8%AA%D9%86-%DA%86%D9%86%D8%AF%DB%8C%D9%86-%DA%A9%D8%B4%D8%AA%DB%8C', '_blank')"><span>📰</span>حادثه در خلیج فارس؛ گزارش هدف‌ قرارگرفتن چندین کشتی</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067403/%D8%A8%D8%AE%D8%AA%DB%8C%D8%A7%D8%B1%DB%8C-%D8%B2%D8%A7%D8%AF%D9%87-%D8%AF%D8%B1-%D9%85%D9%88%D8%B1%D8%AF-%D8%AD%D8%B1%D8%AF%D8%A7%D9%86%DB%8C-%D8%AF%DB%8C%DA%AF%D8%B1-%DA%86%DB%8C%D8%B2%DB%8C-%D9%86%D9%85%DB%8C-%DA%AF%D9%88%DB%8C%D9%85-%D8%A8%D9%87-%D8%AA%DB%8C%D9%85-%D8%A7%D9%85%DB%8C%D8%AF', '_blank')"><span>📰</span>بختیاری‌زاده: در مورد حردانی دیگر چیزی نمی‌گویم | به تیم امید بازیکن نمی‌دهم</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067404/%D8%A7%D9%84%D9%86%D8%A7%D8%B2-%D8%B4%D8%A7%DA%A9%D8%B1%D8%AF%D9%88%D8%B3%D8%AA-%D8%A8%D8%A7-%D8%A7%DB%8C%D9%86-%DA%86%D9%87%D8%B1%D9%87-%D8%A8%D9%87-%D8%B3%DB%8C%D9%86%D9%85%D8%A7-%D8%A8%D8%B1%DA%AF%D8%B4%D8%AA', '_blank')"><span>📰</span>الناز شاکردوست با این چهره به سینما برگشت</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272260/%D9%82%DB%8C%D9%85%D8%AA-%DA%AF%D9%88%D8%B4%D8%AA-%D9%85%D8%B1%D8%BA-%D8%A7%D9%85%D8%B1%D9%88%D8%B2-%DB%B1%DB%B8-%D8%B4%D9%87%D8%B1%DB%8C%D9%88%D8%B1-%DB%B1%DB%B4%DB%B0%DB%B5-%D8%B1%D8%A7%D9%86-%D9%85%D8%B1%D8%BA-%DA%A9%DB%8C%D9%84%D9%88%DB%8C%DB%8C-%DA%86%D9%86%D8%AF-%D8%B4%D8%AF', '_blank')"><span>📰</span>قیمت گوشت مرغ امروز ۱۸ شهریور ۱۴۰۵/ ران مرغ کیلویی چند شد؟ + جدول</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272218/%D8%AA%D8%A3%DA%A9%DB%8C%D8%AF-%D9%85%D8%B9%D8%A7%D9%88%D9%86-%D9%81%D8%B1%D9%85%D8%A7%D9%86%D8%AF%D8%A7%D8%B1-%D8%A8%D8%B1%D9%88%D8%AC%D8%B1%D8%AF-%D8%A8%D8%B1-%D8%AA%D9%88%D8%B3%D8%B9%D9%87-%D8%AE%D8%AF%D9%85%D8%A7%D8%AA-%D8%B4%D9%87%D8%B1%DB%8C-%D9%85%D8%AA%D9%86%D8%A7%D8%B3%D8%A8-%D8%A8%D8%A7-%D9%86%DB%8C%D8%A7%D8%B2', '_blank')"><span>📰</span>تأکید معاون فرماندار بروجرد بر توسعه خدمات شهری متناسب با نیاز سالمندان</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272297/%D8%AA%DB%8C%D8%B1%D8%A7%D9%86%D8%AF%D8%A7%D8%B2%DB%8C-%D8%AF%D8%B1-%D8%A7%D8%AA%D9%88%D8%A8%D8%A7%D9%86-%D8%AA%D9%87%D8%B1%D8%A7%D9%86-%D9%82%D9%85', '_blank')"><span>📰</span>تیراندازی در اتوبان تهران_قم</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272144/%D8%B9%D8%B6%D9%88-%D9%87%DB%8C%D8%A7%D8%AA-%D8%B1%D8%A6%DB%8C%D8%B3%D9%87-%D9%85%D8%AC%D9%84%D8%B3-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86-%D9%87%D8%B1%DA%AF%D8%B2-%D8%AC%D8%A8%D9%87%D9%87-%D9%85%D9%82%D8%A7%D9%88%D9%85%D8%AA-%D8%B1%D8%A7-%D8%AA%D9%86%D9%87%D8%A7-%D9%86%D9%85%DB%8C-%DA%AF%D8%B0%D8%A7%D8%B1%D8%AF', '_blank')"><span>📰</span>عضو هیات رئیسه مجلس: ایران هرگز جبهه مقاومت را تنها نمی‌گذارد/ رژیم صهیونیستی باید در انتظار پاسخی کوبنده و سیلی سختی باشد</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272214/%D8%A7%D9%86%D8%B9%D9%82%D8%A7%D8%AF-%D8%AA%D9%81%D8%A7%D9%87%D9%85-%D9%86%D8%A7%D9%85%D9%87-%DA%A9%D8%A7%D8%B1%D8%A8%D8%B1%D8%AF%DB%8C-%D8%AF%D8%A7%D9%86%D8%B4%DA%AF%D8%A7%D9%87-%D9%84%D8%B1%D8%B3%D8%AA%D8%A7%D9%86-%D9%88-%D8%B4%D8%B1%DA%A9%D8%AA-%D8%A2%D8%A8-%D9%85%D9%86%D8%B7%D9%82%D9%87-%D8%A7%DB%8C-%D8%A7%D8%B3%D8%AA%D8%A7%D9%86', '_blank')"><span>📰</span>انعقاد تفاهم نامه کاربردی دانشگاه لرستان و شرکت آب منطقه‌ای استان</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272209/%D8%A8%D8%A8%DB%8C%D9%86%DB%8C%D8%AF-%D8%AD%D8%B3%D9%86-%D8%B1%D9%88%D8%AD%D8%A7%D9%86%DB%8C-%D8%A8%D8%A7%DB%8C%D8%AF-%D8%A8%D8%A7-%D9%85%D8%B1%D8%AF%D9%85-%D9%85%D8%B4%D9%88%D8%B1%D8%AA-%DA%A9%D9%86%DB%8C%D9%85-%D8%B8%D8%A7%D9%87%D8%B1%D8%A7-%D8%A8%D8%B9%D8%B6%DB%8C-%D9%87%D8%A7', '_blank')"><span>📰</span>ببینید | حسن روحانی: باید با مردم مشورت کنیم؛ ظاهراً بعضی‌ها از پیمان و مذاکره بدشان می‌آید</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272207/%D8%A8%D8%A7%D8%B2%D8%AF%DB%8C%D8%AF-%D8%B4%D9%87%D8%B1%D8%AF%D8%A7%D8%B1-%D9%85%D9%86%D8%B7%D9%82%D9%87-%DA%86%D9%87%D8%A7%D8%B1-%DA%A9%D8%B1%D9%85%D8%A7%D9%86-%D8%A7%D8%B2-%D9%85%D8%B1%DA%A9%D8%B2-%D8%AE%D9%84%D8%A7%D9%82%DB%8C%D8%AA-%D9%88-%D9%86%D9%88%D8%A2%D9%88%D8%B1%DB%8C-%D8%B4%D9%87%D8%B1%D8%AF%D8%A7%D8%B1%DB%8C', '_blank')"><span>📰</span>بازدید شهردار منطقه چهار کرمان از مرکز خلاقیت و نوآوری شهرداری</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2270606/%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%DA%86%DA%AF%D9%88%D9%86%D9%87-%D8%A8%D9%87-%D8%A7%D8%A8%D8%B2%D8%A7%D8%B1-%D9%87%D8%B4%D8%AF%D8%A7%D8%B1-%D8%B3%D9%84%D8%A7%D9%85%D8%AA-%D8%AA%D8%A8%D8%AF%DB%8C%D9%84-%D8%B4%D8%AF-%D8%AA%D8%AC%D8%B1%D8%A8%D9%87-%DA%A9%D8%B4%D9%88%D8%B1%D9%87%D8%A7%DB%8C-%D9%85%D8%AE%D8%AA%D9%84%D9%81', '_blank')"><span>📰</span>موبایل چگونه به ابزار هشدار سلامت تبدیل شد؟/ تجربه کشورهای مختلف برای اطلاع‌رسانی و هشدارهای فوری</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2271923/%D9%87%D9%88%D8%B4-%D9%85%D8%B5%D9%86%D9%88%D8%B9%DB%8C-%D9%88-%D9%BE%D8%A7%DB%8C%D8%A7%D9%86-%D8%AD%D8%B1%DB%8C%D9%85-%D8%AE%D8%B5%D9%88%D8%B5%DB%8C-%DA%A9%D9%88%D8%AF%DA%A9%D8%A7%D9%86', '_blank')"><span>📰</span>هوش مصنوعی و پایان حریم خصوصی کودکان؟</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272251/%D8%B4%D9%87%D8%A7%D8%AF%D8%AA-%DB%8C%DA%A9-%D8%AD%D8%A7%D9%81%D8%B8-%D8%A7%D9%85%D9%86%DB%8C%D8%AA-%D8%AF%D8%B1-%D8%B3%DB%8C%D8%B3%D8%AA%D8%A7%D9%86-%D9%88-%D8%A8%D9%84%D9%88%DA%86%D8%B3%D8%AA%D8%A7%D9%86-%D9%86%DB%8C%D8%B1%D9%88%DB%8C-%D8%B2%D9%85%DB%8C%D9%86%DB%8C-%D8%B3%D9%BE%D8%A7%D9%87-%D8%A7%D8%B7%D9%84%D8%A7%D8%B9%DB%8C%D9%87', '_blank')"><span>📰</span>شهادت یک حافظ امنیت در سیستان و بلوچستان/ نیروی زمینی سپاه اطلاعیه داد</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272288/%D9%81%D8%B1%D8%A7%D8%AE%D9%88%D8%A7%D9%86-%D8%B3%D9%88%D9%85%DB%8C%D9%86-%D8%AC%D8%A7%DB%8C%D8%B2%D9%87-%D9%85%D9%84%DB%8C-%D8%B3%DB%8C%D8%A7%D8%B3%D8%AA%DA%AF%D8%B0%D8%A7%D8%B1%DB%8C-%D8%AC%D8%A7%DB%8C%D8%B2%D9%87-%D9%85%D9%84%DB%8C-%D8%B3%DB%8C%D8%A7%D8%B3%D8%AA%DA%AF%D8%B0%D8%A7%D8%B1%DB%8C-%D8%A8%D8%A7', '_blank')"><span>📰</span>فراخوان سومین جایزه ملی سیاستگذاری / جایزه ملی سیاستگذاری با هدف شناسایی اندیشکده‌های برتر برگزار می‌شود</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272013/%D8%B1%D8%A7%D8%B2-%D8%B9%D8%A8%D9%88%D8%B1-%D8%B4%DB%8C%D8%B9%D9%87-%D8%A7%D8%B2-%D8%B1%D9%88%D8%B2%D9%87%D8%A7%DB%8C-%D8%B3%D8%AE%D8%AA-%D8%AF%D8%B1-%D8%B2%DB%8C%D8%A7%D8%B1%D8%AA-%D8%AC%D8%A7%D9%85%D8%B9%D9%87-%DA%A9%D8%A8%DB%8C%D8%B1%D9%87-%DA%86%D8%B1%D8%A7-%D9%88%D9%84%D8%A7%DB%8C%D8%AA', '_blank')"><span>📰</span>راز عبور شیعه از روزهای سخت در زیارت جامعه کبیره؛ چرا «ولایت» محور وحدت است؟</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272290/%D8%A7%DB%8C%D8%B1%D8%A7%D9%86-%D8%A8%D8%A7-%D8%B5%D8%AF%D8%B1%D9%86%D8%B4%DB%8C%D9%86%DB%8C-%D8%A8%D9%87-%D9%85%D8%B1%D8%AD%D9%84%D9%87-%D8%AD%D8%B0%D9%81%DB%8C-%D8%B1%D8%B3%DB%8C%D8%AF', '_blank')"><span>📰</span>ایران با صدرنشینی به مرحله حذفی رسید؛ دیوار چین برای شاگردان پیاتزا کوتاه بود!</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272164/%D8%B3%D8%B1%D9%86%D9%88%D8%B4%D8%AA-%D9%82%D8%A7%D8%AA%D9%84-%D8%A7%D9%85%DB%8C%D8%B1%DA%A9%D8%A8%DB%8C%D8%B1-%D9%88-%D9%86%D9%88%D8%A7%D8%AF%DA%AF%D8%A7%D9%86%D8%B4-%DA%86%D9%87-%D8%B4%D8%AF', '_blank')"><span>📰</span>سرنوشت قاتل امیرکبیر و نوادگانش چه شد؟</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272122/%D9%87%D9%86%D8%B1-%D9%BE%D9%88%D8%B4%D8%A7%D9%86%D8%AF%D9%86-%D9%86%D9%82%D8%B4-%D8%AF%D8%B1-%D8%AF%D9%88%D8%A7%D8%B2%D8%AF%D9%87%D9%85%DB%8C%D9%86-%D8%B1%D9%88%DB%8C%D8%AF%D8%A7%D8%AF-%D8%AC%D9%85%D8%B9%D9%87-%D9%87%D8%A7%DB%8C-%D8%AA%D8%A6%D8%A7%D8%AA%D8%B1-%D8%B4%D9%87%D8%B1', '_blank')"><span>📰</span>«هنر پوشاندن نقش» در دوازدهمین رویداد «جمعه‌های تئاتر شهر»</div></div></div>
-        <div class="card"><div class="card-title">🌐 ترجمه</div><div class="lang-row"><div class="lang-box"><div class="lang-display" onclick="showLangModal('from')" id="fromDisplay">انتخاب زبان مبدا</div></div><button class="swap-btn" id="swapBtn" onclick="swapLanguages()">⇄</button><div class="lang-box"><div class="lang-display" onclick="showLangModal('to')" id="toDisplay">انتخاب زبان مقصد</div></div></div><textarea id="text" placeholder="متن خود را وارد کنید..."></textarea><div class="result" id="result">نتیجه ترجمه...</div><div class="btn-row"><button class="translate-btn" onclick="translateText()">ترجمه</button><button class="copy-btn" onclick="copyResult()">کپی</button></div></div>
+        <div class="card"><div class="card-title">📰 آخرین اخبار</div><div class="news-scroll"><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812481/%D8%AF%D8%A8%DB%8C%D8%B1-%D8%AF%D9%88%D8%B1%D9%87-%D9%86%D8%AE%D8%B3%D8%AA%DB%8C%D9%86-%D8%AC%D8%A7%DB%8C%D8%B2%D9%87-%D8%A8%DB%8C%D9%86-%D8%A7%D9%84%D9%85%D9%84%D9%84%DB%8C-%D9%85%D8%B3%D8%AA%D9%88%D8%B1%D9%87-%D8%A7%D8%B1%D8%AF%D9%84%D8%A7%D9%86-%D8%A8%D9%87-%D9%85%D8%B9%D8%B1%D9%81%DB%8C-%D8%B2%D9%86%D8%A7%D9%86', '_blank')"><span>📰</span>دبیر دوره: نخستین جایزه بین‌المللی «مستوره اردلان» به معرفی زنان کرد اثرگذار می‌پردازد</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812480/%D8%A7%D8%AC%D8%B1%D8%A7%DB%8C-%D8%B7%D8%B1%D8%AD-%D9%85%D8%AF%DB%8C%D8%B1%DB%8C%D8%AA-%D8%AA%D9%84%D9%81%DB%8C%D9%82%DB%8C-%D8%A2%D9%81%D8%A7%D8%AA-%D9%88-%D8%A8%DB%8C%D9%85%D8%A7%D8%B1%DB%8C-%D9%87%D8%A7%DB%8C-%D9%BE%D9%86%D8%A8%D9%87-%D8%AF%D8%B1-%D8%A7%D8%B3%D8%AA%D9%87%D8%A8%D8%A7%D9%86', '_blank')"><span>📰</span>اجرای طرح مدیریت تلفیقی آفات و بیماری‌های پنبه در استهبان</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812478/%D9%87%DB%8C%DA%86-%D8%A7%D8%AF%D8%A7%D8%B1%D9%87-%D8%A7%DB%8C-%D8%AD%D9%82-%D9%86%D8%AF%D8%A7%D8%B1%D8%AF-%D9%86%DB%8C%D8%B1%D9%88%DB%8C-%D8%AF%D8%A7%D8%B1%D8%A7%DB%8C-%D9%BE%D8%B3%D8%AA-%D8%B3%D8%A7%D8%B2%D9%85%D8%A7%D9%86%DB%8C-%D8%B4%D9%87%D8%B1%D8%B3%D8%AA%D8%A7%D9%86-%D8%B1%D8%A7-%D8%A8%D8%AF%D9%88%D9%86', '_blank')"><span>📰</span>هیچ اداره‌ای حق ندارد نیروی دارای پست سازمانی شهرستان را بدون معرفی جایگزین منتقل کند</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812477/%D8%B6%D8%B1%D9%88%D8%B1%D8%AA-%D8%AD%D9%85%D8%A7%DB%8C%D8%AA-%D8%A8%D8%A7%D9%86%DA%A9-%D9%87%D8%A7-%D8%A8%D8%B1%D8%A7%DB%8C-%D8%AC%D9%84%D9%88%DA%AF%DB%8C%D8%B1%DB%8C-%D8%A7%D8%B2-%D8%AA%D8%B9%D8%B7%DB%8C%D9%84%DB%8C-%D9%88%D8%A7%D8%AD%D8%AF%D9%87%D8%A7%DB%8C-%D8%AA%D9%88%D9%84%DB%8C%D8%AF%DB%8C-%DA%A9%D9%87%DA%AF%DB%8C%D9%84%D9%88%DB%8C%D9%87', '_blank')"><span>📰</span>ضرورت حمایت بانک‌ها برای جلوگیری از تعطیلی واحدهای تولیدی کهگیلویه و بویراحمد</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812476/%D8%B3%D8%B1%D8%AF%D8%A7%D8%B1-%D9%82%D8%B1%D8%A8%D8%A7%D9%86%DB%8C-%D8%A8%D8%A7%DB%8C%D8%AF-%D8%A7%D8%AD%D8%AA%D8%B1%D8%A7%D9%85-%D8%AC%D9%88%D8%A7%D9%86%D8%A7%D9%86-%D8%B1%D8%A7-%D8%AD%D9%81%D8%B8-%DA%A9%D9%86%DB%8C%D9%85', '_blank')"><span>📰</span>سردار قربانی: باید احترام جوانان را حفظ کنیم</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812475/%D8%AF%D9%88%D9%85%DB%8C%D9%86-%D9%85%D8%B8%D9%86%D9%87-%DA%AF%DB%8C%D8%B1%DB%8C-%D8%A7%D9%88%D8%B1%D8%A7%D9%82-%D9%85%D8%A7%D9%84%DB%8C-%D8%A7%D8%B3%D9%84%D8%A7%D9%85%DB%8C-%D8%A8%D8%B1%DA%AF%D8%B2%D8%A7%D8%B1-%D9%85%DB%8C-%D8%B4%D9%88%D8%AF', '_blank')"><span>📰</span>دومین مظنه‌گیری اوراق مالی اسلامی برگزار می‌شود</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812378/%D9%BE%D8%A7%DB%8C-%D8%AF%D8%B1%D8%AF-%D9%88-%D8%AF%D9%84-%D8%AA%D9%88%D9%84%DB%8C%D8%AF%DA%A9%D9%86%D9%86%D8%AF%DA%AF%D8%A7%D9%86-%D8%B5%D9%86%D8%B9%D8%AA-%D9%86%D8%B3%D8%A7%D8%AC%DB%8C-%D9%85%D9%88%D8%A7%D8%AF-%D8%A7%D9%88%D9%84%DB%8C%D9%87-%D9%87%D8%B3%D8%AA-%D8%A7%D9%85%D8%A7-%D8%AA%D9%88%D9%84%DB%8C%D8%AF', '_blank')"><span>📰</span>پای درد و دل تولیدکنندگان صنعت نساجی: مواد اولیه هست، اما تولید سخت‌تر شد!</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812474/%D8%B1%D8%A6%DB%8C%D8%B3-%D8%B4%D9%88%D8%B1%D8%A7%DB%8C-%D8%B4%D9%87%D8%B1-%D8%A8%D8%A7%D8%BA-%D9%87%D8%A7-%D8%A8%D8%AE%D8%B4%DB%8C-%D8%A7%D8%B2-%D9%87%D9%88%DB%8C%D8%AA-%D8%B4%DB%8C%D8%B1%D8%A7%D8%B2-%D9%87%D8%B3%D8%AA%D9%86%D8%AF-%D8%AA%D9%88%D8%B3%D8%B9%D9%87-%D9%86%DB%8C%D8%A7%D8%B2%D9%85%D9%86%D8%AF', '_blank')"><span>📰</span>رئیس شورای شهر: باغ‌ها بخشی از هویت شیراز هستند/ توسعه نیازمند کار و عقلانیت است</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812470/%D9%86%DA%AF%D8%A7%D9%87-%D8%A2%D9%85%D8%A7%D8%B1%DB%8C-%D8%A8%D9%87-%D8%A8%D8%B1%D8%AF-%D9%88%D8%A7%D9%84%DB%8C%D8%A8%D8%A7%D9%84-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86-%D9%85%D9%82%D8%A7%D8%A8%D9%84-%DA%86%DB%8C%D9%86-%D8%AE%D8%A7%D9%86%D8%B2%D8%A7%D8%AF%D9%87-%D8%AF%D8%B1%D8%AE%D8%B4%DB%8C%D8%AF', '_blank')"><span>📰</span>نگاه آماری به برد والیبال ایران مقابل چین/ خانزاده درخشید</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812473/%D8%AA%D8%AD%D8%B1%DB%8C%D9%85-%D8%B4%D9%87%D8%B1%DA%A9-%D9%87%D8%A7-%D8%AF%D9%85%D9%88%DA%A9%D8%B1%D8%A7%D8%AA-%D9%87%D8%A7-%D8%AA%D8%B1%D8%A7%D9%85%D9%BE-%D8%B1%D8%A7-%D8%A8%D9%87-%D9%BE%DB%8C%D8%B1%D9%88%DB%8C-%D8%A7%D8%B2-%D8%A7%D8%B1%D9%88%D9%BE%D8%A7-%D9%81%D8%B1%D8%A7%D8%AE%D9%88%D8%A7%D9%86%D8%AF%D9%86%D8%AF', '_blank')"><span>📰</span>تحریم شهرک‌ها؛ دموکرات‌ها ترامپ را به پیروی از اروپا فراخواندند</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812472/%D8%B6%D8%B1%D8%A8%D9%87-%D8%B3%D8%A7%D8%B2%D9%85%D8%A7%D9%86-%D8%A7%D8%B7%D9%84%D8%A7%D8%B9%D8%A7%D8%AA-%D8%B3%D9%BE%D8%A7%D9%87-%D8%A7%DB%8C%D9%84%D8%A7%D9%85-%D8%A8%D9%87-%D8%B4%D8%A8%DA%A9%D9%87-%D9%81%D8%B3%D8%A7%D8%AF-%D9%85%D8%A7%D9%84%DB%8C-%D9%88-%DA%A9%D9%84%D8%A7%D9%87%D8%A8%D8%B1%D8%AF%D8%A7%D8%B1%DB%8C', '_blank')"><span>📰</span>ضربه سازمان اطلاعات سپاه ایلام به شبکه فساد مالی و کلاهبرداری ۷۰۰ میلیارد ریالی خرید گندم</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812471/%D9%82%D8%AF%D8%B1%D8%AF%D8%A7%D9%86%DB%8C-%D9%BE%D8%B2%D8%B4%DA%A9%DB%8C%D8%A7%D9%86-%D8%A7%D8%B2-%D9%87%D9%85%D8%B1%D8%A7%D9%87%DB%8C-%D9%85%D8%B1%D8%AF%D9%85-%D9%88-%D8%B9%D9%88%D8%A7%D9%85%D9%84-%D8%A7%D8%AC%D8%B1%D8%A7%DB%8C%DB%8C-%D8%AF%D8%B1-%D8%A7%D8%AC%D8%B1%D8%A7%DB%8C-%D8%B7%D8%B1%D8%AD-%D8%A8%D9%86%D8%B2%DB%8C%D9%86', '_blank')"><span>📰</span>قدردانی پزشکیان از همراهی مردم و عوامل اجرایی در اجرای طرح بنزین</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812346/%DA%86%D8%B1%D8%A7-%D9%81%D8%B1%D8%A7%D8%B9%D9%86%D9%87-%D8%B2%D9%86-%D8%AF%D8%B1-%D8%AA%D8%A7%D8%B1%DB%8C%D8%AE-%D9%81%D8%B1%D8%A7%D9%85%D9%88%D8%B4-%D8%B4%D8%AF%D9%86%D8%AF', '_blank')"><span>📰</span>چرا فراعنه زن در تاریخ فراموش شدند؟</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812469/%D9%85%D8%AF%DB%8C%D8%B1%DA%A9%D9%84-%D8%AA%D8%B9%D8%A7%D9%88%D9%86-%D8%A7%D8%B3%D8%AA%D8%A7%D9%86-%D8%AA%D8%B9%D8%A7%D9%88%D9%86%DB%8C-%D9%87%D8%A7%DB%8C-%D8%AF%D8%A7%D9%86%D8%B4-%D8%A8%D9%86%DB%8C%D8%A7%D9%86-%D8%AF%D8%B1-%D9%82%D8%B2%D9%88%DB%8C%D9%86-%D8%AA%D8%B4%DA%A9%DB%8C%D9%84-%D9%85%DB%8C-%D8%B4%D9%88%D9%86%D8%AF', '_blank')"><span>📰</span>مدیرکل تعاون استان: تعاونی‌های دانش بنیان در قزوین تشکیل می‌شوند</div><div class="news-item" onclick="window.open('https://www.isna.ir/news/1405061812468/%D8%A2%D8%BA%D8%A7%D8%B2-%D8%B3%D8%B1%D8%B4%D9%85%D8%A7%D8%B1%DB%8C-%D8%B3%D8%B1%D8%A7%D8%B3%D8%B1%DB%8C-%DA%A9%D9%84%D9%86%DB%8C-%D9%87%D8%A7%DB%8C-%D8%B2%D9%86%D8%A8%D9%88%D8%B1-%D8%B9%D8%B3%D9%84-%D9%81%D8%A7%D8%B1%D8%B3-%D8%AF%D8%B1-%D9%85%D9%87%D8%B1%D9%85%D8%A7%D9%87', '_blank')"><span>📰</span>آغاز سرشماری سراسری کلنی‌های زنبور عسل فارس در مهرماه</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067429/%D8%A7%DB%8C%D8%B1%D8%A7%D9%86-%D9%85%D9%85%DA%A9%D9%86-%D8%A7%D8%B3%D8%AA-%D8%A7%D8%B2-%D8%AA%D8%B3%D9%84%DB%8C%D8%AD%D8%A7%D8%AA-%D9%BE%DB%8C%D8%B4%D8%B1%D9%81%D8%AA%D9%87-%D8%AA%D8%B1-%D8%A8%D8%B1%D8%A7%DB%8C-%D8%AD%D9%85%D9%84%D9%87-%D8%A7%D8%B3%D8%AA%D9%81%D8%A7%D8%AF%D9%87-%DA%A9%D9%86%D8%AF', '_blank')"><span>📰</span>ایران ممکن است از تسلیحات پیشرفته‌تر برای حمله استفاده کند | گزارش وال‌استریت ژورنال از حملات ایران به شناورهای آمریکا</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067411/%D9%82%D8%AF%D8%B1%D8%AA-%D9%BE%D9%87%D9%BE%D8%A7%D8%AF%DB%8C-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86-%DA%86%D8%A7%D9%84%D8%B4-%D8%B9%D9%85%D8%AF%D9%87-%D8%A2%D9%85%D8%B1%DB%8C%DA%A9%D8%A7-%D8%AF%D8%B1-%D9%85%D9%86%D8%B7%D9%82%D9%87', '_blank')"><span>📰</span>قدرت پهپادی ایران؛ چالش عمده آمریکا در منطقه</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067415/%D8%B3%D9%88%D9%85%DB%8C%D9%86-%D8%A8%D8%B1%D8%AF-%D8%B4%D8%A7%DA%AF%D8%B1%D8%AF%D8%A7%D9%86-%D9%BE%DB%8C%D8%A7%D8%AA%D8%B2%D8%A7-%D8%AA%DB%8C%D9%85-%D9%85%D9%84%DB%8C-%D9%88%D8%A7%D9%84%DB%8C%D8%A8%D8%A7%D9%84-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86-%D8%A8%D9%87-%D8%B9%D9%86%D9%88%D8%A7%D9%86-%D8%B5%D8%AF%D8%B1%D9%86%D8%B4%DB%8C%D9%86', '_blank')"><span>📰</span>سومین برد شاگردان پیاتزا | تیم ملی والیبال ایران به عنوان صدرنشین صعود کرد</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067422/%D8%AC%D8%B2%D8%A6%DB%8C%D8%A7%D8%AA-%D9%85%D8%AD%D8%AF%D9%88%D8%AF%D9%87-%D9%85%D9%85%D9%86%D9%88%D8%B9%D9%87-%D8%AC%D8%AF%DB%8C%D8%AF-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86-%D8%AF%D8%B1-%D8%AA%D9%86%DA%AF%D9%87-%D9%87%D8%B1%D9%85%D8%B2-%D8%B3%D8%AE%D9%86%DA%AF%D9%88%DB%8C-%D8%B3%D9%BE%D8%A7%D9%87-%D8%A7%DA%AF%D8%B1', '_blank')"><span>📰</span>جزئیات محدوده ممنوعه جدید ایران در تنگه هرمز | سخنگوی سپاه: اگر هر شناوری بدون هماهنگی وارد این منطقه شود...</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067204/%D9%82%D8%AF%DB%8C%D9%85%DB%8C-%D9%87%D8%A7-%D9%85%D9%87%D8%B1-%D8%AC%D8%AF%DB%8C%D8%AF-%D9%87%D8%A7-%D8%A2%D8%A8%D8%A7%D9%86', '_blank')"><span>📰</span>قدیمی ها مهر، جدید ها آبان</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067198/%DB%B3%DB%B1%DB%B3-%D9%87%D8%B2%D8%A7%D8%B1-%D8%AC%D8%A7%D9%86%D9%81%D8%AF%D8%A7-%D8%A8%D9%87-%D8%B5%D9%81', '_blank')"><span>📰</span> ۳۱۳ هزار جانفدا، به صف</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067195/%D8%B7%D8%B1%D8%AD-%D8%AC%D8%AF%DB%8C%D8%AF-%D8%A8%D9%87%D8%B2%DB%8C%D8%B3%D8%AA%DB%8C-%D8%A8%D8%B1%D8%A7%DB%8C-%DA%86%D9%86%D8%AF%D9%82%D9%84%D9%88%D9%87%D8%A7-%D9%85%D8%A7%D8%AF%D8%B1%D8%A7%D9%86-%DA%86%D9%86%D8%AF%D9%82%D9%84%D9%88%D9%87%D8%A7-%D8%AF%DB%8C%DA%AF%D8%B1-%D8%AA%D9%86%D9%87%D8%A7-%D9%86%DB%8C%D8%B3%D8%AA%D9%86%D8%AF', '_blank')"><span>📰</span>طرح جدید بهزیستی برای چندقلوها| مادران چندقلوها دیگر تنها نیستند</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067417/%D8%AA%D9%81%D9%88%DB%8C%D8%B6-%D8%A7%D8%AE%D8%AA%DB%8C%D8%A7%D8%B1-%D8%AA%D9%82%D8%B3%DB%8C%D8%B7-%D8%A8%D8%AF%D9%87%DB%8C-%D9%85%D8%A7%D9%84%DB%8C%D8%A7%D8%AA%DB%8C-%D8%A7%D8%A8%D8%B1%D8%A7%D8%B2%DB%8C-%D8%A7%D8%B4%D8%AE%D8%A7%D8%B5-%D8%AD%D9%82%D9%88%D9%82%DB%8C-%D8%B9%D9%85%D9%84%DA%A9%D8%B1%D8%AF-%D8%B3%D8%A7%D9%84', '_blank')"><span>📰</span>تفویض اختیار تقسیط بدهی مالیاتی ابرازی اشخاص حقوقی عملکرد سال ۱۴۰۴</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067418/%D9%87%D8%B4%D8%AF%D8%A7%D8%B1-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86-%D8%A8%D9%87-%D8%A2%D9%85%D8%B1%DB%8C%DA%A9%D8%A7-%D8%A8%DB%8C%D8%A7%D9%86%DB%8C%D9%87-%D9%88%D8%B2%D8%A7%D8%B1%D8%AA-%D8%A7%D9%85%D9%88%D8%B1-%D8%AE%D8%A7%D8%B1%D8%AC%D9%87-%D8%AF%D8%B1%D8%A8%D8%A7%D8%B1%D9%87-%D8%AD%D9%85%D9%84%D9%87-%D8%A2%D9%85%D8%B1%DB%8C%DA%A9%D8%A7', '_blank')"><span>📰</span>هشدار ایران به آمریکا؛ بیانیه وزارت امور خارجه درباره حمله آمریکا به شناورهای ایرانی</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067394/%D9%87%D8%AF%D9%81-%DA%AF%D8%B0%D8%A7%D8%B1%DB%8C-%D8%A8%D8%B1%D8%A7%DB%8C-%D8%B1%D8%B3%DB%8C%D8%AF%D9%86-%D8%A8%D9%87-%DB%B9-%D9%87%D8%B2%D8%A7%D8%B1-%D8%AF%D8%B3%D8%AA%DA%AF%D8%A7%D9%87-%D8%A7%D8%AA%D9%88%D8%A8%D9%88%D8%B3', '_blank')"><span>📰</span>هدف‌گذاری برای رسیدن به ۹ هزار دستگاه اتوبوس</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067416/%D8%A8%DB%8C%D8%A7%D9%86%DB%8C%D9%87-%D9%88%D8%B2%D8%A7%D8%B1%D8%AA-%D8%AE%D8%A7%D8%B1%D8%AC%D9%87-%D8%AF%D8%B1%D8%A8%D8%A7%D8%B1%D9%87-%D8%AF%D8%B1%DA%AF%DB%8C%D8%B1%DB%8C-%D8%A8%D8%A7-%D8%A2%D9%85%D8%B1%DB%8C%DA%A9%D8%A7-%D8%AC%D8%B2%D8%A6%DB%8C%D8%A7%D8%AA-%D9%BE%D8%A7%D8%B3%D8%AE-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86', '_blank')"><span>📰</span>بیانیه وزارت خارجه درباره درگیری با آمریکا؛ جزئیات پاسخ ایران به تعرض علیه نفتکش‌ها</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067412/%D9%88%D9%82%D8%AA-%D8%A7%D8%AE%D8%B1%D8%A7%D8%AC-%D9%87%DA%AF%D8%B3%D8%AA-%D8%B1%D8%B3%DB%8C%D8%AF%D9%87-%D8%A7%D8%B3%D8%AA', '_blank')"><span>📰</span>وقت اخراج هگست رسیده است</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067410/%D9%85%D8%B5%D8%AF%D9%88%D9%85%DB%8C%D8%AA-%D8%B1%D9%88%D8%B2%D8%A8%D9%87-%DA%86%D8%B4%D9%85%DB%8C-%DA%A9%D8%A7%D9%BE%DB%8C%D8%AA%D8%A7%D9%86-%D8%A7%D8%B3%D8%AA%D9%82%D9%84%D8%A7%D9%84-%D9%85%D9%82%D8%A7%D8%A8%D9%84-%D9%BE%DB%8C%DA%A9%D8%A7%D9%86-%D9%85%D8%B9%D8%B1%D9%81%DB%8C-%D8%B4%D8%AF', '_blank')"><span>📰</span>مصدومیت روزبه چشمی؛ کاپیتان استقلال مقابل پیکان معرفی شد</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067383/%D9%84%D8%B2%D9%88%D9%85-%D8%AA%D8%AC%D9%87%DB%8C%D8%B2-%D9%88-%D8%A8%D8%A7%D8%B2%D8%A2%D9%81%D8%B1%DB%8C%D9%86%DB%8C-%D8%B2%DB%8C%D8%B1%D8%B3%D8%A7%D8%AE%D8%AA-%D9%87%D8%A7-%D8%A8%D8%B1%D8%A7%DB%8C-%D8%AA%D9%88%D8%B3%D8%B9%D9%87-%D8%AD%D9%85%D9%84-%D9%88-%D9%86%D9%82%D9%84-%D9%BE%D8%A7%DA%A9', '_blank')"><span>📰</span>لزوم تجهیز و بازآفرینی زیرساخت‌ها برای توسعه حمل و نقل پاک</div><div class="news-item" onclick="window.open('https://www.hamshahrionline.ir/news/1067407/%D8%B1%D9%88%D8%B3-%D9%87%D8%A7-%D8%A8%D9%87-%D8%A7%DB%8C%D9%86-%D9%81%DB%8C%D9%84%D9%85-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86%DB%8C-%D8%AF%D8%B1%D8%A8%D8%A7%D8%B1%D9%87-%D8%BA%D8%B2%D9%87-%D8%AC%D8%A7%DB%8C%D8%B2%D9%87-%D8%AF%D8%A7%D8%AF%D9%86%D8%AF', '_blank')"><span>📰</span>روس ها به این فیلم ایرانی درباره غزه جایزه دادند</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/live/2272300/%D8%AD%D9%82-%D9%BE%D8%B1%D8%B3%D8%AA%D8%A7%D8%B1%DB%8C-%D9%85%D8%B3%D8%A6%D9%84%D9%87-%D8%AD%D9%84-%D9%86%D8%B4%D8%AF%D9%87-%D8%AF%D9%88%D9%84%D8%AA-%D9%88-%D9%85%D8%AC%D9%84%D8%B3-%DA%86%D9%87-%DA%A9%D8%B3%DB%8C-%D9%85%D8%B3%D8%A6%D9%88%D9%84-%D8%B1%D8%B3%DB%8C%D8%AF%DA%AF%DB%8C-%D8%A8%D9%87', '_blank')"><span>📰</span>حق‌پرستاری؛ مسئله حل‌نشده دولت و مجلس/ چه کسی مسئول رسیدگی به متقاضیان پشت‌نوبت دریافت حمایت بهزیستی است؟</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272205/%D8%AF%D8%B1%D8%AE%D8%B4%D8%B4-%D8%AF%D8%A7%D9%86%D8%B4-%D8%A2%D9%85%D9%88%D8%B2%D8%A7%D9%86-%DA%A9%D8%B1%D9%85%D8%A7%D9%86%DB%8C-%D8%A8%D8%A7-%DB%B5-%D8%B1%D8%AA%D8%A8%D9%87-%D8%A7%D9%88%D9%84-%DA%A9%D8%B4%D9%88%D8%B1%DB%8C-%D8%AF%D8%B1-%D9%BE%D8%B1%D8%B3%D8%B4-%D9%85%D9%87%D8%B1-%D8%B1%D8%A6%DB%8C%D8%B3-%D8%AC%D9%85%D9%87%D9%88%D8%B1', '_blank')"><span>📰</span>درخشش دانش‌آموزان کرمانی با ۵ رتبه اول کشوری در پرسش مهر رئیس‌جمهور</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272009/%D8%A7%D8%B2-%D8%AE%D9%88%D8%A7%D9%86%D8%AF%D9%86-%D8%AF%DB%8C%D9%86-%D8%AA%D8%A7-%D9%81%D9%87%D9%85%DB%8C%D8%AF%D9%86-%D8%B9%D8%B4%D9%82-%D8%AE%D8%AF%D8%A7-%D8%B3%D9%88%D8%A7%D8%AF-%D8%AF%DB%8C%D9%86%DB%8C-%D9%88%D8%A7%D9%82%D8%B9%DB%8C-%DA%86%DB%8C%D8%B3%D8%AA', '_blank')"><span>📰</span>از خواندن دین تا فهمیدن عشق خدا؛ سواد دینی واقعی چیست؟</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272304/%D9%86%D8%AE%D8%B3%D8%AA-%D9%88%D8%B2%DB%8C%D8%B1-%D8%A7%D8%B3%D8%A8%D9%82-%D8%B5%D9%87%DB%8C%D9%88%D9%86%DB%8C%D8%B3%D8%AA%DB%8C-%D9%86%D8%AA%D8%A7%D9%86%DB%8C%D8%A7%D9%87%D9%88-%D8%B1%D8%A7-%D8%A8%D9%87-%D9%82%D8%B5%D9%88%D8%B1-%D9%81%D8%A7%D8%AD%D8%B4-%D8%A7%D9%85%D9%86%DB%8C%D8%AA%DB%8C-%D9%85%D8%AA%D9%87%D9%85', '_blank')"><span>📰</span>نخست‌وزیر اسبق صهیونیستی، نتانیاهو را به «قصور فاحش امنیتی» متهم کرد</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272201/%D8%AD%D9%85%D8%A7%DB%8C%D8%AA-%D8%A7%D8%B2-%DB%B5%DB%B1-%D9%87%D8%B2%D8%A7%D8%B1-%D8%B2%D9%86-%D8%B3%D8%B1%D9%BE%D8%B1%D8%B3%D8%AA-%D8%AE%D8%A7%D9%86%D9%88%D8%A7%D8%B1-%D9%88-%D9%87%D8%B2%D8%A7%D8%B1%D8%A7%D9%86-%D8%AF%D8%AE%D8%AA%D8%B1-%D8%AF%D8%B1-%DA%A9%D8%B1%D9%85%D8%A7%D9%86%D8%B4%D8%A7%D9%87', '_blank')"><span>📰</span>حمایت از ۵۱ هزار زن سرپرست خانوار و هزاران دختر در کرمانشاه</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272191/%D8%A8%D8%A7%D8%B2%D8%AA%D8%B9%D8%B1%DB%8C%D9%81-%D9%85%D8%A3%D9%85%D9%88%D8%B1%DB%8C%D8%AA-%D8%B4%D8%B1%DA%A9%D8%AA-%D8%AA%D9%88%D8%B3%D8%B9%D9%87-%DA%AF%D8%B1%D8%AF%D8%B4%DA%AF%D8%B1%DB%8C-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86-%D8%AF%D8%B1-%DA%A9%D8%B1%D9%85%D8%A7%D9%86%D8%B4%D8%A7%D9%87', '_blank')"><span>📰</span>بازتعریف مأموریت شرکت توسعه گردشگری ایران در کرمانشاه</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272274/%D8%A8%D8%A8%DB%8C%D9%86%DB%8C%D8%AF-%D8%AD%D8%AF%D8%A7%D8%AF%D8%B9%D8%A7%D8%AF%D9%84-%D8%A8%D9%87-%D8%AF%D9%84%DB%8C%D9%84-%D8%B4%D8%B1%D8%A7%DB%8C%D8%B7-%D8%AC%D9%86%DA%AF-%D9%81%D8%B9%D9%84%D8%A7-%D9%86%D9%85%DB%8C-%D8%AA%D9%88%D8%A7%D9%86%DB%8C%D9%85-%D8%A2%D9%86-%D8%B7%D9%88%D8%B1', '_blank')"><span>📰</span>ببینید | حدادعادل:  به دلیل شرایط جنگ، فعلا نمی‌توانیم آن‌طور که باید وارد مساله حجاب شویم</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272255/%D8%A7%D9%84%D9%88%DB%8C%D8%B3-%D9%BE%D8%B1%DB%8C%D8%B3%D9%84%DB%8C-%D8%A8%D8%B1%D8%A7%DB%8C-%D9%86%D8%AE%D8%B3%D8%AA%DB%8C%D9%86-%D8%A8%D8%A7%D8%B1-%D8%A8%D9%87-%D8%B7%D9%88%D8%B1-%D8%AA%D9%85%D8%A7%D9%85-%D9%82%D8%AF%D8%B1-%D8%AF%D8%B1-%D8%AA%D9%84%D9%88%DB%8C%D8%B2%DB%8C%D9%88%D9%86-%D8%A2%D9%85%D8%B1%DB%8C%DA%A9%D8%A7', '_blank')"><span>📰</span>الویس پریسلی برای نخستین‌بار به طور تمام‌قدر در تلویزیون آمریکا ظاهر شد؛ ۱۸ شهریور ۱۳۳۵</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272045/%D9%85%D8%AD%D9%85%D8%AF%D8%B1%D8%B6%D8%A7-%D9%88%D8%B1%D8%B2%DB%8C-%D8%A8%D8%A7-%D8%B3%D8%B1%D8%B2%D9%85%DB%8C%D9%86-%D8%B3%DB%8C%D9%85%D8%B1%D8%BA-%D8%B1%D8%A7%D9%88%DB%8C-%D9%81%D8%B5%D9%84%DB%8C-%D8%AF%DB%8C%DA%AF%D8%B1-%D8%A7%D8%B2-%D8%AA%D8%A7%D8%B1%DB%8C%D8%AE-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86', '_blank')"><span>📰</span>محمدرضا ورزی با «سرزمین سیمرغ» راوی فصلی دیگر از تاریخ ایران</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272260/%D9%82%DB%8C%D9%85%D8%AA-%DA%AF%D9%88%D8%B4%D8%AA-%D9%85%D8%B1%D8%BA-%D8%A7%D9%85%D8%B1%D9%88%D8%B2-%DB%B1%DB%B8-%D8%B4%D9%87%D8%B1%DB%8C%D9%88%D8%B1-%DB%B1%DB%B4%DB%B0%DB%B5-%D8%B1%D8%A7%D9%86-%D9%85%D8%B1%D8%BA-%DA%A9%DB%8C%D9%84%D9%88%DB%8C%DB%8C-%DA%86%D9%86%D8%AF-%D8%B4%D8%AF', '_blank')"><span>📰</span>قیمت گوشت مرغ امروز ۱۸ شهریور ۱۴۰۵/ ران مرغ کیلویی چند شد؟ + جدول</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272218/%D8%AA%D8%A3%DA%A9%DB%8C%D8%AF-%D9%85%D8%B9%D8%A7%D9%88%D9%86-%D9%81%D8%B1%D9%85%D8%A7%D9%86%D8%AF%D8%A7%D8%B1-%D8%A8%D8%B1%D9%88%D8%AC%D8%B1%D8%AF-%D8%A8%D8%B1-%D8%AA%D9%88%D8%B3%D8%B9%D9%87-%D8%AE%D8%AF%D9%85%D8%A7%D8%AA-%D8%B4%D9%87%D8%B1%DB%8C-%D9%85%D8%AA%D9%86%D8%A7%D8%B3%D8%A8-%D8%A8%D8%A7-%D9%86%DB%8C%D8%A7%D8%B2', '_blank')"><span>📰</span>تأکید معاون فرماندار بروجرد بر توسعه خدمات شهری متناسب با نیاز سالمندان</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272297/%D8%AA%DB%8C%D8%B1%D8%A7%D9%86%D8%AF%D8%A7%D8%B2%DB%8C-%D8%AF%D8%B1-%D8%A7%D8%AA%D9%88%D8%A8%D8%A7%D9%86-%D8%AA%D9%87%D8%B1%D8%A7%D9%86-%D9%82%D9%85', '_blank')"><span>📰</span>تیراندازی در اتوبان تهران_قم</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272144/%D8%B9%D8%B6%D9%88-%D9%87%DB%8C%D8%A7%D8%AA-%D8%B1%D8%A6%DB%8C%D8%B3%D9%87-%D9%85%D8%AC%D9%84%D8%B3-%D8%A7%DB%8C%D8%B1%D8%A7%D9%86-%D9%87%D8%B1%DA%AF%D8%B2-%D8%AC%D8%A8%D9%87%D9%87-%D9%85%D9%82%D8%A7%D9%88%D9%85%D8%AA-%D8%B1%D8%A7-%D8%AA%D9%86%D9%87%D8%A7-%D9%86%D9%85%DB%8C-%DA%AF%D8%B0%D8%A7%D8%B1%D8%AF', '_blank')"><span>📰</span>عضو هیات رئیسه مجلس: ایران هرگز جبهه مقاومت را تنها نمی‌گذارد/ رژیم صهیونیستی باید در انتظار پاسخی کوبنده و سیلی سختی باشد</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272214/%D8%A7%D9%86%D8%B9%D9%82%D8%A7%D8%AF-%D8%AA%D9%81%D8%A7%D9%87%D9%85-%D9%86%D8%A7%D9%85%D9%87-%DA%A9%D8%A7%D8%B1%D8%A8%D8%B1%D8%AF%DB%8C-%D8%AF%D8%A7%D9%86%D8%B4%DA%AF%D8%A7%D9%87-%D9%84%D8%B1%D8%B3%D8%AA%D8%A7%D9%86-%D9%88-%D8%B4%D8%B1%DA%A9%D8%AA-%D8%A2%D8%A8-%D9%85%D9%86%D8%B7%D9%82%D9%87-%D8%A7%DB%8C-%D8%A7%D8%B3%D8%AA%D8%A7%D9%86', '_blank')"><span>📰</span>انعقاد تفاهم نامه کاربردی دانشگاه لرستان و شرکت آب منطقه‌ای استان</div><div class="news-item" onclick="window.open('https://www.khabaronline.ir/news/2272209/%D8%A8%D8%A8%DB%8C%D9%86%DB%8C%D8%AF-%D8%AD%D8%B3%D9%86-%D8%B1%D9%88%D8%AD%D8%A7%D9%86%DB%8C-%D8%A8%D8%A7%DB%8C%D8%AF-%D8%A8%D8%A7-%D9%85%D8%B1%D8%AF%D9%85-%D9%85%D8%B4%D9%88%D8%B1%D8%AA-%DA%A9%D9%86%DB%8C%D9%85-%D8%B8%D8%A7%D9%87%D8%B1%D8%A7-%D8%A8%D8%B9%D8%B6%DB%8C-%D9%87%D8%A7', '_blank')"><span>📰</span>ببینید | حسن روحانی: باید با مردم مشورت کنیم؛ ظاهراً بعضی‌ها از پیمان و مذاکره بدشان می‌آید</div></div></div>
+        <div class="card"><div class="card-title">🌐 ترجمه</div><div class="lang-row"><div class="lang-box"><div class="lang-display" onclick="showLangModal('from')" id="fromDisplay">فارسی</div></div><button class="swap-btn" id="swapBtn" onclick="swapLanguages()">⇄</button><div class="lang-box"><div class="lang-display" onclick="showLangModal('to')" id="toDisplay">English</div></div></div><textarea id="text" placeholder="متن خود را وارد کنید..."></textarea><div class="result" id="result">نتیجه ترجمه...</div><div class="btn-row"><button class="translate-btn" onclick="translateText()">ترجمه</button><button class="copy-btn" onclick="copyResult()">کپی</button></div></div>
         <div class="footer">© 2026 AmirHarter - تمامی حقوق محفوظ است</div>
     </div>
     <script>
-        const translations = {"fa": {"search_placeholder": "در AMIR HARTER", "search_btn": "جستجو", "google_play": "📱 گوگل‌پلی", "telewebion": "📺 تلوبیون", "games": "🎮 بازی‌ها", "weather": "🌤 آب و هوا", "select_province": "انتخاب استان...", "search_province": "🔍 جستجوی استان...", "currency": "💱 قیمت ارز", "search_currency": "🔍 جستجوی ارز...", "gold": "💰 طلا و سکه", "search_gold": "🔍 جستجوی طلا...", "football": "⚽ بازی‌های داغ", "all": "همه", "finished": "پایان یافته", "live": "در حال انجام", "upcoming": "برگزار نشده", "news": "📰 آخرین اخبار", "translate": "🌐 ترجمه", "from_lang": "انتخاب زبان مبدا", "to_lang": "انتخاب زبان مقصد", "enter_text": "متن خود را وارد کنید...", "translate_btn": "ترجمه", "copy_btn": "کپی", "result": "نتیجه ترجمه...", "settings": "تنظیمات", "language": "زبان", "theme": "تغییر تم", "font": "فونت", "share": "اشتراک‌گذاری سایت", "report": "گزارش مشکل", "about": "درباره ما", "version": "نسخه", "footer": "© 2026 AmirHarter - تمامی حقوق محفوظ است", "search_lang": "🔍 جستجوی زبان..."}, "en": {"search_placeholder": "در AMIR HARTER", "search_btn": "Search", "google_play": "📱 Google Play", "telewebion": "📺 Telewebion", "games": "🎮 Games", "weather": "🌤 Weather", "select_province": "Select province...", "search_province": "🔍 Search province...", "currency": "💱 Currency Rates", "search_currency": "🔍 Search currency...", "gold": "💰 Gold & Coins", "search_gold": "🔍 Search gold...", "football": "⚽ Hot Matches", "all": "All", "finished": "Finished", "live": "Live", "upcoming": "Upcoming", "news": "📰 Latest News", "translate": "🌐 Translate", "from_lang": "Select source", "to_lang": "Select target", "enter_text": "Enter your text...", "translate_btn": "Translate", "copy_btn": "Copy", "result": "Translation result...", "settings": "Settings", "language": "Language", "theme": "Change Theme", "font": "Font", "share": "Share Site", "report": "Report Issue", "about": "About Us", "version": "Version", "footer": "© 2026 AmirHarter - All rights reserved", "search_lang": "🔍 Search language..."}};
-        const currencyNamesEn = {"دلار": "Dollar", "یورو": "Euro", "درهم": "Dirham", "پوند": "Pound", "لیر ترکیه": "Turkish Lira", "یوان چین": "Chinese Yuan", "روبل روسیه": "Russian Ruble", "دینار عراق": "Iraqi Dinar", "افغانی": "Afghani", "طلای 18 عیار": "18K Gold", "طلای 24 عیار": "24K Gold", "سکه امامی": "Emami Coin", "نیم سکه": "Half Coin", "ربع سکه": "Quarter Coin", "سکه گرمی": "Gram Coin", "مثقال طلا": "Gold Mithqal"};
-        const provinceNamesEn = {"تهران": "Tehran", "مشهد": "Mashhad", "اصفهان": "Isfahan", "شیراز": "Shiraz", "تبریز": "Tabriz", "اهواز": "Ahvaz", "قم": "Qom", "کرج": "Karaj", "کرمانشاه": "Kermanshah", "رشت": "Rasht", "زاهدان": "Zahedan", "همدان": "Hamedan", "ارومیه": "Urmia", "یزد": "Yazd", "اردبیل": "Ardabil", "بندرعباس": "Bandar Abbas", "اراک": "Arak", "زنجان": "Zanjan", "سنندج": "Sanandaj", "قزوین": "Qazvin", "خرم‌آباد": "Khorramabad", "گرگان": "Gorgan", "ساری": "Sari", "بوشهر": "Bushehr", "بیرجند": "Birjand", "ایلام": "Ilam", "شهرکرد": "Shahr-e Kord", "یاسوج": "Yasuj", "بجنورد": "Bojnord", "سمنان": "Semnan"};
-        const languagesFa = {"fa": "فارسی", "en": "انگلیسی", "ar": "عربی", "fr": "فرانسوی", "de": "آلمانی", "es": "اسپانیایی", "it": "ایتالیایی", "pt": "پرتغالی", "ru": "روسی", "tr": "ترکی", "zh": "چینی", "ja": "ژاپنی", "ko": "کره‌ای", "hi": "هندی", "ur": "اردو", "nl": "هلندی", "pl": "لهستانی", "sv": "سوئدی", "no": "نروژی", "da": "دانمارکی", "fi": "فنلاندی", "el": "یونانی", "he": "عبری", "th": "تایلندی", "vi": "ویتنامی", "id": "اندونزیایی", "ms": "مالایی", "cs": "چکی", "sk": "اسلواکی", "hu": "مجاری", "ro": "رومانیایی", "bg": "بلغاری", "uk": "اوکراینی", "sr": "صربی", "hr": "کرواتی", "sl": "اسلوونیایی"};
-        const languagesEn = {"fa": "Persian", "en": "English", "ar": "Arabic", "fr": "French", "de": "German", "es": "Spanish", "it": "Italian", "pt": "Portuguese", "ru": "Russian", "tr": "Turkish", "zh": "Chinese", "ja": "Japanese", "ko": "Korean", "hi": "Hindi", "ur": "Urdu", "nl": "Dutch", "pl": "Polish", "sv": "Swedish", "no": "Norwegian", "da": "Danish", "fi": "Finnish", "el": "Greek", "he": "Hebrew", "th": "Thai", "vi": "Vietnamese", "id": "Indonesian", "ms": "Malay", "cs": "Czech", "sk": "Slovak", "hu": "Hungarian", "ro": "Romanian", "bg": "Bulgarian", "uk": "Ukrainian", "sr": "Serbian", "hr": "Croatian", "sl": "Slovenian"};
+        const languagesFa = {"fa":"فارسی","en":"انگلیسی","ar":"عربی","fr":"فرانسوی","de":"آلمانی","es":"اسپانیایی","it":"ایتالیایی","pt":"پرتغالی","ru":"روسی","tr":"ترکی","zh":"چینی","ja":"ژاپنی","ko":"کره‌ای","hi":"هندی","ur":"اردو","nl":"هلندی","pl":"لهستانی","sv":"سوئدی","no":"نروژی","da":"دانمارکی","fi":"فنلاندی","el":"یونانی","he":"عبری","th":"تایلندی","vi":"ویتنامی","id":"اندونزیایی","ms":"مالایی","cs":"چکی","sk":"اسلواکی","hu":"مجاری","ro":"رومانیایی","bg":"بلغاری","uk":"اوکراینی","sr":"صربی","hr":"کرواتی","sl":"اسلوونیایی"};
+        const languagesEn = {"fa":"Persian","en":"English","ar":"Arabic","fr":"French","de":"German","es":"Spanish","it":"Italian","pt":"Portuguese","ru":"Russian","tr":"Turkish","zh":"Chinese","ja":"Japanese","ko":"Korean","hi":"Hindi","ur":"Urdu","nl":"Dutch","pl":"Polish","sv":"Swedish","no":"Norwegian","da":"Danish","fi":"Finnish","el":"Greek","he":"Hebrew","th":"Thai","vi":"Vietnamese","id":"Indonesian","ms":"Malay","cs":"Czech","sk":"Slovak","hu":"Hungarian","ro":"Romanian","bg":"Bulgarian","uk":"Ukrainian","sr":"Serbian","hr":"Croatian","sl":"Slovenian"};
         let currentLang = 'fa';
-        const provinces = {"تهران": [35.6892, 51.389], "مشهد": [36.2605, 59.6168], "اصفهان": [32.6546, 51.668], "شیراز": [29.5918, 52.5837], "تبریز": [38.0962, 46.2738], "اهواز": [31.3183, 48.6706], "قم": [34.6416, 50.8746], "کرج": [35.84, 50.9391], "کرمانشاه": [34.3142, 47.065], "رشت": [37.2808, 49.5832], "زاهدان": [29.4963, 60.8629], "همدان": [34.7983, 48.5148], "ارومیه": [37.5527, 45.076], "یزد": [31.8974, 54.3569], "اردبیل": [38.2498, 48.2933], "بندرعباس": [27.1832, 56.2666], "اراک": [34.0949, 49.7016], "زنجان": [36.683, 48.5087], "سنندج": [35.3219, 46.9862], "قزوین": [36.286, 50.004], "خرم‌آباد": [33.4871, 48.3558], "گرگان": [36.8386, 54.4346], "ساری": [36.5633, 53.0601], "بوشهر": [28.9234, 50.8203], "بیرجند": [32.8649, 59.2212], "ایلام": [33.6375, 46.4227], "شهرکرد": [32.3256, 50.8644], "یاسوج": [30.6684, 51.5875], "بجنورد": [37.4749, 57.329], "سمنان": [35.5729, 53.3971]};
-        
         let fromLang = 'fa';
         let toLang = 'en';
         let langMode = 'from';
         
-        function setLanguage(lang) {
-            currentLang = lang;
-            document.getElementById('langLabel').textContent = lang === 'fa' ? 'فارسی' : 'English';
-            document.body.style.direction = lang === 'fa' ? 'rtl' : 'ltr';
-            closeModal('languageModal');
-            
-            document.querySelector('.search-btn').textContent = translations[lang].search_btn;
-            document.getElementById('mainSearch').placeholder = translations[lang].search_placeholder;
-            document.querySelectorAll('.search-option')[0].textContent = translations[lang].google_play;
-            document.querySelectorAll('.search-option')[1].textContent = translations[lang].telewebion;
-            document.querySelectorAll('.search-option')[2].textContent = translations[lang].games;
-            document.querySelectorAll('.card-title')[0].textContent = translations[lang].weather;
-            document.querySelectorAll('.card-title')[1].textContent = translations[lang].currency;
-            document.querySelectorAll('.card-title')[2].textContent = translations[lang].gold;
-            document.querySelectorAll('.card-title')[3].textContent = translations[lang].football;
-            document.querySelectorAll('.card-title')[4].textContent = translations[lang].news;
-            document.querySelectorAll('.card-title')[5].textContent = translations[lang].translate;
-            document.querySelectorAll('.currency-search')[0].placeholder = translations[lang].search_currency;
-            document.querySelectorAll('.currency-search')[1].placeholder = translations[lang].search_gold;
-            document.getElementById('provinceSearchInput').placeholder = translations[lang].search_province;
-            document.getElementById('langSearchInput').placeholder = translations[lang].search_lang;
-            document.querySelectorAll('.filter-btn')[0].textContent = translations[lang].all;
-            document.querySelectorAll('.filter-btn')[1].textContent = translations[lang].finished;
-            document.querySelectorAll('.filter-btn')[2].textContent = translations[lang].live;
-            document.querySelectorAll('.filter-btn')[3].textContent = translations[lang].upcoming;
-            document.getElementById('text').placeholder = translations[lang].enter_text;
-            document.querySelector('.result').textContent = translations[lang].result;
-            document.querySelector('.translate-btn').textContent = translations[lang].translate_btn;
-            document.querySelector('.copy-btn').textContent = translations[lang].copy_btn;
-            document.querySelector('.footer').textContent = translations[lang].footer;
-            document.querySelector('.settings-title').textContent = '⚙️ ' + translations[lang].settings;
-            document.querySelectorAll('.settings-item')[0].innerHTML = '🌐 ' + translations[lang].language + ': <span id="langLabel">' + (lang === 'fa' ? 'فارسی' : 'English') + '</span>';
-            document.querySelectorAll('.settings-item')[1].textContent = '🌙 ' + translations[lang].theme;
-            document.querySelectorAll('.settings-item')[2].innerHTML = '🔤 ' + translations[lang].font + ': <span id="fontLabel">' + (lang === 'fa' ? 'متوسط' : 'Medium') + '</span>';
-            document.querySelectorAll('.settings-item')[3].textContent = '📤 ' + translations[lang].share;
-            document.querySelectorAll('.settings-item')[4].textContent = '⚠️ ' + translations[lang].report;
-            document.querySelectorAll('.settings-item')[5].textContent = '📖 ' + translations[lang].about;
-            document.querySelectorAll('.settings-item')[6].textContent = '📌 ' + translations[lang].version + ': v48';
-            
-            document.getElementById('provinceDisplay').textContent = translations[lang].select_province;
-            document.getElementById('fromDisplay').textContent = translations[lang].from_lang;
-            document.getElementById('toDisplay').textContent = translations[lang].to_lang;
-            
-            document.querySelectorAll('.match-item').forEach(item => {
-                const homeFa = item.getAttribute('data-home-fa');
-                const awayFa = item.getAttribute('data-away-fa');
-                const homeOrig = item.getAttribute('data-home-original');
-                const awayOrig = item.getAttribute('data-away-original');
-                const homeSpan = item.querySelector('.team-name.right');
-                const awaySpan = item.querySelector('.team-name.left');
-                if (lang === 'fa') {
-                    homeSpan.textContent = homeFa;
-                    awaySpan.textContent = awayFa;
-                } else {
-                    homeSpan.textContent = homeOrig || homeFa;
-                    awaySpan.textContent = awayOrig || awayFa;
-                }
-            });
-            
-            document.querySelectorAll('#currencyList .currency-item, #goldList .currency-item').forEach(item => {
-                const nameSpan = item.querySelector('span:first-child');
-                const faName = item.getAttribute('data-name');
-                if (lang === 'en' && faName && currencyNamesEn[faName]) {
-                    nameSpan.textContent = currencyNamesEn[faName];
-                } else if (lang === 'fa' && faName) {
-                    nameSpan.textContent = faName;
-                }
-            });
-            
-            if (lang === 'en') {
-                document.querySelector('#aboutModal .modal').innerHTML = '<div class="modal-header"><span>📖 About Us</span><button class="modal-close" onclick="closeModal('aboutModal')">×</button></div><p>AmirHarter | Smart Portal</p><br><p>AMIRHARTER ... not just a website</p><p>It's a whole world!</p><br><p>Everything in one place</p><p>From latest news and currency rates</p><p>To weather, football and translation!</p><br><p>Made so you have a world of information at your fingertips</p><br><p>✨ Power in simplicity ✨</p><p>Version 5.0</p>';
-                document.querySelector('#reportModal .modal').innerHTML = '<div class="modal-header"><span>⚠️ Report Issue</span><button class="modal-close" onclick="closeModal('reportModal')">×</button></div><p>Message us on Rubika:</p><br><p style="cursor:pointer; background: var(--card); padding: 10px; border-radius: 8px;" onclick="copyID()">@ID_HARTER</p>';
+        function toggleLanguage() {
+            if (currentLang === 'fa') {
+                currentLang = 'en';
+                document.body.style.direction = 'ltr';
+                document.getElementById('langLabel').textContent = 'English';
+                document.querySelector('.settings-title').textContent = '⚙️ Settings';
+                document.querySelector('.search-btn').textContent = 'Search';
+                document.querySelector('.search-box').placeholder = 'Search in AMIR HARTER';
+                document.querySelectorAll('.search-option')[0].textContent = '📱 Google Play';
+                document.querySelectorAll('.search-option')[1].textContent = '📺 Telewebion';
+                document.querySelectorAll('.search-option')[2].textContent = '🎮 Games';
+                document.querySelectorAll('.card-title')[0].textContent = '🌤 Weather';
+                document.querySelectorAll('.card-title')[1].textContent = '💱 Currency Rates';
+                document.querySelectorAll('.card-title')[2].textContent = '💰 Gold & Coins';
+                document.querySelectorAll('.card-title')[3].textContent = '⚽ Hot Matches';
+                document.querySelectorAll('.card-title')[4].textContent = '📰 Latest News';
+                document.querySelectorAll('.card-title')[5].textContent = '🌐 Translate';
+                document.querySelectorAll('.currency-search')[0].placeholder = '🔍 Search currency...';
+                document.querySelectorAll('.currency-search')[1].placeholder = '🔍 Search gold...';
+                document.querySelectorAll('.filter-btn')[0].textContent = 'All';
+                document.querySelectorAll('.filter-btn')[1].textContent = 'Finished';
+                document.querySelectorAll('.filter-btn')[2].textContent = 'Live';
+                document.querySelectorAll('.filter-btn')[3].textContent = 'Upcoming';
+                document.getElementById('provinceDisplay').textContent = 'Select province...';
+                document.querySelector('textarea').placeholder = 'Enter your text...';
+                document.querySelector('.result').textContent = 'Translation result...';
+                document.querySelector('.translate-btn').textContent = 'Translate';
+                document.querySelector('.copy-btn').textContent = 'Copy';
+                document.querySelector('.footer').textContent = '© 2026 AmirHarter - All rights reserved';
+                document.getElementById('fromDisplay').textContent = languagesEn[fromLang];
+                document.getElementById('toDisplay').textContent = languagesEn[toLang];
             } else {
-                document.querySelector('#aboutModal .modal').innerHTML = '<div class="modal-header"><span>📖 درباره ما</span><button class="modal-close" onclick="closeModal('aboutModal')">×</button></div><p>AmirHarter | پورتال هوشمند</p><br><p>AMIRHARTER ... فقط یک سایت نیست</p><p>یه دنیای کامله!</p><br><p>جایی که همه‌چیز یکجا جمع شده</p><p>از آخرین اخبار و قیمت ارز</p><p>تا آب و هوا، فوتبال و ترجمه!</p><br><p>ساخته شده برای اینکه دنیایی از اطلاعات دم دستت باشه</p><br><p>✨ قدرت در عین سادگی ✨</p><p>نسخه ۵.۰</p>';
-                document.querySelector('#reportModal .modal').innerHTML = '<div class="modal-header"><span>⚠️ گزارش مشکل</span><button class="modal-close" onclick="closeModal('reportModal')">×</button></div><p>در روبیکا پیام دهید:</p><br><p style="cursor:pointer; background: var(--card); padding: 10px; border-radius: 8px;" onclick="copyID()">@ID_HARTER</p>';
+                currentLang = 'fa';
+                document.body.style.direction = 'rtl';
+                document.getElementById('langLabel').textContent = 'فارسی';
+                document.querySelector('.settings-title').textContent = '⚙️ تنظیمات';
+                document.querySelector('.search-btn').textContent = 'جستجو';
+                document.querySelector('.search-box').placeholder = 'در AMIR HARTER';
+                document.querySelectorAll('.search-option')[0].textContent = '📱 گوگل‌پلی';
+                document.querySelectorAll('.search-option')[1].textContent = '📺 تلوبیون';
+                document.querySelectorAll('.search-option')[2].textContent = '🎮 بازی‌ها';
+                document.querySelectorAll('.card-title')[0].textContent = '🌤 آب و هوا';
+                document.querySelectorAll('.card-title')[1].textContent = '💱 قیمت ارز';
+                document.querySelectorAll('.card-title')[2].textContent = '💰 طلا و سکه';
+                document.querySelectorAll('.card-title')[3].textContent = '⚽ بازی‌های داغ';
+                document.querySelectorAll('.card-title')[4].textContent = '📰 آخرین اخبار';
+                document.querySelectorAll('.card-title')[5].textContent = '🌐 ترجمه';
+                document.querySelectorAll('.currency-search')[0].placeholder = '🔍 جستجوی ارز...';
+                document.querySelectorAll('.currency-search')[1].placeholder = '🔍 جستجوی طلا...';
+                document.querySelectorAll('.filter-btn')[0].textContent = 'همه';
+                document.querySelectorAll('.filter-btn')[1].textContent = 'پایان یافته';
+                document.querySelectorAll('.filter-btn')[2].textContent = 'در حال انجام';
+                document.querySelectorAll('.filter-btn')[3].textContent = 'برگزار نشده';
+                document.getElementById('provinceDisplay').textContent = 'انتخاب استان...';
+                document.querySelector('textarea').placeholder = 'متن خود را وارد کنید...';
+                document.querySelector('.result').textContent = 'نتیجه ترجمه...';
+                document.querySelector('.translate-btn').textContent = 'ترجمه';
+                document.querySelector('.copy-btn').textContent = 'کپی';
+                document.querySelector('.footer').textContent = '© 2026 AmirHarter - تمامی حقوق محفوظ است';
+                document.getElementById('fromDisplay').textContent = languagesFa[fromLang];
+                document.getElementById('toDisplay').textContent = languagesFa[toLang];
             }
-            
-            renderLangList();
-            renderProvinceList();
             updateClock();
         }
         
-        function showLanguageModal() { document.getElementById('languageModal').style.display = 'flex'; toggleSettings(); }
-        function showLangModal(mode) { langMode = mode; document.getElementById('langModalTitle').textContent = currentLang === 'fa' ? (mode === 'from' ? '🌐 انتخاب زبان مبدا' : '🌐 انتخاب زبان مقصد') : (mode === 'from' ? '🌐 Select source' : '🌐 Select target'); document.getElementById('langModal').style.display = 'flex'; renderLangList(); }
-        function renderLangList() { const list = document.getElementById('langList'); if (!list) return; const langs = currentLang === 'fa' ? languagesFa : languagesEn; list.innerHTML = ''; for (const code in langs) { list.innerHTML += `<div class="lang-item" onclick="selectLang('${code}')">${langs[code]}</div>`; } }
-        function selectLang(code) { const langs = currentLang === 'fa' ? languagesFa : languagesEn; if (langMode === 'from') { fromLang = code; document.getElementById('fromDisplay').textContent = langs[code]; } else { toLang = code; document.getElementById('toDisplay').textContent = langs[code]; } closeModal('langModal'); }
-        function filterLanguages(query) { const list = document.getElementById('langList'); const langs = currentLang === 'fa' ? languagesFa : languagesEn; list.innerHTML = ''; for (const code in langs) { if (langs[code].toLowerCase().includes(query.toLowerCase()) || query === '') { list.innerHTML += `<div class="lang-item" onclick="selectLang('${code}')">${langs[code]}</div>`; } } }
+        function updateClock() {
+            const now = new Date();
+            if (currentLang === 'en') {
+                document.getElementById('clock').textContent = now.toLocaleTimeString('en-US');
+                document.getElementById('date').textContent = now.toLocaleDateString('en-US', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+            } else {
+                document.getElementById('clock').textContent = now.toLocaleTimeString('fa-IR');
+                document.getElementById('date').textContent = now.toLocaleDateString('fa-IR', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+            }
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
         
-        function showProvinceModal() { document.getElementById('provinceModal').style.display = 'flex'; renderProvinceList(); }
-        function renderProvinceList() { const list = document.getElementById('provinceList'); if (!list) return; list.innerHTML = ''; for (const name in provinces) { const displayName = currentLang === 'fa' ? name : (provinceNamesEn[name] || name); list.innerHTML += `<div class="province-item" onclick="selectProvince('${name}')">${displayName}</div>`; } }
-        function selectProvince(name) { const displayName = currentLang === 'fa' ? name : (provinceNamesEn[name] || name); document.getElementById('provinceDisplay').textContent = displayName; closeModal('provinceModal'); const [lat, lon] = provinces[name]; fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=Asia%2FTehran`).then(r => r.json()).then(d => { const temp = d.current_weather.temperature; const wind = d.current_weather.windspeed; const code = d.current_weather.weathercode; const descs = {0:'آفتابی',1:'نیمه آفتابی',2:'نیمه ابری',3:'ابری',45:'مه',61:'باران',71:'برف'}; const desc = descs[code] || 'نامشخص'; document.getElementById('weatherData').innerHTML = `<div class="weather-icon">🌤</div><div class="weather-temp">${temp}°C</div><div class="weather-desc">${displayName}<br>${desc}<br>باد: ${wind} km/h</div>`; }); }
-        function filterProvinces(query) { const list = document.getElementById('provinceList'); list.innerHTML = ''; for (const name in provinces) { const displayName = currentLang === 'fa' ? name : (provinceNamesEn[name] || name); if (displayName.toLowerCase().includes(query.toLowerCase()) || query === '') { list.innerHTML += `<div class="province-item" onclick="selectProvince('${name}')">${displayName}</div>`; } } }
+        const provinces = {'تهران': [35.6892, 51.389], 'مشهد': [36.2605, 59.6168], 'اصفهان': [32.6546, 51.668], 'شیراز': [29.5918, 52.5837], 'تبریز': [38.0962, 46.2738], 'اهواز': [31.3183, 48.6706], 'قم': [34.6416, 50.8746], 'کرج': [35.84, 50.9391], 'کرمانشاه': [34.3142, 47.065], 'رشت': [37.2808, 49.5832], 'زاهدان': [29.4963, 60.8629], 'همدان': [34.7983, 48.5148], 'ارومیه': [37.5527, 45.076], 'یزد': [31.8974, 54.3569], 'اردبیل': [38.2498, 48.2933], 'بندرعباس': [27.1832, 56.2666], 'اراک': [34.0949, 49.7016], 'زنجان': [36.683, 48.5087], 'سنندج': [35.3219, 46.9862], 'قزوین': [36.286, 50.004], 'خرم\u200cآباد': [33.4871, 48.3558], 'گرگان': [36.8386, 54.4346], 'ساری': [36.5633, 53.0601], 'بوشهر': [28.9234, 50.8203], 'بیرجند': [32.8649, 59.2212], 'ایلام': [33.6375, 46.4227], 'شهرکرد': [32.3256, 50.8644], 'یاسوج': [30.6684, 51.5875], 'بجنورد': [37.4749, 57.329], 'سمنان': [35.5729, 53.3971]};
+        
+        function showLangModal(mode) {
+            langMode = mode;
+            document.getElementById('langModalTitle').textContent = (mode === 'from') ? '🌐 انتخاب زبان مبدا' : '🌐 انتخاب زبان مقصد';
+            document.getElementById('langModal').style.display = 'flex';
+            renderLangList();
+        }
+        
+        function renderLangList() {
+            const list = document.getElementById('langList');
+            const langs = (currentLang === 'en') ? languagesEn : languagesFa;
+            list.innerHTML = '';
+            for (const code in langs) {
+                list.innerHTML += `<div class="lang-item" onclick="selectLang('${code}')">${langs[code]}</div>`;
+            }
+        }
+        
+        function selectLang(code) {
+            if (langMode === 'from') {
+                fromLang = code;
+                const langs = (currentLang === 'en') ? languagesEn : languagesFa;
+                document.getElementById('fromDisplay').textContent = langs[code];
+            } else {
+                toLang = code;
+                const langs = (currentLang === 'en') ? languagesEn : languagesFa;
+                document.getElementById('toDisplay').textContent = langs[code];
+            }
+            closeModal('langModal');
+        }
+        
+        function filterLanguages(query) {
+            const list = document.getElementById('langList');
+            const langs = (currentLang === 'en') ? languagesEn : languagesFa;
+            list.innerHTML = '';
+            for (const code in langs) {
+                if (langs[code].toLowerCase().includes(query.toLowerCase()) || query === '') {
+                    list.innerHTML += `<div class="lang-item" onclick="selectLang('${code}')">${langs[code]}</div>`;
+                }
+            }
+        }
+        
+        function showProvinceModal() {
+            document.getElementById('provinceModal').style.display = 'flex';
+            renderProvinceList();
+        }
+        
+        function renderProvinceList() {
+            const list = document.getElementById('provinceList');
+            list.innerHTML = '';
+            for (const name in provinces) {
+                list.innerHTML += `<div class="province-item" onclick="selectProvince('${name}')">${name}</div>`;
+            }
+        }
+        
+        function selectProvince(name) {
+            document.getElementById('provinceDisplay').textContent = name;
+            closeModal('provinceModal');
+            const [lat, lon] = provinces[name];
+            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=Asia%2FTehran`)
+                .then(r => r.json())
+                .then(d => {
+                    const temp = d.current_weather.temperature;
+                    const wind = d.current_weather.windspeed;
+                    const code = d.current_weather.weathercode;
+                    const descs = {0:'آفتابی',1:'نیمه آفتابی',2:'نیمه ابری',3:'ابری',45:'مه',61:'باران',71:'برف'};
+                    const desc = descs[code] || 'نامشخص';
+                    document.getElementById('weatherData').innerHTML = `<div class="weather-icon">🌤</div><div class="weather-temp">${temp}°C</div><div class="weather-desc">${name}<br>${desc}<br>باد: ${wind} km/h</div>`;
+                });
+        }
+        
+        function filterProvinces(query) {
+            const list = document.getElementById('provinceList');
+            list.innerHTML = '';
+            for (const name in provinces) {
+                if (name.includes(query) || query === '') {
+                    list.innerHTML += `<div class="province-item" onclick="selectProvince('${name}')">${name}</div>`;
+                }
+            }
+        }
         
         function toggleSettings() { document.getElementById('settingsPanel').classList.toggle('open'); document.getElementById('settingsOverlay').style.display = document.getElementById('settingsPanel').classList.contains('open') ? 'block' : 'none'; }
         function showAboutModal() { toggleSettings(); document.getElementById('aboutModal').style.display = 'flex'; }
@@ -375,13 +431,11 @@
         function shareSite() { const url = window.location.href; if (navigator.share) { navigator.share({title: 'AmirHarter', url: url}); } else { prompt('لینک سایت:', url); } }
         function filterCurrency(query) { document.querySelectorAll('#currencyList .currency-item').forEach(item => { const name = item.getAttribute('data-name') || ''; item.style.display = name.includes(query) || query === '' ? 'flex' : 'none'; }); }
         function filterGold(query) { document.querySelectorAll('#goldList .currency-item').forEach(item => { const name = item.getAttribute('data-name') || ''; item.style.display = name.includes(query) || query === '' ? 'flex' : 'none'; }); }
-        function updateClock() { const now = new Date(); document.getElementById('clock').textContent = now.toLocaleTimeString(currentLang === 'fa' ? 'fa-IR' : 'en-US'); document.getElementById('date').textContent = now.toLocaleDateString(currentLang === 'fa' ? 'fa-IR' : 'en-US', {weekday:'long',year:'numeric',month:'long',day:'numeric'}); }
-        setInterval(updateClock, 1000); updateClock();
         function toggleTheme() { document.body.classList.toggle('light-mode'); const isLight = document.body.classList.contains('light-mode'); document.getElementById('themeFloat').textContent = isLight ? '🌙' : '☀️'; }
         function searchGoogle(q) { if (q) window.open('https://www.google.com/search?q=' + encodeURIComponent(q), '_blank'); }
-        function voiceSearch() { if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) { const SR = window.SpeechRecognition || window.webkitSpeechRecognition; const recognition = new SR(); recognition.lang = currentLang === 'fa' ? 'fa-IR' : 'en-US'; recognition.onresult = function(e) { document.getElementById('mainSearch').value = e.results[0][0].transcript; }; recognition.start(); } else { alert('مرورگر شما از تایپ صوتی پشتیبانی نمی‌کند'); } }
+        function voiceSearch() { if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) { const SR = window.SpeechRecognition || window.webkitSpeechRecognition; const recognition = new SR(); recognition.lang = 'fa-IR'; recognition.onresult = function(e) { document.getElementById('mainSearch').value = e.results[0][0].transcript; }; recognition.start(); } else { alert('مرورگر شما از تایپ صوتی پشتیبانی نمی‌کند'); } }
         function filterMatches(type, btn) { document.querySelectorAll('.match-item').forEach(item => { if (type === 'all') item.style.display = 'block'; else item.style.display = item.dataset.status === type ? 'block' : 'none'; }); document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
-        function swapLanguages() { const temp = fromLang; fromLang = toLang; toLang = temp; const langs = currentLang === 'fa' ? languagesFa : languagesEn; document.getElementById('fromDisplay').textContent = langs[fromLang]; document.getElementById('toDisplay').textContent = langs[toLang]; document.getElementById('swapBtn').classList.toggle('rotated'); }
+        function swapLanguages() { const temp = fromLang; fromLang = toLang; toLang = temp; const langs = (currentLang === 'en') ? languagesEn : languagesFa; document.getElementById('fromDisplay').textContent = langs[fromLang]; document.getElementById('toDisplay').textContent = langs[toLang]; const swapBtn = document.getElementById('swapBtn'); if (swapBtn) { swapBtn.classList.toggle('rotated'); } }
         function translateText() { const text = document.getElementById('text').value; if (!text) return; const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${fromLang}&tl=${toLang}&dt=t&q=${encodeURIComponent(text)}`; fetch(url).then(r => r.json()).then(d => { let translated = ''; d[0].forEach(part => translated += part[0]); document.getElementById('result').textContent = translated; }).catch(() => document.getElementById('result').textContent = 'خطا در ترجمه'); }
         function copyResult() { const result = document.getElementById('result').textContent; const textarea = document.createElement('textarea'); textarea.value = result; document.body.appendChild(textarea); textarea.select(); document.execCommand('copy'); document.body.removeChild(textarea); alert('کپی شد!'); }
     </script>
