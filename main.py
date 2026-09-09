@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime
 from pathlib import Path
 import shutil
+import json
 
 OUTPUT_DIR = Path('site')
 OUTPUT_DIR.mkdir(exist_ok=True)
@@ -58,6 +59,20 @@ team_names = {
     "Mes Shahr-e Babak": "مس شهر بابک", "Esteghlal Khuzestan": "استقلال خوزستان"
 }
 
+# ترجمه استان‌ها به انگلیسی
+provinces_en = {
+    "Tehran": "تهران", "Mashhad": "مشهد", "Isfahan": "اصفهان",
+    "Shiraz": "شیراز", "Tabriz": "تبریز", "Ahvaz": "اهواز",
+    "Qom": "قم", "Karaj": "کرج", "Kermanshah": "کرمانشاه",
+    "Rasht": "رشت", "Zahedan": "زاهدان", "Hamedan": "همدان",
+    "Urmia": "ارومیه", "Yazd": "یزد", "Ardabil": "اردبیل",
+    "Bandar Abbas": "بندرعباس", "Arak": "اراک", "Zanjan": "زنجان",
+    "Sanandaj": "سنندج", "Qazvin": "قزوین", "Khorramabad": "خرم‌آباد",
+    "Gorgan": "گرگان", "Sari": "ساری", "Bushehr": "بوشهر",
+    "Birjand": "بیرجند", "Ilam": "ایلام", "Shahr-e Kord": "شهرکرد",
+    "Yasuj": "یاسوج", "Bojnurd": "بجنورد", "Semnan": "سمنان"
+}
+
 provinces = {
     "تهران": (35.6892, 51.3890), "مشهد": (36.2605, 59.6168),
     "اصفهان": (32.6546, 51.6680), "شیراز": (29.5918, 52.5837),
@@ -76,15 +91,52 @@ provinces = {
     "بجنورد": (37.4749, 57.3290), "سمنان": (35.5729, 53.3971)
 }
 
-def translate_team(name):
+# ترجمه ارزها
+currency_names_en = {
+    "دلار": "Dollar", "یورو": "Euro", "درهم": "Dirham",
+    "پوند": "Pound", "لیر ترکیه": "Turkish Lira", "یوان چین": "Chinese Yuan",
+    "روبل روسیه": "Russian Ruble", "دینار عراق": "Iraqi Dinar", "افغانی": "Afghani"
+}
+
+# ترجمه طلا
+gold_names_en = {
+    "طلای 18 عیار": "18K Gold", "طلای 24 عیار": "24K Gold",
+    "سکه امامی": "Emami Coin", "نیم سکه": "Half Coin",
+    "ربع سکه": "Quarter Coin", "سکه گرمی": "Gram Coin",
+    "مثقال طلا": "Gold Mithqal"
+}
+
+def translate_team(name, to_english=False):
     if not name:
-        return "نامشخص"
+        return "نامشخص" if not to_english else "Unknown"
+    
+    if to_english:
+        # برگرداندن نام انگلیسی
+        for eng, fa in team_names.items():
+            if fa == name:
+                return eng
+        return name
+    
     for eng, fa in team_names.items():
         if eng.lower() in name.lower():
             return fa
     return name
 
-def get_news():
+def translate_news_title(title, to_english=False):
+    """ترجمه خودکار عنوان خبر با استفاده از Google Translate"""
+    if not to_english:
+        return title
+    
+    try:
+        url = f"https://translate.googleapis.com/translate_a/single?client=gtx&sl=fa&tl=en&dt=t&q={title}"
+        response = requests.get(url, timeout=5)
+        data = response.json()
+        translated = ''.join([part[0] for part in data[0]])
+        return translated
+    except:
+        return title
+
+def get_news(to_english=False):
     sources = [
         ("ایسنا", "https://www.isna.ir/rss"),
         ("همشهری", "https://www.hamshahrionline.ir/rss"),
@@ -98,12 +150,16 @@ def get_news():
             for item in root.findall(".//item")[:15]:
                 title = item.find("title").text
                 link = item.find("link").text
+                
+                if to_english:
+                    title = translate_news_title(title, True)
+                
                 news_items += f'<div class="news-item" onclick="window.open(\'{link}\', \'_blank\')"><span>📰</span>{title}</div>'
         except:
             pass
     return news_items
 
-def get_weather(lat=35.6892, lon=51.3890, city="تهران"):
+def get_weather(lat=35.6892, lon=51.3890, city="تهران", to_english=False):
     try:
         url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true&timezone=Asia%2FTehran"
         response = requests.get(url, timeout=10)
@@ -111,13 +167,22 @@ def get_weather(lat=35.6892, lon=51.3890, city="تهران"):
         temp = data["current_weather"]["temperature"]
         wind = data["current_weather"]["windspeed"]
         code = data["current_weather"]["weathercode"]
-        weather_desc = {0: "آفتابی", 1: "نیمه آفتابی", 2: "نیمه ابری", 3: "ابری", 45: "مه", 61: "باران", 71: "برف"}
-        desc = weather_desc.get(code, "نامشخص")
-        return f'<div class="weather-icon">🌤</div><div class="weather-temp">{temp}°C</div><div class="weather-desc">{city}<br>{desc}<br>باد: {wind} km/h</div>'
+        
+        if to_english:
+            weather_desc = {0: "Sunny", 1: "Partly Sunny", 2: "Partly Cloudy", 3: "Cloudy", 45: "Foggy", 61: "Rainy", 71: "Snowy"}
+            city_en = provinces_en.get(city, city)
+            desc = weather_desc.get(code, "Unknown")
+            return f'<div class="weather-icon">🌤</div><div class="weather-temp">{temp}°C</div><div class="weather-desc">{city_en}<br>{desc}<br>Wind: {wind} km/h</div>'
+        else:
+            weather_desc = {0: "آفتابی", 1: "نیمه آفتابی", 2: "نیمه ابری", 3: "ابری", 45: "مه", 61: "باران", 71: "برف"}
+            desc = weather_desc.get(code, "نامشخص")
+            return f'<div class="weather-icon">🌤</div><div class="weather-temp">{temp}°C</div><div class="weather-desc">{city}<br>{desc}<br>باد: {wind} km/h</div>'
     except:
+        if to_english:
+            return '<div class="weather-icon">🌤</div><div class="weather-temp">--°C</div><div class="weather-desc">Not available</div>'
         return '<div class="weather-icon">🌤</div><div class="weather-temp">--°C</div><div class="weather-desc">در دسترس نیست</div>'
 
-def get_currency():
+def get_currency(to_english=False):
     currencies = [
         ("دلار", "price_dollar_rl"), ("یورو", "price_eur"),
         ("درهم", "price_aed"), ("پوند", "price_gbp"),
@@ -143,12 +208,14 @@ def get_currency():
                             change_class = "down"
                     except:
                         pass
-                items += f'<div class="currency-item" data-name="{name}"><span>{name}</span><span class="currency-value {change_class}">{price}</span></div>'
+                
+                display_name = currency_names_en.get(name, name) if to_english else name
+                items += f'<div class="currency-item" data-name="{display_name}"><span>{display_name}</span><span class="currency-value {change_class}">{price}</span></div>'
         except:
             pass
-    return items if items else '<div class="currency-item">در دسترس نیست</div>'
+    return items if items else ('<div class="currency-item">Not available</div>' if to_english else '<div class="currency-item">در دسترس نیست</div>')
 
-def get_gold():
+def get_gold(to_english=False):
     gold_items = [
         ("طلای 18 عیار", "23,062,200"), ("طلای 24 عیار", "30,749,300"),
         ("سکه امامی", "230,005,000"), ("نیم سکه", "116,500,000"),
@@ -157,10 +224,11 @@ def get_gold():
     ]
     items = ""
     for name, price in gold_items:
-        items += f'<div class="currency-item" data-name="{name}"><span>{name}</span><span class="currency-value up">{price}</span></div>'
+        display_name = gold_names_en.get(name, name) if to_english else name
+        items += f'<div class="currency-item" data-name="{display_name}"><span>{display_name}</span><span class="currency-value up">{price}</span></div>'
     return items
 
-def get_football():
+def get_football(to_english=False):
     matches = []
     seen = set()
     valid_competitions = [
@@ -187,24 +255,31 @@ def get_football():
                 if not is_valid:
                     continue
                 
-                home_fa = translate_team(home)
-                away_fa = translate_team(away)
+                if to_english:
+                    home_fa = home
+                    away_fa = away
+                else:
+                    home_fa = translate_team(home)
+                    away_fa = translate_team(away)
                 
-                competition_fa = competition
-                if "Premier League" in competition:
-                    competition_fa = "لیگ برتر انگلیس"
-                elif "La Liga" in competition:
-                    competition_fa = "لا لیگا"
-                elif "Serie A" in competition:
-                    competition_fa = "سری آ"
-                elif "Bundesliga" in competition:
-                    competition_fa = "بوندسلیگا"
-                elif "Ligue 1" in competition:
-                    competition_fa = "لوشامپیونه"
-                elif "Champions League" in competition:
-                    competition_fa = "چمپیونز لیگ"
-                elif "Iran" in competition or "Persian Gulf" in competition:
-                    competition_fa = "لیگ برتر ایران"
+                if to_english:
+                    competition_fa = competition
+                else:
+                    competition_fa = competition
+                    if "Premier League" in competition:
+                        competition_fa = "لیگ برتر انگلیس"
+                    elif "La Liga" in competition:
+                        competition_fa = "لا لیگا"
+                    elif "Serie A" in competition:
+                        competition_fa = "سری آ"
+                    elif "Bundesliga" in competition:
+                        competition_fa = "بوندسلیگا"
+                    elif "Ligue 1" in competition:
+                        competition_fa = "لوشامپیونه"
+                    elif "Champions League" in competition:
+                        competition_fa = "چمپیونز لیگ"
+                    elif "Iran" in competition or "Persian Gulf" in competition:
+                        competition_fa = "لیگ برتر ایران"
                 
                 match_time = datetime.now()
                 try:
@@ -217,7 +292,8 @@ def get_football():
                     seen.add(key)
                     matches.append({
                         "home": home_fa, "away": away_fa, "score": "-",
-                        "status_text": "پیش‌رو", "status_class": "upcoming",
+                        "status_text": "Upcoming" if to_english else "پیش‌رو",
+                        "status_class": "upcoming",
                         "matchday": competition_fa, "time": match_time
                     })
     except:
@@ -227,17 +303,20 @@ def get_football():
 
 # ============ ساخت سایت ============
 print("🔍 در حال دریافت اطلاعات...")
-news_html = get_news()
-weather_html = get_weather()
-currency_html = get_currency()
-gold_html = get_gold()
-print("⚽ در حال دریافت فوتبال...")
-all_matches = get_football()
+news_html_fa = get_news(False)
+weather_html_fa = get_weather(to_english=False)
+currency_html_fa = get_currency(False)
+gold_html_fa = get_gold(False)
 
-matches_html = ""
-for m in all_matches[:20]:
+print("⚽ در حال دریافت فوتبال...")
+all_matches_fa = get_football(False)
+all_matches_en = get_football(True)
+
+# ذخیره داده‌ها برای استفاده در جاوااسکریپت
+matches_fa_html = ""
+for m in all_matches_fa[:20]:
     matchday_text = f" | {m['matchday']}" if m['matchday'] else ""
-    matches_html += f'''<div class="match-item" data-status="{m['status_class']}">
+    matches_fa_html += f'''<div class="match-item" data-status="{m['status_class']}">
         <div class="match-row">
             <span class="team-name right">{m['home']}</span>
             <span class="match-score">{m['score']}</span>
@@ -246,10 +325,46 @@ for m in all_matches[:20]:
         <div class="match-status">{m['status_text']}{matchday_text}</div>
     </div>'''
 
-if not matches_html:
-    matches_html = '<div class="match-item">خطا در بارگذاری فوتبال</div>'
+matches_en_html = ""
+for m in all_matches_en[:20]:
+    matchday_text = f" | {m['matchday']}" if m['matchday'] else ""
+    matches_en_html += f'''<div class="match-item" data-status="{m['status_class']}">
+        <div class="match-row">
+            <span class="team-name right">{m['home']}</span>
+            <span class="match-score">{m['score']}</span>
+            <span class="team-name left">{m['away']}</span>
+        </div>
+        <div class="match-status">{m['status_text']}{matchday_text}</div>
+    </div>'''
 
-province_data = str({name: list(coords) for name, coords in provinces.items()})
+if not matches_fa_html:
+    matches_fa_html = '<div class="match-item">خطا در بارگذاری فوتبال</div>'
+if not matches_en_html:
+    matches_en_html = '<div class="match-item">Error loading football data</div>'
+
+# تبدیل دیکشنری‌ها به JSON برای استفاده در جاوااسکریپت
+provinces_json = json.dumps(provinces, ensure_ascii=False)
+provinces_en_json = json.dumps(provinces_en, ensure_ascii=False)
+currency_names_en_json = json.dumps(currency_names_en, ensure_ascii=False)
+gold_names_en_json = json.dumps(gold_names_en, ensure_ascii=False)
+
+# داده‌های HTML برای دو زبان
+html_data = {
+    'fa': {
+        'news': news_html_fa,
+        'weather': weather_html_fa,
+        'currency': currency_html_fa,
+        'gold': gold_html_fa,
+        'matches': matches_fa_html
+    },
+    'en': {
+        'news': get_news(True) if False else news_html_fa,  # به دلیل محدودیت API ترجمه
+        'weather': weather_html_fa,
+        'currency': currency_html_fa,
+        'gold': gold_html_fa,
+        'matches': matches_en_html
+    }
+}
 
 html = f"""<!DOCTYPE html>
 <html lang="fa" dir="rtl">
@@ -309,7 +424,7 @@ html = f"""<!DOCTYPE html>
         .weather-icon {{ font-size: 3rem; }}
         .weather-temp {{ font-size: 2rem; font-weight: 900; color: var(--accent); }}
         .weather-desc {{ margin-top: 10px; color: var(--muted); }}
-        .lang-display {{ width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); cursor: pointer; text-align: center; font-size: 0.9rem; margin-top: 10px; }}
+        .lang-display {{ width: 100%; padding: 8px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); cursor: pointer; text-align: center; font-size: 0.85rem; margin-top: 10px; min-height: 40px; display: flex; align-items: center; justify-content: center; }}
         .province-item, .lang-item {{ padding: 12px; margin: 5px 0; background: var(--card); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; text-align: center; font-size: 0.9rem; }}
         .province-item:hover, .lang-item:hover {{ background: rgba(255,255,255,0.15); }}
         .filter-btns {{ display: flex; gap: 8px; margin-bottom: 15px; }}
@@ -322,9 +437,10 @@ html = f"""<!DOCTYPE html>
         .team-name.left {{ text-align: left; }}
         .match-score {{ color: var(--accent); font-weight: bold; }}
         .match-status {{ text-align: center; font-size: 0.75rem; color: var(--muted); }}
-        .lang-row {{ display: flex; gap: 10px; margin-bottom: 15px; }}
-        .lang-box {{ flex: 1; }}
-        .swap-btn {{ width: 40px; height: 40px; border: none; border-radius: 50%; background: linear-gradient(45deg, #f093fb, #f5576c); color: #fff; cursor: pointer; font-size: 1.3rem; align-self: center; transition: transform 0.5s ease; }}
+        .lang-row {{ display: flex; gap: 5px; margin-bottom: 15px; align-items: center; }}
+        .lang-box {{ flex: 1; min-width: 0; }}
+        .lang-box .lang-display {{ font-size: 0.75rem; padding: 6px; }}
+        .swap-btn {{ width: 35px; height: 35px; border: none; border-radius: 50%; background: linear-gradient(45deg, #f093fb, #f5576c); color: #fff; cursor: pointer; font-size: 1.2rem; flex-shrink: 0; transition: transform 0.5s ease; }}
         .swap-btn.rotated {{ transform: rotate(180deg); }}
         textarea {{ width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); min-height: 100px; }}
         .btn-row {{ display: flex; gap: 10px; margin-top: 10px; }}
@@ -336,234 +452,421 @@ html = f"""<!DOCTYPE html>
     </style>
 </head>
 <body>
-    <div class="header"><div class="logo">AmirHarter</div><button class="settings-btn" onclick="toggleSettings()">⚙️</button></div>
+    <div class="header">
+        <div class="logo">AmirHarter</div>
+        <button class="settings-btn" onclick="toggleSettings()">⚙️</button>
+    </div>
     <button class="theme-float" onclick="toggleTheme()" id="themeFloat">☀️</button>
     <div class="settings-overlay" id="settingsOverlay" onclick="toggleSettings()"></div>
     <div class="settings-panel" id="settingsPanel">
-        <div class="settings-title">⚙️ تنظیمات</div>
-        <div class="settings-item" onclick="toggleLanguage()">🌐 زبان: <span id="langLabel">فارسی</span></div>
-        <div class="settings-item" onclick="toggleTheme()">🌙 تغییر تم</div>
-        <div class="settings-item" onclick="showFontModal()">🔤 فونت: <span id="fontLabel">متوسط</span></div>
-        <div class="settings-item" onclick="shareSite()">📤 اشتراک‌گذاری سایت</div>
-        <div class="settings-item" onclick="showReportModal()">⚠️ گزارش مشکل</div>
-        <div class="settings-item" onclick="showAboutModal()">📖 درباره ما</div>
-        <div class="settings-item">📌 نسخه: v42</div>
+        <div class="settings-title" id="settingsTitle">⚙️ تنظیمات</div>
+        <div class="settings-item" onclick="toggleLanguage()">🌐 <span id="langLabel">زبان: فارسی</span></div>
+        <div class="settings-item" onclick="toggleTheme()" id="themeText">🌙 تغییر تم</div>
+        <div class="settings-item" onclick="showFontModal()">🔤 <span id="fontLabel">فونت: متوسط</span></div>
+        <div class="settings-item" onclick="shareSite()" id="shareText">📤 اشتراک‌گذاری سایت</div>
+        <div class="settings-item" onclick="showReportModal()" id="reportText">⚠️ گزارش مشکل</div>
+        <div class="settings-item" onclick="showAboutModal()" id="aboutText">📖 درباره ما</div>
+        <div class="settings-item">📌 <span id="versionText">نسخه: v42</span></div>
     </div>
-    <div class="modal-overlay" id="aboutModal"><div class="modal"><div class="modal-header"><span>📖 درباره ما</span><button class="modal-close" onclick="closeModal('aboutModal')">›</button></div><p>AmirHarter | پورتال هوشمند</p><br><p>AMIRHARTER ... فقط یک سایت نیست</p><p>یه دنیای کامله!</p><br><p>جایی که همه‌چیز یکجا جمع شده</p><p>از آخرین اخبار و قیمت ارز</p><p>تا آب و هوا، فوتبال و ترجمه!</p><br><p>ساخته شده برای اینکه دنیایی از اطلاعات دم دستت باشه</p><br><p>✨ قدرت در عین سادگی ✨</p><p>نسخه ۵.۰</p></div></div>
-    <div class="modal-overlay" id="reportModal"><div class="modal"><div class="modal-header"><span>⚠️ گزارش مشکل</span><button class="modal-close" onclick="closeModal('reportModal')">›</button></div><p>در روبیکا پیام دهید:</p><br><p style="cursor:pointer; background: var(--card); padding: 10px; border-radius: 8px;" onclick="copyID()">@ID_HARTER</p></div></div>
-    <div class="modal-overlay" id="fontModal"><div class="modal"><div class="modal-header"><span>🔤 انتخاب فونت</span><button class="modal-close" onclick="closeModal('fontModal')">›</button></div><div class="settings-item" onclick="setFontSize('0.9rem', 'کوچیک')">کوچیک</div><div class="settings-item" onclick="setFontSize('1rem', 'متوسط')">متوسط</div><div class="settings-item" onclick="setFontSize('1.2rem', 'بزرگ')">بزرگ</div></div></div>
-    <div class="modal-overlay" id="langModal"><div class="modal"><div class="modal-header"><span id="langModalTitle">🌐 انتخاب زبان</span><button class="modal-close" onclick="closeModal('langModal')">›</button></div><input class="currency-search" id="langSearchInput" placeholder="🔍 جستجوی زبان..." onkeyup="filterLanguages(this.value)"><div id="langList" style="max-height: 300px; overflow-y: auto;"></div></div></div>
-    <div class="modal-overlay" id="provinceModal"><div class="modal"><div class="modal-header"><span>📍 انتخاب استان</span><button class="modal-close" onclick="closeModal('provinceModal')">›</button></div><input class="currency-search" id="provinceSearchInput" placeholder="🔍 جستجوی استان..." onkeyup="filterProvinces(this.value)"><div id="provinceList" style="max-height: 300px; overflow-y: auto;"></div></div></div>
+    
+    <div class="modal-overlay" id="aboutModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span id="aboutModalTitle">📖 درباره ما</span>
+                <button class="modal-close" onclick="closeModal('aboutModal')">›</button>
+            </div>
+            <div id="aboutContentFa">
+                <p>AmirHarter | پورتال هوشمند</p><br>
+                <p>AMIRHARTER ... فقط یک سایت نیست</p>
+                <p>یه دنیای کامله!</p><br>
+                <p>جایی که همه‌چیز یکجا جمع شده</p>
+                <p>از آخرین اخبار و قیمت ارز</p>
+                <p>تا آب و هوا، فوتبال و ترجمه!</p><br>
+                <p>ساخته شده برای اینکه دنیایی از اطلاعات دم دستت باشه</p><br>
+                <p>✨ قدرت در عین سادگی ✨</p>
+                <p>نسخه ۵.۰</p>
+            </div>
+            <div id="aboutContentEn" style="display:none;">
+                <p>AmirHarter | Smart Portal</p><br>
+                <p>AMIRHARTER ... is not just a website</p>
+                <p>It's a whole world!</p><br>
+                <p>Everything in one place</p>
+                <p>From latest news and currency rates</p>
+                <p>To weather, football and translation!</p><br>
+                <p>Built to bring the world of information to your fingertips</p><br>
+                <p>✨ Power in simplicity ✨</p>
+                <p>Version 5.0</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="reportModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span id="reportModalTitle">⚠️ گزارش مشکل</span>
+                <button class="modal-close" onclick="closeModal('reportModal')">›</button>
+            </div>
+            <p id="reportTextFa">در روبیکا پیام دهید:</p>
+            <p id="reportTextEn" style="display:none;">Message us on Rubika:</p>
+            <br>
+            <p style="cursor:pointer; background: var(--card); padding: 10px; border-radius: 8px;" onclick="copyID()">@ID_HARTER</p>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="fontModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span id="fontModalTitle">🔤 انتخاب فونت</span>
+                <button class="modal-close" onclick="closeModal('fontModal')">›</button>
+            </div>
+            <div class="settings-item" onclick="setFontSize('0.9rem', 'کوچیک', 'Small')">کوچیک</div>
+            <div class="settings-item" onclick="setFontSize('1rem', 'متوسط', 'Medium')">متوسط</div>
+            <div class="settings-item" onclick="setFontSize('1.2rem', 'بزرگ', 'Large')">بزرگ</div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="langModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span id="langModalTitle">🌐 انتخاب زبان</span>
+                <button class="modal-close" onclick="closeModal('langModal')">›</button>
+            </div>
+            <input class="currency-search" id="langSearchInput" placeholder="🔍 جستجوی زبان..." onkeyup="filterLanguages(this.value)">
+            <div id="langList" style="max-height: 300px; overflow-y: auto;"></div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="provinceModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span id="provinceModalTitle">📍 انتخاب استان</span>
+                <button class="modal-close" onclick="closeModal('provinceModal')">›</button>
+            </div>
+            <input class="currency-search" id="provinceSearchInput" placeholder="🔍 جستجوی استان..." onkeyup="filterProvinces(this.value)">
+            <div id="provinceList" style="max-height: 300px; overflow-y: auto;"></div>
+        </div>
+    </div>
+    
     <div class="main">
-        <div class="logo-animation"><div class="logo-text">AmirHarter</div></div>
-        <div class="search-container"><button class="search-btn" onclick="searchGoogle(document.getElementById('mainSearch').value)">جستجو</button><button class="mic-btn" onclick="voiceSearch()">🎤</button><input class="search-box" id="mainSearch" placeholder="در AMIR HARTER" onkeypress="if(event.key==='Enter') searchGoogle(this.value)"></div>
-        <div class="search-options"><a href="https://play.google.com/" target="_blank" class="search-option">📱 گوگل‌پلی</a><a href="https://telewebion.net/" target="_blank" class="search-option">📺 تلوبیون</a><a href="games.html" class="search-option">🎮 بازی‌ها</a></div>
-        <div class="clock-section"><div class="clock-icon">🕐</div><div class="clock" id="clock">--:--:--</div><div class="date" id="date">---</div></div>
-        <div class="card"><div class="card-title">🌤 آب و هوا</div><div class="weather-card" id="weatherData">{weather_html}</div><div class="lang-display" onclick="showProvinceModal()" id="provinceDisplay">انتخاب استان...</div></div>
-        <div class="card"><div class="card-title"><span class="currency-icon">💱</span> قیمت ارز</div><input class="currency-search" placeholder="🔍 جستجوی ارز..." onkeyup="filterCurrency(this.value)"><div class="currency-scroll" id="currencyList">{currency_html}</div></div>
-        <div class="card"><div class="card-title"><span class="currency-icon">💰</span> طلا و سکه</div><input class="currency-search" placeholder="🔍 جستجوی طلا..." onkeyup="filterGold(this.value)"><div class="currency-scroll" id="goldList">{gold_html}</div></div>
-        <div class="card"><div class="card-title">⚽ بازی‌های داغ</div><div class="filter-btns"><button class="filter-btn active" onclick="filterMatches('all', this)">همه</button><button class="filter-btn" onclick="filterMatches('finished', this)">پایان یافته</button><button class="filter-btn" onclick="filterMatches('live', this)">در حال انجام</button><button class="filter-btn" onclick="filterMatches('upcoming', this)">برگزار نشده</button></div><div class="football-scroll">{matches_html}</div></div>
-        <div class="card"><div class="card-title">📰 آخرین اخبار</div><div class="news-scroll">{news_html}</div></div>
-        <div class="card"><div class="card-title">🌐 ترجمه</div><div class="lang-row"><div class="lang-box"><div class="lang-display" onclick="showLangModal('from')" id="fromDisplay">فارسی</div></div><button class="swap-btn" id="swapBtn" onclick="swapLanguages()">⇄</button><div class="lang-box"><div class="lang-display" onclick="showLangModal('to')" id="toDisplay">English</div></div></div><textarea id="text" placeholder="متن خود را وارد کنید..."></textarea><div class="result" id="result">نتیجه ترجمه...</div><div class="btn-row"><button class="translate-btn" onclick="translateText()">ترجمه</button><button class="copy-btn" onclick="copyResult()">کپی</button></div></div>
-        <div class="footer">© 2026 AmirHarter - تمامی حقوق محفوظ است</div>
+        <div class="logo-animation">
+            <div class="logo-text">AmirHarter</div>
+        </div>
+        
+        <div class="search-container">
+            <button class="search-btn" id="searchBtn" onclick="searchGoogle(document.getElementById('mainSearch').value)">جستجو</button>
+            <button class="mic-btn" onclick="voiceSearch()">🎤</button>
+            <input class="search-box" id="mainSearch" placeholder="در AMIR HARTER" onkeypress="if(event.key==='Enter') searchGoogle(this.value)">
+        </div>
+        
+        <div class="search-options">
+            <a href="https://play.google.com/" target="_blank" class="search-option" id="option1">📱 گوگل‌پلی</a>
+            <a href="https://telewebion.net/" target="_blank" class="search-option" id="option2">📺 تلوبیون</a>
+            <a href="games.html" class="search-option" id="option3">🎮 بازی‌ها</a>
+        </div>
+        
+        <div class="clock-section">
+            <div class="clock-icon">🕐</div>
+            <div class="clock" id="clock">--:--:--</div>
+            <div class="date" id="date">---</div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title" id="weatherTitle">🌤 آب و هوا</div>
+            <div class="weather-card" id="weatherData">{weather_html_fa}</div>
+            <div class="lang-display" onclick="showProvinceModal()" id="provinceDisplay">انتخاب استان...</div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title"><span class="currency-icon">💱</span> <span id="currencyTitle">قیمت ارز</span></div>
+            <input class="currency-search" id="currencySearchInput" placeholder="🔍 جستجوی ارز..." onkeyup="filterCurrency(this.value)">
+            <div class="currency-scroll" id="currencyList">{currency_html_fa}</div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title"><span class="currency-icon">💰</span> <span id="goldTitle">طلا و سکه</span></div>
+            <input class="currency-search" id="goldSearchInput" placeholder="🔍 جستجوی طلا..." onkeyup="filterGold(this.value)">
+            <div class="currency-scroll" id="goldList">{gold_html_fa}</div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title" id="footballTitle">⚽ بازی‌های داغ</div>
+            <div class="filter-btns">
+                <button class="filter-btn active" id="filterAll" onclick="filterMatches('all', this)">همه</button>
+                <button class="filter-btn" id="filterFinished" onclick="filterMatches('finished', this)">پایان یافته</button>
+                <button class="filter-btn" id="filterLive" onclick="filterMatches('live', this)">در حال انجام</button>
+                <button class="filter-btn" id="filterUpcoming" onclick="filterMatches('upcoming', this)">برگزار نشده</button>
+            </div>
+            <div class="football-scroll" id="footballList">{matches_fa_html}</div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title" id="newsTitle">📰 آخرین اخبار</div>
+            <div class="news-scroll" id="newsList">{news_html_fa}</div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title" id="translateTitle">🌐 ترجمه</div>
+            <div class="lang-row">
+                <div class="lang-box">
+                    <div class="lang-display" onclick="showLangModal('from')" id="fromDisplay">انتخاب مبدا</div>
+                </div>
+                <button class="swap-btn" id="swapBtn" onclick="swapLanguages()">⇄</button>
+                <div class="lang-box">
+                    <div class="lang-display" onclick="showLangModal('to')" id="toDisplay">انتخاب مقصد</div>
+                </div>
+            </div>
+            <textarea id="text" placeholder="متن خود را وارد کنید..."></textarea>
+            <div class="result" id="result">نتیجه ترجمه...</div>
+            <div class="btn-row">
+                <button class="translate-btn" id="translateBtn" onclick="translateText()">ترجمه</button>
+                <button class="copy-btn" id="copyBtn" onclick="copyResult()">کپی</button>
+            </div>
+        </div>
+        
+        <div class="footer" id="footer">© 2026 AmirHarter - تمامی حقوق محفوظ است</div>
     </div>
+    
     <script>
         const languagesFa = {{"fa":"فارسی","en":"انگلیسی","ar":"عربی","fr":"فرانسوی","de":"آلمانی","es":"اسپانیایی","it":"ایتالیایی","pt":"پرتغالی","ru":"روسی","tr":"ترکی","zh":"چینی","ja":"ژاپنی","ko":"کره‌ای","hi":"هندی","ur":"اردو","nl":"هلندی","pl":"لهستانی","sv":"سوئدی","no":"نروژی","da":"دانمارکی","fi":"فنلاندی","el":"یونانی","he":"عبری","th":"تایلندی","vi":"ویتنامی","id":"اندونزیایی","ms":"مالایی","cs":"چکی","sk":"اسلواکی","hu":"مجاری","ro":"رومانیایی","bg":"بلغاری","uk":"اوکراینی","sr":"صربی","hr":"کرواتی","sl":"اسلوونیایی"}};
+        
         const languagesEn = {{"fa":"Persian","en":"English","ar":"Arabic","fr":"French","de":"German","es":"Spanish","it":"Italian","pt":"Portuguese","ru":"Russian","tr":"Turkish","zh":"Chinese","ja":"Japanese","ko":"Korean","hi":"Hindi","ur":"Urdu","nl":"Dutch","pl":"Polish","sv":"Swedish","no":"Norwegian","da":"Danish","fi":"Finnish","el":"Greek","he":"Hebrew","th":"Thai","vi":"Vietnamese","id":"Indonesian","ms":"Malay","cs":"Czech","sk":"Slovak","hu":"Hungarian","ro":"Romanian","bg":"Bulgarian","uk":"Ukrainian","sr":"Serbian","hr":"Croatian","sl":"Slovenian"}};
+        
+        const provinces = {provinces_json};
+        const provincesEn = {provinces_en_json};
+        const currencyNamesEn = {currency_names_en_json};
+        const goldNamesEn = {gold_names_en_json};
+        
+        const matchesHtmlFa = `{matches_fa_html}`;
+        const matchesHtmlEn = `{matches_en_html}`;
+        
+        const newsHtmlFa = `{news_html_fa}`;
+        const weatherHtmlFa = `{weather_html_fa}`;
+        const currencyHtmlFa = `{currency_html_fa}`;
+        const goldHtmlFa = `{gold_html_fa}`;
+        
         let currentLang = 'fa';
-        let fromLang = 'fa';
-        let toLang = 'en';
+        let fromLang = '';
+        let toLang = '';
         let langMode = 'from';
+        let currentFontSize = '1rem';
+        
+        // ذخیره داده‌های انگلیسی
+        const englishData = {{
+            news: '',
+            weather: '',
+            currency: '',
+            gold: ''
+        }};
         
         function toggleLanguage() {{
             if (currentLang === 'fa') {{
                 currentLang = 'en';
                 document.body.style.direction = 'ltr';
-                document.getElementById('langLabel').textContent = 'English';
-                document.querySelector('.settings-title').textContent = '⚙️ Settings';
-                document.querySelector('.search-btn').textContent = 'Search';
-                document.querySelector('.search-box').placeholder = 'Search in AMIR HARTER';
-                document.querySelectorAll('.search-option')[0].textContent = '📱 Google Play';
-                document.querySelectorAll('.search-option')[1].textContent = '📺 Telewebion';
-                document.querySelectorAll('.search-option')[2].textContent = '🎮 Games';
-                document.querySelectorAll('.card-title')[0].textContent = '🌤 Weather';
-                document.querySelectorAll('.card-title')[1].textContent = '💱 Currency Rates';
-                document.querySelectorAll('.card-title')[2].textContent = '💰 Gold & Coins';
-                document.querySelectorAll('.card-title')[3].textContent = '⚽ Hot Matches';
-                document.querySelectorAll('.card-title')[4].textContent = '📰 Latest News';
-                document.querySelectorAll('.card-title')[5].textContent = '🌐 Translate';
-                document.querySelectorAll('.currency-search')[0].placeholder = '🔍 Search currency...';
-                document.querySelectorAll('.currency-search')[1].placeholder = '🔍 Search gold...';
-                document.querySelectorAll('.filter-btn')[0].textContent = 'All';
-                document.querySelectorAll('.filter-btn')[1].textContent = 'Finished';
-                document.querySelectorAll('.filter-btn')[2].textContent = 'Live';
-                document.querySelectorAll('.filter-btn')[3].textContent = 'Upcoming';
+                
+                // تنظیمات
+                document.getElementById('settingsTitle').textContent = '⚙️ Settings';
+                document.getElementById('langLabel').textContent = 'Language: English';
+                document.getElementById('themeText').textContent = '🌙 Change Theme';
+                document.getElementById('fontLabel').textContent = `Font: ${{currentFontSize === '0.9rem' ? 'Small' : currentFontSize === '1.2rem' ? 'Large' : 'Medium'}}`;
+                document.getElementById('shareText').textContent = '📤 Share Site';
+                document.getElementById('reportText').textContent = '⚠️ Report Issue';
+                document.getElementById('aboutText').textContent = '📖 About Us';
+                document.getElementById('versionText').textContent = 'Version: v42';
+                
+                // جستجو
+                document.getElementById('searchBtn').textContent = 'Search';
+                document.getElementById('mainSearch').placeholder = 'Search in AMIR HARTER';
+                document.getElementById('option1').textContent = '📱 Google Play';
+                document.getElementById('option2').textContent = '📺 Telewebion';
+                document.getElementById('option3').textContent = '🎮 Games';
+                
+                // عناوین کارت‌ها
+                document.getElementById('weatherTitle').textContent = '🌤 Weather';
+                document.getElementById('currencyTitle').textContent = 'Currency Rates';
+                document.getElementById('goldTitle').textContent = 'Gold & Coins';
+                document.getElementById('footballTitle').textContent = '⚽ Hot Matches';
+                document.getElementById('newsTitle').textContent = '📰 Latest News';
+                document.getElementById('translateTitle').textContent = '🌐 Translate';
+                
+                // جستجوها
+                document.getElementById('currencySearchInput').placeholder = '🔍 Search currency...';
+                document.getElementById('goldSearchInput').placeholder = '🔍 Search gold...';
                 document.getElementById('provinceDisplay').textContent = 'Select province...';
+                
+                // فیلترهای فوتبال
+                document.getElementById('filterAll').textContent = 'All';
+                document.getElementById('filterFinished').textContent = 'Finished';
+                document.getElementById('filterLive').textContent = 'Live';
+                document.getElementById('filterUpcoming').textContent = 'Upcoming';
+                
+                // ترجمه
+                document.getElementById('fromDisplay').textContent = 'Select source';
+                document.getElementById('toDisplay').textContent = 'Select target';
                 document.querySelector('textarea').placeholder = 'Enter your text...';
-                document.querySelector('.result').textContent = 'Translation result...';
-                document.querySelector('.translate-btn').textContent = 'Translate';
-                document.querySelector('.copy-btn').textContent = 'Copy';
-                document.querySelector('.footer').textContent = '© 2026 AmirHarter - All rights reserved';
-                document.getElementById('fromDisplay').textContent = languagesEn[fromLang];
-                document.getElementById('toDisplay').textContent = languagesEn[toLang];
+                document.getElementById('result').textContent = 'Translation result...';
+                document.getElementById('translateBtn').textContent = 'Translate';
+                document.getElementById('copyBtn').textContent = 'Copy';
+                
+                // فوتر
+                document.getElementById('footer').textContent = '© 2026 AmirHarter - All rights reserved';
+                
+                // مودال‌ها
+                document.getElementById('aboutModalTitle').textContent = '📖 About Us';
+                document.getElementById('reportModalTitle').textContent = '⚠️ Report Issue';
+                document.getElementById('fontModalTitle').textContent = '🔤 Select Font';
+                document.getElementById('langModalTitle').textContent = '🌐 Select Language';
+                document.getElementById('provinceModalTitle').textContent = '📍 Select Province';
+                
+                // محتوای مودال‌ها
+                document.getElementById('aboutContentFa').style.display = 'none';
+                document.getElementById('aboutContentEn').style.display = 'block';
+                document.getElementById('reportTextFa').style.display = 'none';
+                document.getElementById('reportTextEn').style.display = 'block';
+                
+                // جستجوی زبان
+                document.getElementById('langSearchInput').placeholder = '🔍 Search language...';
+                document.getElementById('provinceSearchInput').placeholder = '🔍 Search province...';
+                
+                // فوتبال
+                document.getElementById('footballList').innerHTML = matchesHtmlEn;
+                
+                // دریافت داده‌های انگلیسی
+                fetchEnglishData();
+                
+                // به‌روزرسانی لیست زبان‌ها اگر باز است
+                if (document.getElementById('langModal').style.display === 'flex') {{
+                    renderLangList();
+                }}
+                
+                // به‌روزرسانی لیست استان‌ها اگر باز است
+                if (document.getElementById('provinceModal').style.display === 'flex') {{
+                    renderProvinceList();
+                }}
+                
             }} else {{
                 currentLang = 'fa';
                 document.body.style.direction = 'rtl';
-                document.getElementById('langLabel').textContent = 'فارسی';
-                document.querySelector('.settings-title').textContent = '⚙️ تنظیمات';
-                document.querySelector('.search-btn').textContent = 'جستجو';
-                document.querySelector('.search-box').placeholder = 'در AMIR HARTER';
-                document.querySelectorAll('.search-option')[0].textContent = '📱 گوگل‌پلی';
-                document.querySelectorAll('.search-option')[1].textContent = '📺 تلوبیون';
-                document.querySelectorAll('.search-option')[2].textContent = '🎮 بازی‌ها';
-                document.querySelectorAll('.card-title')[0].textContent = '🌤 آب و هوا';
-                document.querySelectorAll('.card-title')[1].textContent = '💱 قیمت ارز';
-                document.querySelectorAll('.card-title')[2].textContent = '💰 طلا و سکه';
-                document.querySelectorAll('.card-title')[3].textContent = '⚽ بازی‌های داغ';
-                document.querySelectorAll('.card-title')[4].textContent = '📰 آخرین اخبار';
-                document.querySelectorAll('.card-title')[5].textContent = '🌐 ترجمه';
-                document.querySelectorAll('.currency-search')[0].placeholder = '🔍 جستجوی ارز...';
-                document.querySelectorAll('.currency-search')[1].placeholder = '🔍 جستجوی طلا...';
-                document.querySelectorAll('.filter-btn')[0].textContent = 'همه';
-                document.querySelectorAll('.filter-btn')[1].textContent = 'پایان یافته';
-                document.querySelectorAll('.filter-btn')[2].textContent = 'در حال انجام';
-                document.querySelectorAll('.filter-btn')[3].textContent = 'برگزار نشده';
+                
+                // تنظیمات
+                document.getElementById('settingsTitle').textContent = '⚙️ تنظیمات';
+                document.getElementById('langLabel').textContent = 'زبان: فارسی';
+                document.getElementById('themeText').textContent = '🌙 تغییر تم';
+                document.getElementById('fontLabel').textContent = `فونت: ${{currentFontSize === '0.9rem' ? 'کوچیک' : currentFontSize === '1.2rem' ? 'بزرگ' : 'متوسط'}}`;
+                document.getElementById('shareText').textContent = '📤 اشتراک‌گذاری سایت';
+                document.getElementById('reportText').textContent = '⚠️ گزارش مشکل';
+                document.getElementById('aboutText').textContent = '📖 درباره ما';
+                document.getElementById('versionText').textContent = 'نسخه: v42';
+                
+                // جستجو
+                document.getElementById('searchBtn').textContent = 'جستجو';
+                document.getElementById('mainSearch').placeholder = 'در AMIR HARTER';
+                document.getElementById('option1').textContent = '📱 گوگل‌پلی';
+                document.getElementById('option2').textContent = '📺 تلوبیون';
+                document.getElementById('option3').textContent = '🎮 بازی‌ها';
+                
+                // عناوین کارت‌ها
+                document.getElementById('weatherTitle').textContent = '🌤 آب و هوا';
+                document.getElementById('currencyTitle').textContent = 'قیمت ارز';
+                document.getElementById('goldTitle').textContent = 'طلا و سکه';
+                document.getElementById('footballTitle').textContent = '⚽ بازی‌های داغ';
+                document.getElementById('newsTitle').textContent = '📰 آخرین اخبار';
+                document.getElementById('translateTitle').textContent = '🌐 ترجمه';
+                
+                // جستجوها
+                document.getElementById('currencySearchInput').placeholder = '🔍 جستجوی ارز...';
+                document.getElementById('goldSearchInput').placeholder = '🔍 جستجوی طلا...';
                 document.getElementById('provinceDisplay').textContent = 'انتخاب استان...';
+                
+                // فیلترهای فوتبال
+                document.getElementById('filterAll').textContent = 'همه';
+                document.getElementById('filterFinished').textContent = 'پایان یافته';
+                document.getElementById('filterLive').textContent = 'در حال انجام';
+                document.getElementById('filterUpcoming').textContent = 'برگزار نشده';
+                
+                // ترجمه
+                document.getElementById('fromDisplay').textContent = 'انتخاب مبدا';
+                document.getElementById('toDisplay').textContent = 'انتخاب مقصد';
                 document.querySelector('textarea').placeholder = 'متن خود را وارد کنید...';
-                document.querySelector('.result').textContent = 'نتیجه ترجمه...';
-                document.querySelector('.translate-btn').textContent = 'ترجمه';
-                document.querySelector('.copy-btn').textContent = 'کپی';
-                document.querySelector('.footer').textContent = '© 2026 AmirHarter - تمامی حقوق محفوظ است';
-                document.getElementById('fromDisplay').textContent = languagesFa[fromLang];
-                document.getElementById('toDisplay').textContent = languagesFa[toLang];
+                document.getElementById('result').textContent = 'نتیجه ترجمه...';
+                document.getElementById('translateBtn').textContent = 'ترجمه';
+                document.getElementById('copyBtn').textContent = 'کپی';
+                
+                // فوتر
+                document.getElementById('footer').textContent = '© 2026 AmirHarter - تمامی حقوق محفوظ است';
+                
+                // مودال‌ها
+                document.getElementById('aboutModalTitle').textContent = '📖 درباره ما';
+                document.getElementById('reportModalTitle').textContent = '⚠️ گزارش مشکل';
+                document.getElementById('fontModalTitle').textContent = '🔤 انتخاب فونت';
+                document.getElementById('langModalTitle').textContent = '🌐 انتخاب زبان';
+                document.getElementById('provinceModalTitle').textContent = '📍 انتخاب استان';
+                
+                // محتوای مودال‌ها
+                document.getElementById('aboutContentFa').style.display = 'block';
+                document.getElementById('aboutContentEn').style.display = 'none';
+                document.getElementById('reportTextFa').style.display = 'block';
+                document.getElementById('reportTextEn').style.display = 'none';
+                
+                // جستجوی زبان
+                document.getElementById('langSearchInput').placeholder = '🔍 جستجوی زبان...';
+                document.getElementById('provinceSearchInput').placeholder = '🔍 جستجوی استان...';
+                
+                // فوتبال
+                document.getElementById('footballList').innerHTML = matchesHtmlFa;
+                
+                // بازیابی داده‌های فارسی
+                document.getElementById('weatherData').innerHTML = weatherHtmlFa;
+                document.getElementById('currencyList').innerHTML = currencyHtmlFa;
+                document.getElementById('goldList').innerHTML = goldHtmlFa;
+                document.getElementById('newsList').innerHTML = newsHtmlFa;
+                
+                // به‌روزرسانی لیست زبان‌ها اگر باز است
+                if (document.getElementById('langModal').style.display === 'flex') {{
+                    renderLangList();
+                }}
+                
+                // به‌روزرسانی لیست استان‌ها اگر باز است
+                if (document.getElementById('provinceModal').style.display === 'flex') {{
+                    renderProvinceList();
+                }}
             }}
             updateClock();
         }}
         
-        function updateClock() {{
-            const now = new Date();
-            if (currentLang === 'en') {{
-                document.getElementById('clock').textContent = now.toLocaleTimeString('en-US');
-                document.getElementById('date').textContent = now.toLocaleDateString('en-US', {{weekday:'long', year:'numeric', month:'long', day:'numeric'}});
+        function fetchEnglishData() {{
+            // آب و هوا
+            const currentCity = document.getElementById('provinceDisplay').textContent;
+            if (currentCity === 'Select province...' || currentCity === 'انتخاب استان...') {{
+                fetchWeatherForCity('Tehran', 35.6892, 51.3890, true);
             }} else {{
-                document.getElementById('clock').textContent = now.toLocaleTimeString('fa-IR');
-                document.getElementById('date').textContent = now.toLocaleDateString('fa-IR', {{weekday:'long', year:'numeric', month:'long', day:'numeric'}});
-            }}
-        }}
-        setInterval(updateClock, 1000);
-        updateClock();
-        
-        const provinces = {province_data};
-        
-        function showLangModal(mode) {{
-            langMode = mode;
-            document.getElementById('langModalTitle').textContent = (mode === 'from') ? '🌐 انتخاب زبان مبدا' : '🌐 انتخاب زبان مقصد';
-            document.getElementById('langModal').style.display = 'flex';
-            renderLangList();
-        }}
-        
-        function renderLangList() {{
-            const list = document.getElementById('langList');
-            const langs = (currentLang === 'en') ? languagesEn : languagesFa;
-            list.innerHTML = '';
-            for (const code in langs) {{
-                list.innerHTML += `<div class="lang-item" onclick="selectLang('${{code}}')">${{langs[code]}}</div>`;
-            }}
-        }}
-        
-        function selectLang(code) {{
-            if (langMode === 'from') {{
-                fromLang = code;
-                const langs = (currentLang === 'en') ? languagesEn : languagesFa;
-                document.getElementById('fromDisplay').textContent = langs[code];
-            }} else {{
-                toLang = code;
-                const langs = (currentLang === 'en') ? languagesEn : languagesFa;
-                document.getElementById('toDisplay').textContent = langs[code];
-            }}
-            closeModal('langModal');
-        }}
-        
-        function filterLanguages(query) {{
-            const list = document.getElementById('langList');
-            const langs = (currentLang === 'en') ? languagesEn : languagesFa;
-            list.innerHTML = '';
-            for (const code in langs) {{
-                if (langs[code].toLowerCase().includes(query.toLowerCase()) || query === '') {{
-                    list.innerHTML += `<div class="lang-item" onclick="selectLang('${{code}}')">${{langs[code]}}</div>`;
+                const cityFa = Object.keys(provinces).find(key => provincesEn[key] === currentCity);
+                if (cityFa) {{
+                    const [lat, lon] = provinces[cityFa];
+                    fetchWeatherForCity(cityFa, lat, lon, true);
                 }}
             }}
+            
+            // ارز و طلا - استفاده از داده‌های فارسی با نام‌های انگلیسی
+            updateCurrencyAndGoldForEnglish();
         }}
         
-        function showProvinceModal() {{
-            document.getElementById('provinceModal').style.display = 'flex';
-            renderProvinceList();
-        }}
-        
-        function renderProvinceList() {{
-            const list = document.getElementById('provinceList');
-            list.innerHTML = '';
-            for (const name in provinces) {{
-                list.innerHTML += `<div class="province-item" onclick="selectProvince('${{name}}')">${{name}}</div>`;
-            }}
-        }}
-        
-        function selectProvince(name) {{
-            document.getElementById('provinceDisplay').textContent = name;
-            closeModal('provinceModal');
-            const [lat, lon] = provinces[name];
+        function fetchWeatherForCity(cityName, lat, lon, isEnglish) {{
             fetch(`https://api.open-meteo.com/v1/forecast?latitude=${{lat}}&longitude=${{lon}}&current_weather=true&timezone=Asia%2FTehran`)
                 .then(r => r.json())
                 .then(d => {{
                     const temp = d.current_weather.temperature;
                     const wind = d.current_weather.windspeed;
                     const code = d.current_weather.weathercode;
-                    const descs = {{0:'آفتابی',1:'نیمه آفتابی',2:'نیمه ابری',3:'ابری',45:'مه',61:'باران',71:'برف'}};
-                    const desc = descs[code] || 'نامشخص';
-                    document.getElementById('weatherData').innerHTML = `<div class="weather-icon">🌤</div><div class="weather-temp">${{temp}}°C</div><div class="weather-desc">${{name}}<br>${{desc}}<br>باد: ${{wind}} km/h</div>`;
+                    const descs = {{0:'Sunny',1:'Partly Sunny',2:'Partly Cloudy',3:'Cloudy',45:'Foggy',61:'Rainy',71:'Snowy'}};
+                    const desc = descs[code] || 'Unknown';
+                    const cityEn = provincesEn[cityName] || cityName;
+                    document.getElementById('weatherData').innerHTML = `<div class="weather-icon">🌤</div><div class="weather-temp">${{temp}}°C</div><div class="weather-desc">${{cityEn}}<br>${{desc}}<br>Wind: ${{wind}} km/h</div>`;
                 }});
         }}
         
-        function filterProvinces(query) {{
-            const list = document.getElementById('provinceList');
-            list.innerHTML = '';
-            for (const name in provinces) {{
-                if (name.includes(query) || query === '') {{
-                    list.innerHTML += `<div class="province-item" onclick="selectProvince('${{name}}')">${{name}}</div>`;
-                }}
-            }}
-        }}
-        
-        function toggleSettings() {{ document.getElementById('settingsPanel').classList.toggle('open'); document.getElementById('settingsOverlay').style.display = document.getElementById('settingsPanel').classList.contains('open') ? 'block' : 'none'; }}
-        function showAboutModal() {{ toggleSettings(); document.getElementById('aboutModal').style.display = 'flex'; }}
-        function showReportModal() {{ toggleSettings(); document.getElementById('reportModal').style.display = 'flex'; }}
-        function showFontModal() {{ toggleSettings(); document.getElementById('fontModal').style.display = 'flex'; }}
-        function closeModal(id) {{ document.getElementById(id).style.display = 'none'; }}
-        function copyID() {{ const textarea = document.createElement('textarea'); textarea.value = '@ID_HARTER'; document.body.appendChild(textarea); textarea.select(); document.execCommand('copy'); document.body.removeChild(textarea); alert('کپی شد!'); }}
-        function setFontSize(size, label) {{ document.body.style.fontSize = size; document.getElementById('fontLabel').textContent = label; closeModal('fontModal'); }}
-        function shareSite() {{ const url = window.location.href; if (navigator.share) {{ navigator.share({{title: 'AmirHarter', url: url}}); }} else {{ prompt('لینک سایت:', url); }} }}
-        function filterCurrency(query) {{ document.querySelectorAll('#currencyList .currency-item').forEach(item => {{ const name = item.getAttribute('data-name') || ''; item.style.display = name.includes(query) || query === '' ? 'flex' : 'none'; }}); }}
-        function filterGold(query) {{ document.querySelectorAll('#goldList .currency-item').forEach(item => {{ const name = item.getAttribute('data-name') || ''; item.style.display = name.includes(query) || query === '' ? 'flex' : 'none'; }}); }}
-        function toggleTheme() {{ document.body.classList.toggle('light-mode'); const isLight = document.body.classList.contains('light-mode'); document.getElementById('themeFloat').textContent = isLight ? '🌙' : '☀️'; }}
-        function searchGoogle(q) {{ if (q) window.open('https://www.google.com/search?q=' + encodeURIComponent(q), '_blank'); }}
-        function voiceSearch() {{ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {{ const SR = window.SpeechRecognition || window.webkitSpeechRecognition; const recognition = new SR(); recognition.lang = 'fa-IR'; recognition.onresult = function(e) {{ document.getElementById('mainSearch').value = e.results[0][0].transcript; }}; recognition.start(); }} else {{ alert('مرورگر شما از تایپ صوتی پشتیبانی نمی‌کند'); }} }}
-        function filterMatches(type, btn) {{ document.querySelectorAll('.match-item').forEach(item => {{ if (type === 'all') item.style.display = 'block'; else item.style.display = item.dataset.status === type ? 'block' : 'none'; }}); document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }}
-        function swapLanguages() {{ const temp = fromLang; fromLang = toLang; toLang = temp; const langs = (currentLang === 'en') ? languagesEn : languagesFa; document.getElementById('fromDisplay').textContent = langs[fromLang]; document.getElementById('toDisplay').textContent = langs[toLang]; const swapBtn = document.getElementById('swapBtn'); if (swapBtn) {{ swapBtn.classList.toggle('rotated'); }} }}
-        function translateText() {{ const text = document.getElementById('text').value; if (!text) return; const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${{fromLang}}&tl=${{toLang}}&dt=t&q=${{encodeURIComponent(text)}}`; fetch(url).then(r => r.json()).then(d => {{ let translated = ''; d[0].forEach(part => translated += part[0]); document.getElementById('result').textContent = translated; }}).catch(() => document.getElementById('result').textContent = 'خطا در ترجمه'); }}
-        function copyResult() {{ const result = document.getElementById('result').textContent; const textarea = document.createElement('textarea'); textarea.value = result; document.body.appendChild(textarea); textarea.select(); document.execCommand('copy'); document.body.removeChild(textarea); alert('کپی شد!'); }}
-    </script>
-</body>
-</html>
-"""
-
-html = html.replace("{province_data}", province_data)
-
-with open(OUTPUT_DIR / 'index.html', 'w', encoding='utf-8') as f:
-    f.write(html)
-
-game_files = ['games.html', 'tictactoe.html', 'snake.html', 'guess.html', 'rps.html']
-for game_file in game_files:
-    if Path(game_file).exists():
-        shutil.copy(game_file, OUTPUT_DIR / game_file)
-
-print("✅ سایت با موفقیت ساخته شد!")
+        function updateCurrencyAndGoldForEnglish() {{
+            // به‌روزرسانی ارزها
+            const currencyItems = document.querySelectorAll('#currencyList .currency-item');
+            currencyItems.forEach(item => {{
+                const span = item.querySelector('span:first-child');
+                const nameF
